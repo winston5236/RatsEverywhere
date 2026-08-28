@@ -1,0 +1,98 @@
+This is a single self-contained index.html file — a browser-based, real-time 3D visualization concept demo for a home rodent-monitoring and deterrence system (the "宮格式住家防鼠系統" / "Grid-Based Home Rodent Defense System"). It simulates, in an interactive 3D scene, a rat entering a monitored space, being tracked cell-by-cell across a 36×36×36 grid, having a dynamically-recalculated "ideal capture route" plotted around obstacles, and being deterred by a configurable predator-sound system as it approaches restricted areas — all rendered live in the browser with Three.js, no build step, and no backend. It's meant to be dropped directly into a GitHub repo and served via GitHub Pages.
+
+There is no framework (no React/Vue), no bundler, and no server-side code — everything is vanilla HTML, CSS, and a single ES module <script> block that imports Three.js and two of its addons directly from a CDN via an import map.
+
+1. Document & Dependency Setup
+
+The <head> loads three Google Fonts (Space Grotesk for headings, JetBrains Mono for all data/technical text, Noto Sans TC for Chinese body text) and declares an importmap that maps the bare specifiers three and three/addons/ to jsDelivr-hosted URLs for Three.js r160. The two addons pulled in are OrbitControls (for mouse-driven camera rotation/zoom/pan) and CSS2DRenderer/CSS2DObject (for floating HTML labels that stay pinned to 3D world positions, like "GOAL", "ENTRY", "SPEAKER"). Because everything is loaded via <script type="module">, the file needs to be served over HTTP(S) rather than opened directly as a file:// URL (it works fine on GitHub Pages).
+
+2. Visual Design System (CSS)
+
+The theme is a bright/light UI built entirely from CSS custom properties defined once in :root — background tones, a blue accent (used for "tech/tracking" elements), amber (sound/warnings), red (danger/route), and green (the rat and its trail). All typography and spacing are driven by those same tokens so the look stays consistent across the top bar, dashboard, legend, and popup editor.
+
+The page layout is a single flex column (#app): a top bar, a horizontal layout area (3D viewport + dashboard sidebar), and a footer status bar. The 3D viewport itself is a position:relative container that hosts two overlapping renderers — the WebGL canvas and the CSS2D label layer — plus several position:absolute HTML overlays drawn on top: a status chip (top-left), a color legend (bottom-left), a live coordinate readout (bottom-right), and the floating "editor panel" (top-right, hidden until toggled).
+
+3. 3D Coordinate System & Grid
+
+The whole simulated room is modeled as a cube subdivided into a GRID × GRID (36×36) floor grid, where each grid cell is CELL (0.3) world units wide, making the total room WORLD = GRID * CELL (10.8) units on every axis — literally a 36×36×36-unit cube in concept, rendered as a 10.8×10.8×10.8 Three.js scene.
+
+Helper functions translate between the two coordinate systems used throughout the app:
+
+cellCenter(col, row) — converts a grid cell into a 3D world position.
+worldToCell(x, z) — converts a 3D world position (e.g. from a raycast hit) back into a clamped grid cell.
+cellLabel(col, row) / colLabel(col) — produce human-readable labels like C-14 (spreadsheet-style column letters + row numbers), used throughout the dashboard and console log.
+
+The room's visual grid is built by buildGridLines(plane), called three times — once for the floor, once for the "west" wall, once for the "north" wall — so length, width, and height all have visible reference lines, not just the floor. Each call generates a single BufferGeometry of line segments, split into "minor" (every unit) and "major" (every 6th unit) sets with different opacity/color, so the grid reads clearly without being visually noisy. The room's outer bounding box is drawn separately as a bold dark EdgesGeometry wireframe for maximum contrast against the bright background.
+
+4. Placed Objects: Furniture & Avoidance Zones
+
+ITEM_DEFS is a single lookup table describing every placeable object type — sofa, chair, light, shelf, window, and zone (the "must not approach" avoidance placeholder) — each with a default footprint (L/W/H in whole grid units), a color, an opacity, a blocking flag (whether it physically obstructs rat movement), and an elevate mode (floor, mid, or ceiling) that determines its vertical placement (e.g. lights sit near the ceiling, windows sit mid-wall, furniture sits on the floor).
+
+Rather than giving every object type its own mesh-building code, there's one shared renderer: buildItemMesh() creates a unit-sized box (1×1×1) plus its wireframe edges, and updateItemTransform() non-uniformly scales that unit box by (L*CELL, H*CELL, W*CELL) and repositions it — meaning every resize operation is just a scale/position update, never a geometry rebuild. This is what makes the "+/− stepper, whole-unit increments" resizing in the editor cheap and simple. Avoidance zones reuse the exact same rendering path as furniture (same function, same data shape) but are non-blocking, translucent red, and only affect the pathfinding cost rather than hard-blocking movement.
+
+placeItem(), resizeItem(), and removeItem() are the three mutation entry points; all three call rebuildGrids() and recomputeRoute(true) afterward so obstacle changes are reflected immediately in both movement and the plotted route. placeHuman()/removeHuman() are a parallel, simpler set for human markers (fixed size, no resizing), rendered as a small cylinder+sphere figure.
+
+5. Obstacle & Cost Grids
+
+Two parallel 2D arrays drive all spatial reasoning:
+
+obstacleGrid[row][col] — boolean hard-blocking grid. Populated by any blocking furniture footprint and by every human's occupied cell.
+costGrid[row][col] — numeric soft-avoidance grid. Populated by avoidance zones (their own footprint gets a high flat cost, costOwn, and a one-cell border around them gets a smaller costRing cost) and by humans (via spreadCost(), which radiates cost outward using Chebyshev distance so cells near a person are discouraged even though only their exact cell is hard-blocked).
+
+rebuildGrids() recomputes both arrays from scratch every time anything is placed, resized, or removed — simple and correct, and cheap enough at this grid size to not need incremental updates.
+
+6. Pathfinding — the Dynamic "Ideal Route"
+
+findPath(startCol, startRow, goalCol, goalRow) is a self-contained 8-directional A* implementation (diagonal steps cost √2, straight steps cost 1, and every step additionally costs costGrid value × 0.14, which is how avoidance zones and human proximity organically bend the route around them without making it strictly impassable). It uses a single Map of visited/frontier nodes rather than a proper binary heap (fine at 1,296 possible cells) and reconstructs the path by walking parent pointers back from the goal.
+
+The "ideal route" is recalculated continuously, not just once: every time the rat completes a step (moves to a new cell) and a routeRecalcTimer cooldown has expired, recomputeRoute() reruns A* from the rat's current cell to the fixed goal cell and calls updateRouteVisual(). That function rebuilds a dashed red THREE.Line through the path's cell centers (using LineDashedMaterial + computeLineDistances()) and lights up a pool of reusable red plane meshes (routePool) over each cell the route passes through — so the red dashed line and red-highlighted cells are always in sync with the rat's live position and with whatever obstacles/zones/humans currently exist.
+
+7. The Rat: Movement, Trail, and Behavior
+
+The rat itself (ratGroup) is a small procedural mesh — an ellipsoid body, head, tail, a soft point light for glow, and a floating "SUBJECT_01" label — colored green per the requirement that the rat and its visited cells be highlighted green.
+
+Movement is grid-stepped rather than freely continuous: the rat state object tracks a current cell, a previous cell, and a stepFrom/stepTo pair of world positions it tweens between (updateRat() uses an ease-in-out lerp over stepDuration seconds). When a step completes, decideNextCell() picks the next cell using weighted randomness rather than always taking the pathfinder's suggestion — this is what produces the "erratic, back-and-forth" wandering behavior instead of a robotic straight walk:
+
+A pFollow probability of stepping toward the next cell on the currently-computed ideal route.
+A pBack probability of stepping back to the cell it just came from (literal back-and-forth).
+Otherwise, a uniformly random valid neighboring cell.
+
+Both probabilities are dynamically adjusted by the active deterrence state (see below), so a more "effective" sound noticeably increases path-following and reduces hesitation, while a weak sound leaves the rat more erratic.
+
+Every time the rat enters a new cell, markVisited() grabs the next slot from a fixed-size round-robin pool of green plane meshes (trailPool), positions it at that cell, and timestamps it; updateTrail() fades each active slot's opacity out over FADE_TIME (7.5s) each frame. This gives a continuously "refreshing" green trail rather than an ever-growing, unbounded one.
+
+8. Predator Sound System
+
+PREDATORS is an array of four presets (owl, kite, cat, snake), each with an id, bilingual label, a shape (concentric, arc, spiky, or rattle), a color, a cosmetic frequency range, a spawnInterval, and a baseEff (baseline effectiveness percentage). activePredatorId tracks which one is currently selected.
+
+Visible sound waves are produced by spawnWave(), which builds a different Three.js primitive depending on the preset's shape:
+
+concentric — a simple expanding ring.
+arc — a partial ring (60° wedge) that both expands and rotates, evoking a wingbeat sweep.
+spiky — a hand-built star-shaped LineLoop (buildSpikyRing(), alternating inner/outer radius points) that expands.
+rattle — reuses the ring geometry but with a much shorter life and a much shorter spawn interval, producing rapid staccato pulses instead of a unique shape.
+
+activeWaves is a plain array of in-flight wave objects; updateWaves(dt) grows each mesh's scale and fades its opacity over its life, disposing and removing it once finished — a lightweight manual object-lifecycle system rather than a pooled one, since wave counts stay low.
+
+Deterrence is triggered organically by the cost grid: each time the rat completes a step, the game checks costGrid[rat.row][rat.col] > 6. Crossing that threshold calls activateDeterrence(), which rolls a randomized session effectiveness (baseEff ± 10, clamped 5–98), starts spawning waves from a fixed wall-mounted speakerPos, and immediately feeds that effectiveness value into the rat's movement probabilities and step speed (higher effectiveness → faster steps, higher chance of following the ideal route; lower effectiveness → more hesitation/backtracking). Dropping back below the threshold for three consecutive steps (a small hysteresis via lowRiskStreak) calls deactivateDeterrence(), which records that session's effectiveness into statsByPredator[id] (a running count + total) and recomputes a recommendation via refreshSuggestion() — it either nudges the user toward an untried predator or reports whichever tried predator has the best historical average effectiveness so far. Both the live effectiveness and the recommendation are reflected in the dashboard in real time.
+
+9. Consolidated Tabbed Editor Popup
+
+All placement/configuration UI lives in one floating panel (#editor-panel), toggled open/closed by a top-bar button and closable via an ✕ button. Internally it's a simple tab system: four .tab-btn buttons each carry a data-tab value, and four .tab-panel containers each carry a matching data-tabpanel value; a single click listener toggles the active/hidden classes across both sets in lockstep — no external tab library.
+
+Furniture tab — a palette of five draggable icons (sofa/chair/light/shelf/window) plus a live list of placed instances, each row showing its type, grid location, and inline +/− stepper buttons per dimension (L/W/H) that call resizeItem().
+Humans tab — one draggable "human" icon plus a placed list (remove-only, no resizing).
+Sound tab — rendered by renderSoundTab(), which builds one card per predator preset with a "use" button (sets activePredatorId), a waveform-shape <select>, two frequency number inputs, and an effectiveness <input type="range"> with a live percentage readout. All of this is wired via three delegated listeners on the tab's container (click for "use", change for the shape/frequency fields, input for the live-updating slider) rather than per-card listeners, so re-rendering the tab after switching presets doesn't leak or duplicate handlers.
+Avoidance Zones tab — a draggable "zone" icon plus a placed list with L/W steppers only (zones are 2D footprints for pathfinding purposes even though they render as a translucent box).
+
+Placement itself is real HTML5 drag-and-drop: each palette .palette-item sets a text/plain payload on dragstart (e.g. furniture:sofa, human, zone), and the renderer's canvas listens for dragover/drop. On drop, screenToCell() converts the cursor position into a 3D ray via THREE.Raycaster, intersects a mathematical floor plane (THREE.Plane) rather than any actual mesh, and converts the hit point into a grid cell with worldToCell() — that cell becomes the placement anchor. The same raycasting helper is reused for entrance-picking: toggling "Set Entrance" flips a pickingEntrance flag, and the next canvas click (while that flag is on) sets a manual entrance cell instead of placing an object.
+
+10. Simplified Right-Side Dashboard
+
+The sidebar (.dashboard) is a two-column CSS grid of small, self-contained "block" cards (some spanning both columns via .wide), each with a tiny label (.k) and a bold value (.v) — Status, current Grid Cell, Velocity, Entry point, Goal, Route length, Active Sound, Effectiveness (with a mini progress bar), Suggested Sound, Furniture/Human/Zone counts, Visited-cell count, and a single-line "Latest Event" log. All of these are updated in place via direct textContent/innerHTML writes scattered through the simulation code (in updateRat(), enterPhase(), activateDeterrence(), the animation loop, etc.) rather than through any templating system — it's intentionally just a flat set of document.getElementById(...) calls kept in sync with the live simulation state.
+
+11. Simulation State Machine & Animation Loop
+
+A small explicit state machine (PHASE.IDLE → TRACKING → CAPTURED → COOLDOWN → IDLE…) drives the overall run cycle, handled in enterPhase() (entry actions per phase — spawning the rat, resetting the route/trail, updating the status chip and its color/icon) and advanced inside the main tick() loop based on elapsed phaseTime.
+
+tick() is the single requestAnimationFrame loop for the whole app: it advances a simulated clock, updates OrbitControls, fades the trail pool, advances/prunes active sound waves, spawns new waves on a timer while deterrence is active, steps the state machine (including the risk/deterrence check and the periodic route recompute described above), and finally renders both the WebGL scene and the CSS2D label layer. speedMult, set from the top-bar speed <select>, scales dt globally, so it uniformly speeds up or slows down the rat's stepping, wave spawning, and the simulated clock together.

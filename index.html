@@ -39,9 +39,9 @@
   label.toggle input{accent-color:var(--blue);}
   input[type=number]{width:56px;background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:3px 5px;color:var(--text);}
   input[type=range]{accent-color:var(--blue);width:100%;}
-
+ 
   #app{position:relative;width:100vw;height:100vh;display:flex;flex-direction:column;}
-
+ 
   .topbar{flex:0 0 auto;display:flex;align-items:center;justify-content:space-between;gap:14px;padding:10px 16px;border-bottom:1px solid var(--border);background:var(--bg-2);z-index:30;flex-wrap:wrap;box-shadow:0 1px 0 rgba(15,23,42,.02);}
   .brand{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap;min-width:0;}
   .brand .mark{font-family:var(--font-mono);font-size:10px;letter-spacing:.12em;color:var(--blue);border:1px solid var(--border);padding:3px 6px;border-radius:var(--radius);white-space:nowrap;background:var(--blue-dim);}
@@ -50,11 +50,11 @@
   .controls{display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
   .controls .group{display:flex;align-items:center;gap:6px;}
   .controls .sep{width:1px;height:16px;background:var(--border);}
-
+ 
   .layout{flex:1 1 auto;display:flex;min-height:0;}
   #viewport{position:relative;flex:1 1 auto;min-width:0;background:radial-gradient(ellipse at 50% 15%, #ffffff 0%, var(--bg) 70%);}
   #viewport canvas{display:block;}
-
+ 
   .overlay{position:absolute;pointer-events:none;z-index:5;font-family:var(--font-mono);}
   .status-chip{top:12px;left:12px;position:absolute;display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.88);border:1px solid var(--border);padding:6px 11px;border-radius:var(--radius);font-size:11px;letter-spacing:.06em;backdrop-filter:blur(3px);box-shadow:0 1px 4px rgba(15,23,42,.06);}
   .status-chip .dot{width:7px;height:7px;border-radius:50%;background:var(--blue);box-shadow:0 0 6px var(--blue);}
@@ -62,19 +62,19 @@
   .status-chip.captured .dot{background:var(--green);box-shadow:0 0 6px var(--green);}
   #status-label{color:var(--text);font-weight:600;}
   #status-sub{color:var(--text-faint);}
-
+ 
   .legend{bottom:12px;left:12px;position:absolute;background:rgba(255,255,255,.88);border:1px solid var(--border);padding:8px 11px;border-radius:var(--radius);font-size:10px;color:var(--text-dim);letter-spacing:.02em;display:flex;flex-direction:column;gap:4px;backdrop-filter:blur(3px);box-shadow:0 1px 4px rgba(15,23,42,.06);}
   .legend .row{display:flex;align-items:center;gap:7px;}
   .legend .swatch{width:9px;height:9px;border-radius:2px;flex:0 0 auto;}
-
+ 
   .coord-readout{bottom:12px;right:12px;position:absolute;background:rgba(255,255,255,.88);border:1px solid var(--border);padding:8px 11px;border-radius:var(--radius);font-size:10.5px;color:var(--text-dim);letter-spacing:.03em;text-align:right;backdrop-filter:blur(3px);box-shadow:0 1px 4px rgba(15,23,42,.06);}
   .coord-readout b{color:var(--blue);font-weight:700;}
-
+ 
   .label3d{font-family:var(--font-mono);font-size:9.5px;letter-spacing:.04em;color:var(--text-dim);background:rgba(255,255,255,.85);border:1px solid var(--border);padding:2px 5px;border-radius:2px;white-space:nowrap;pointer-events:none;}
   .label3d.tag-blue{color:var(--blue);border-color:rgba(37,99,235,.35);}
   .label3d.tag-amber{color:var(--amber);border-color:rgba(184,115,10,.35);}
   .label3d.tag-green{color:var(--green);border-color:rgba(22,163,74,.35);}
-
+ 
   /* ---- consolidated tabbed editor popup ---- */
   .editor-toggle{white-space:nowrap;}
   .editor-panel{
@@ -92,7 +92,7 @@
   .editor-close:hover{color:var(--red);background:transparent;border:none;}
   .editor-body{padding:10px;overflow-y:auto;font-family:var(--font-mono);}
   .tab-panel.hidden{display:none;}
-
+ 
   .palette{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px;}
   .palette-item{display:flex;flex-direction:column;align-items:center;gap:3px;width:58px;padding:6px 4px;border:1px solid var(--border);border-radius:var(--radius);background:#fff;cursor:grab;font-size:9px;color:var(--text-dim);text-align:center;user-select:none;}
   .palette-item:active{cursor:grabbing;}
@@ -105,7 +105,7 @@
   .placed-row .dim{display:inline-flex;align-items:center;color:var(--text-faint);}
   .placed-empty{font-size:10px;color:var(--text-faint);padding:4px 0;}
   .editor-hint{font-size:9px;color:var(--text-faint);margin-top:6px;line-height:1.5;}
-
+ 
   .predator-card{border:1px solid var(--border);border-radius:var(--radius);padding:8px;margin-bottom:8px;background:#fff;}
   .predator-card.active{border-color:var(--blue);background:var(--blue-dim);}
   .predator-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;font-size:11px;color:var(--text);font-weight:700;}
@@ -113,7 +113,7 @@
   .predator-row label{flex:0 0 auto;}
   .predator-row select{flex:1 1 auto;}
   .predator-row .freqs{display:flex;align-items:center;gap:4px;}
-
+ 
   /* ---- dashboard: small refreshing blocks ---- */
   .dashboard{flex:0 0 250px;max-width:250px;border-left:1px solid var(--border);background:var(--bg-2);overflow-y:auto;padding:12px;display:grid;grid-template-columns:1fr 1fr;gap:8px;align-content:start;}
   .block{border:1px solid var(--border);background:var(--panel);border-radius:var(--radius);padding:8px 9px;}
@@ -124,12 +124,15 @@
   .block .v.small{font-size:10.5px;font-weight:500;color:var(--text-dim);}
   .eff-bar{height:5px;border-radius:3px;background:var(--panel-2);margin-top:5px;overflow:hidden;}
   .eff-bar i{display:block;height:100%;background:var(--amber);}
-
+ 
   .statusbar{flex:0 0 auto;display:flex;align-items:center;justify-content:space-between;padding:6px 16px;border-top:1px solid var(--border);background:var(--bg-2);font-family:var(--font-mono);font-size:9.5px;color:var(--text-faint);letter-spacing:.03em;}
-
+ 
   .dashboard::-webkit-scrollbar,.placed-list::-webkit-scrollbar,.editor-body::-webkit-scrollbar{width:6px;}
   .dashboard::-webkit-scrollbar-thumb,.placed-list::-webkit-scrollbar-thumb,.editor-body::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
-
+ 
+  .rat-drag-handle{display:inline-flex;align-items:center;gap:5px;padding:6px 10px;border:1px solid rgba(22,163,74,.4);border-radius:var(--radius);background:var(--green-dim);color:var(--green);cursor:grab;font-family:var(--font-mono);font-size:11px;letter-spacing:.03em;user-select:none;white-space:nowrap;}
+  .rat-drag-handle:active{cursor:grabbing;}
+ 
   @media (max-width: 900px){
     .layout{flex-direction:column;}
     #viewport{flex:1 1 54vh;min-height:280px;}
@@ -141,7 +144,7 @@
 </head>
 <body>
 <div id="app">
-
+ 
   <header class="topbar">
     <div class="brand">
       <span class="mark">GRID 36×36×36</span>
@@ -157,6 +160,10 @@
       </div>
       <div class="sep"></div>
       <div class="group">
+        <span class="rat-drag-handle" draggable="true" data-drag="rat" title="拖曳到場景中，手動設定老鼠目前位置（測試用）">🐀 拖曳老鼠 DRAG RAT</span>
+      </div>
+      <div class="sep"></div>
+      <div class="group">
         <span class="toggle" style="cursor:default;">速度</span>
         <select id="speed-select">
           <option value="0.5">0.5×</option>
@@ -168,7 +175,7 @@
       <button id="btn-edit-scene" class="editor-toggle">🛠 場景編輯 EDIT</button>
     </div>
   </header>
-
+ 
   <div class="layout">
     <div id="viewport">
       <div class="overlay status-chip" id="status-chip">
@@ -176,16 +183,16 @@
         <span id="status-label">SCANNING</span>
         <span id="status-sub">— 巡邏中 no subject</span>
       </div>
-
+ 
       <div class="overlay legend">
         <div class="row"><span class="swatch" style="background:#16a34a"></span>老鼠 / 已走過宮格 Rat &amp; visited cells</div>
         <div class="row"><span class="swatch" style="background:#dc2626"></span>理想路徑（動態更新）Ideal route (dynamic)</div>
         <div class="row"><span class="swatch" style="background:#2563eb"></span>家具 / 人員 障礙物 Furniture &amp; humans</div>
         <div class="row"><span class="swatch" style="background:#b8730a"></span>聲波 / 禁區 Sound waves &amp; avoidance zones</div>
       </div>
-
+ 
       <div class="overlay coord-readout" id="coord-readout">GRID —&nbsp;&nbsp;X 0.00&nbsp;&nbsp;Z 0.00</div>
-
+ 
       <div class="editor-panel" id="editor-panel">
         <div class="editor-head">
           <div class="tabs">
@@ -228,7 +235,7 @@
         </div>
       </div>
     </div>
-
+ 
     <aside class="dashboard">
       <div class="block wide"><div class="k">狀態 STATUS</div><div class="v blue" id="d-status">SCANNING</div></div>
       <div class="block"><div class="k">目前宮格 CELL</div><div class="v" id="d-cell">—</div></div>
@@ -250,25 +257,25 @@
       <div class="block wide"><div class="k">最新事件 LATEST EVENT</div><div class="v small" id="d-event">—</div></div>
     </aside>
   </div>
-
+ 
   <footer class="statusbar">
     <span>都市老鼠防治 · 芳和實中 — Grid Defense Concept Demo</span>
     <span id="clock">00:00:00</span>
   </footer>
 </div>
-
+ 
 <script type="importmap">
 { "imports": {
   "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
   "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
 } }
 </script>
-
+ 
 <script type="module">
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { CSS2DRenderer, CSS2DObject } from 'three/addons/renderers/CSS2DRenderer.js';
-
+ 
 /* ============ CONFIG ============ */
 const GRID = 36, CELL = 0.3, WORLD = GRID * CELL;
 const ROOM_H = WORLD;
@@ -283,41 +290,41 @@ function worldToCell(x,z){
   return {c,r};
 }
 function clamp(v,lo,hi){ return Math.max(lo, Math.min(hi, v)); }
-
+ 
 /* ============ RENDERER / SCENE / CAMERA ============ */
 const viewport = document.getElementById('viewport');
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0xf4f6f9);
 scene.fog = new THREE.FogExp2(0xf4f6f9, 0.028);
-
+ 
 const camera = new THREE.PerspectiveCamera(42, 1, 0.1, 100);
 camera.position.set(15, 13, 17);
-
+ 
 const renderer = new THREE.WebGLRenderer({ antialias:true });
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 renderer.setClearColor(0xf4f6f9, 1);
 viewport.appendChild(renderer.domElement);
-
+ 
 const labelRenderer = new CSS2DRenderer();
 labelRenderer.domElement.style.position='absolute';
 labelRenderer.domElement.style.top='0';
 labelRenderer.domElement.style.left='0';
 labelRenderer.domElement.style.pointerEvents='none';
 viewport.appendChild(labelRenderer.domElement);
-
+ 
 function resize(){
   const w = viewport.clientWidth, h = viewport.clientHeight;
   camera.aspect = w/h; camera.updateProjectionMatrix();
   renderer.setSize(w,h); labelRenderer.setSize(w,h);
 }
 window.addEventListener('resize', resize);
-
+ 
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.target.set(0, 2, 0);
 controls.enableDamping = true; controls.dampingFactor = 0.08;
 controls.minDistance = 5; controls.maxDistance = 36;
 controls.maxPolarAngle = Math.PI * 0.49;
-
+ 
 /* ============ LIGHTING ============ */
 scene.add(new THREE.AmbientLight(0xffffff, 1.15));
 const key = new THREE.DirectionalLight(0xffffff, 0.55);
@@ -326,10 +333,10 @@ scene.add(key);
 const rim = new THREE.PointLight(0x2563eb, 0.35, 26);
 rim.position.set(-6, 6, -6);
 scene.add(rim);
-
+ 
 const roomGroup = new THREE.Group();
 scene.add(roomGroup);
-
+ 
 /* ============ ROOM SHELL — high contrast bounding box on all axes ============ */
 {
   const boxGeo = new THREE.BoxGeometry(WORLD, ROOM_H, WORLD);
@@ -337,7 +344,7 @@ scene.add(roomGroup);
   const shell = new THREE.LineSegments(edges, new THREE.LineBasicMaterial({ color:0x0f172a, transparent:true, opacity:0.85 }));
   shell.position.y = ROOM_H/2;
   roomGroup.add(shell);
-
+ 
   const floor = new THREE.Mesh(new THREE.PlaneGeometry(WORLD, WORLD), new THREE.MeshBasicMaterial({ color:0xffffff }));
   floor.rotation.x = -Math.PI/2; floor.position.y = -0.005;
   roomGroup.add(floor);
@@ -373,14 +380,14 @@ function buildGridLines(plane){
 roomGroup.add(buildGridLines('floor'));
 roomGroup.add(buildGridLines('wallX'));
 roomGroup.add(buildGridLines('wallZ'));
-
+ 
 function makeLabel(text, cls){
   const div = document.createElement('div');
   div.className = 'label3d' + (cls?(' '+cls):'');
   div.textContent = text;
   return new CSS2DObject(div);
 }
-
+ 
 /* ============ ITEM DEFINITIONS (furniture + avoidance zones share a renderer) ============ */
 const ITEM_DEFS = {
   sofa:   { label:'沙發 Sofa',   cat:'furniture', L:3, W:2, H:2, color:0x2563eb, opacity:0.82, blocking:true,  elevate:'floor' },
@@ -392,17 +399,17 @@ const ITEM_DEFS = {
 };
 const unitBoxGeo = new THREE.BoxGeometry(1,1,1);
 const unitBoxEdges = new THREE.EdgesGeometry(unitBoxGeo);
-
+ 
 let uid = 1;
 const placedItems = [];   // furniture + zones
 const humanItems = [];
-
+ 
 function clampFootprint(col,row,L,W){
   col = clamp(col, 0, GRID-L);
   row = clamp(row, 0, GRID-W);
   return {col,row};
 }
-
+ 
 function buildItemMesh(item){
   const def = ITEM_DEFS[item.type];
   const box = new THREE.Mesh(unitBoxGeo, new THREE.MeshStandardMaterial({ color:def.color, transparent:true, opacity:def.opacity, roughness:0.85, side:THREE.DoubleSide }));
@@ -430,7 +437,7 @@ function updateItemTransform(item){
   else y = sy/2;
   item.mesh.position.set(cx, y, cz);
 }
-
+ 
 function placeItem(type, col, row){
   const def = ITEM_DEFS[type];
   if (!def) return;
@@ -458,7 +465,7 @@ function removeItem(id){
   placedItems.splice(idx,1);
   rebuildGrids(); recomputeRoute(true); refreshEditorLists();
 }
-
+ 
 function placeHuman(col,row){
   col = clamp(col,0,GRID-1); row = clamp(row,0,GRID-1);
   const item = { id: uid++, col, row };
@@ -482,7 +489,7 @@ function removeHuman(id){
   humanItems.splice(idx,1);
   rebuildGrids(); recomputeRoute(true); refreshEditorLists();
 }
-
+ 
 /* ============ OCCUPANCY + COST GRID ============ */
 let obstacleGrid = [], costGrid = [];
 function spreadCost(cc,cr,valuesByDist){
@@ -523,7 +530,7 @@ function rebuildGrids(){
   });
 }
 rebuildGrids();
-
+ 
 /* ============ A* PATHFINDING (accounts for furniture, humans, avoidance zones) ============ */
 const NEIGHBORS8 = [[1,0],[-1,0],[0,1],[0,-1],[1,1],[1,-1],[-1,1],[-1,-1]];
 function heuristic(c,r,gc,gr){
@@ -566,7 +573,7 @@ function findPath(sc,sr,gc,gr){
   }
   return null;
 }
-
+ 
 /* ============ ROUTE VISUAL — red dashed line + red cell pool, dynamically recalculated ============ */
 let routeLine = new THREE.Line(new THREE.BufferGeometry(), new THREE.LineDashedMaterial({ color:0xdc2626, dashSize:0.12, gapSize:0.08, transparent:true, opacity:0.9 }));
 roomGroup.add(routeLine);
@@ -601,7 +608,7 @@ function updateRouteVisual(path){
   });
   document.getElementById('d-route').textContent = `${path.length} 格 CELLS`;
 }
-
+ 
 /* ============ VISITED TRAIL — green highlight on cells rat passes through ============ */
 const TRAIL_POOL_SIZE = 220;
 const trailPool = [];
@@ -631,14 +638,14 @@ function updateTrail(now){
     slot.mesh.material.opacity = 0.5*(1-t);
   });
 }
-
+ 
 /* ============ ENTRANCE + GOAL MARKERS ============ */
 const GOAL_CELL = { c: GRID-3, r: GRID-3 };
 let entranceCell = { c: 1, r: Math.floor(GRID/2) };
 let manualEntrance = null;
 let randomizeEntrance = true;
 let pickingEntrance = false;
-
+ 
 {
   const c = cellCenter(GOAL_CELL.c, GOAL_CELL.r);
   const ring = new THREE.Mesh(new THREE.RingGeometry(0.11,0.14,32), new THREE.MeshBasicMaterial({ color:0x2563eb, transparent:true, opacity:0.85, side:THREE.DoubleSide }));
@@ -668,7 +675,7 @@ function pickRandomEntrance(){
   if (edgeCells.length === 0) return { c:0, r:0 };
   return edgeCells[Math.floor(Math.random()*edgeCells.length)];
 }
-
+ 
 /* ============ PREDATOR SOUND SYSTEM — visible waves + configurable presets ============ */
 const PREDATORS = [
   { id:'owl',   label:'貓頭鷹 Owl',   shape:'concentric', color:0xf59e0b, freqLow:20,   freqHigh:800,   spawnInterval:0.9,  baseEff:70 },
@@ -679,7 +686,7 @@ const PREDATORS = [
 let activePredatorId = 'owl';
 const statsByPredator = {};
 PREDATORS.forEach(p=> statsByPredator[p.id] = { count:0, totalEff:0 });
-
+ 
 const speakerPos = new THREE.Vector3(WORLD/2 - 0.15, ROOM_H*0.5, WORLD*0.28);
 {
   const box = new THREE.Mesh(new THREE.BoxGeometry(0.18,0.18,0.08), new THREE.MeshStandardMaterial({ color:0x1e293b, roughness:0.7 }));
@@ -741,13 +748,13 @@ function updateWaves(dt){
     if (w.rotSpeed) w.mesh.rotation.z += dt * w.rotSpeed;
   }
 }
-
+ 
 let deterrenceActive = false;
 let lowRiskStreak = 0;
 let waveSpawnTimer = 0;
 let currentSessionEff = null;
 function activeDef(){ return PREDATORS.find(p=>p.id===activePredatorId); }
-
+ 
 function activateDeterrence(){
   deterrenceActive = true;
   const p = activeDef();
@@ -788,7 +795,7 @@ function refreshSuggestion(){
   document.getElementById('d-suggest').textContent = text;
 }
 refreshSuggestion();
-
+ 
 /* ============ RAT ============ */
 const ratGroup = new THREE.Group();
 const ratMat = new THREE.MeshStandardMaterial({ color:0x16a34a, emissive:0x0b3d20, roughness:0.5 });
@@ -809,12 +816,29 @@ ratLabel.position.set(0,0.24,0);
 ratGroup.add(ratLabel);
 ratGroup.visible = false;
 roomGroup.add(ratGroup);
-
+ 
 const rat = { col:0, row:0, prevCol:0, prevRow:0, stepFrom:new THREE.Vector3(), stepTo:new THREE.Vector3(), stepT:1, stepDuration:0.55 };
 function easeInOut(t){ return t<0.5 ? 2*t*t : 1-Math.pow(-2*t+2,2)/2; }
-
-function spawnRat(){
-  const start = (randomizeEntrance || !manualEntrance) ? pickRandomEntrance() : manualEntrance;
+ 
+/* --- free-roam target: keeps the rat ranging widely across the grid instead of
+   camping near the goal; only overridden by the ideal route while fleeing --- */
+let roamTarget = { c:0, r:0 };
+let roamTimer = 0;
+function pickRoamTarget(){
+  let fallback = null;
+  for (let tries=0; tries<40; tries++){
+    const c = Math.floor(Math.random()*GRID);
+    const r = Math.floor(Math.random()*GRID);
+    if (obstacleGrid[r][c]) continue;
+    if (!fallback) fallback = { c, r };
+    const dist = Math.max(Math.abs(c-rat.col), Math.abs(r-rat.row));
+    if (dist >= GRID*0.35) return { c, r };
+  }
+  return fallback || { c:rat.col, r:rat.row };
+}
+ 
+function spawnRat(overrideStart){
+  const start = overrideStart || ((randomizeEntrance || !manualEntrance) ? pickRandomEntrance() : manualEntrance);
   entranceCell = start;
   placeEntranceMarker(start.c, start.r);
   rat.col = start.c; rat.row = start.r; rat.prevCol = start.c; rat.prevRow = start.r;
@@ -828,8 +852,20 @@ function spawnRat(){
   document.getElementById('d-eff').textContent = '—';
   document.getElementById('d-eff-bar').style.width = '0%';
   markVisited(start.c, start.r, simSeconds);
+  roamTarget = pickRoamTarget();
+  roamTimer = 5 + Math.random()*4;
   recomputeRoute(true);
 }
+ 
+/* manual drag-and-drop placement of the rat itself (mock/testing) */
+function dropRatAt(col,row){
+  if (obstacleGrid[row][col]){ logEvent('該宮格已被佔用，無法放置老鼠 cell occupied'); return; }
+  spawnRat({ c:col, r:row });
+  phase = PHASE.TRACKING; phaseTime = 0;
+  setStatus('', 'TRACKING', '— 手動放置個體 manually placed subject');
+  logEvent(`老鼠已手動放置於 Grid ${cellLabel(col,row)}`);
+}
+ 
 function validNeighbors(c,r){
   const out = [];
   for (const [dc,dr] of NEIGHBORS8){
@@ -843,20 +879,40 @@ function validNeighbors(c,r){
 function decideNextCell(){
   const neighbors = validNeighbors(rat.col, rat.row);
   if (neighbors.length === 0) return { c:rat.col, r:rat.row };
-  let pathNext = null;
-  if (currentRoute && currentRoute.length > 1){
-    const idx = currentRoute.findIndex(p=> p.c===rat.col && p.r===rat.row);
-    if (idx >= 0 && idx < currentRoute.length-1){
-      const cand = currentRoute[idx+1];
-      if (neighbors.some(n=> n.c===cand.c && n.r===cand.r)) pathNext = cand;
+ 
+  if (deterrenceActive){
+    /* fleeing: bias strongly toward the ideal route to the goal, scaled by sound effectiveness */
+    let pathNext = null;
+    if (currentRoute && currentRoute.length > 1){
+      const idx = currentRoute.findIndex(p=> p.c===rat.col && p.r===rat.row);
+      if (idx >= 0 && idx < currentRoute.length-1){
+        const cand = currentRoute[idx+1];
+        if (neighbors.some(n=> n.c===cand.c && n.r===cand.r)) pathNext = cand;
+      }
     }
+    const effBoost = currentSessionEff!==null ? currentSessionEff/100 : 0.5;
+    const pFollow = 0.5 + effBoost*0.35;
+    const pBack = 0.10 + (1-effBoost)*0.12;
+    const roll = Math.random();
+    if (roll < pFollow && pathNext) return pathNext;
+    if (roll < pFollow + pBack){
+      const back = neighbors.find(n=> n.c===rat.prevCol && n.r===rat.prevRow);
+      if (back) return back;
+    }
+    return neighbors[Math.floor(Math.random()*neighbors.length)];
   }
-  const effBoost = deterrenceActive && currentSessionEff!==null ? currentSessionEff/100 : 0;
-  const pFollow = 0.46 + effBoost*0.3;
-  const pBack = 0.16 + (deterrenceActive ? (1-effBoost)*0.14 : 0);
+ 
+  /* free roaming: mostly random/back-and-forth, loosely drifting toward a far, periodically-refreshed target */
+  let toward = null, bestDist = Infinity;
+  neighbors.forEach(n=>{
+    const d = Math.max(Math.abs(n.c-roamTarget.c), Math.abs(n.r-roamTarget.r));
+    if (d < bestDist){ bestDist = d; toward = n; }
+  });
+  const pTowardTarget = 0.38;
+  const pBack = 0.20;
   const roll = Math.random();
-  if (roll < pFollow && pathNext) return pathNext;
-  if (roll < pFollow + pBack){
+  if (roll < pTowardTarget && toward) return toward;
+  if (roll < pTowardTarget + pBack){
     const back = neighbors.find(n=> n.c===rat.prevCol && n.r===rat.prevRow);
     if (back) return back;
   }
@@ -869,11 +925,11 @@ function updateRat(dt){
   ratGroup.position.copy(pos);
   const dir = new THREE.Vector3().subVectors(rat.stepTo, rat.stepFrom);
   if (dir.lengthSq() > 0.0001) ratGroup.rotation.y = Math.atan2(dir.x, dir.z);
-
+ 
   document.getElementById('coord-readout').innerHTML = `GRID <b>${cellLabel(rat.col,rat.row)}</b>&nbsp;&nbsp;X ${pos.x.toFixed(2)}&nbsp;&nbsp;Z ${pos.z.toFixed(2)}`;
   document.getElementById('d-cell').textContent = cellLabel(rat.col,rat.row);
   document.getElementById('d-vel').textContent = `${(CELL/rat.stepDuration).toFixed(2)} m/s`;
-
+ 
   if (rat.stepT >= 1){
     const next = decideNextCell();
     rat.prevCol = rat.col; rat.prevRow = rat.row;
@@ -885,11 +941,18 @@ function updateRat(dt){
     const effBoost = deterrenceActive && currentSessionEff!==null ? currentSessionEff/100 : 0;
     rat.stepDuration = deterrenceActive ? 0.55 * (1 - effBoost*0.35) : 0.55;
     markVisited(rat.col, rat.row, simSeconds);
+ 
+    roamTimer -= rat.stepDuration;
+    const distToRoam = Math.max(Math.abs(rat.col-roamTarget.c), Math.abs(rat.row-roamTarget.r));
+    if (!deterrenceActive && (distToRoam <= 1 || roamTimer <= 0)){
+      roamTarget = pickRoamTarget();
+      roamTimer = 5 + Math.random()*4;
+    }
     return true;
   }
   return false;
 }
-
+ 
 /* ============ ROUTE RECOMPUTE ============ */
 let routeRecalcTimer = 0;
 function recomputeRoute(force){
@@ -897,7 +960,7 @@ function recomputeRoute(force){
   const path = findPath(rat.col, rat.row, GOAL_CELL.c, GOAL_CELL.r);
   updateRouteVisual(path);
 }
-
+ 
 /* ============ STATE MACHINE ============ */
 const PHASE = { IDLE:'idle', TRACKING:'tracking', CAPTURED:'captured', COOLDOWN:'cooldown' };
 let phase = PHASE.IDLE, phaseTime = 0, speedMult = 1;
@@ -911,7 +974,7 @@ function setStatus(kind, label, sub){
   document.getElementById('d-status').textContent = label;
 }
 function logEvent(text){ dEvent.textContent = text; }
-
+ 
 function enterPhase(p){
   phase = p; phaseTime = 0;
   if (p === PHASE.IDLE){
@@ -937,7 +1000,7 @@ function enterPhase(p){
   document.getElementById('d-goal').textContent = cellLabel(GOAL_CELL.c, GOAL_CELL.r);
 }
 enterPhase(PHASE.IDLE);
-
+ 
 /* ============ CLOCK ============ */
 let simSeconds = 6*3600 + 14*60;
 function fmtClock(s){
@@ -947,7 +1010,7 @@ function fmtClock(s){
   const sec=String(s%60).padStart(2,'0');
   return `${h}:${m}:${sec}`;
 }
-
+ 
 /* ============ DRAG & DROP + ENTRANCE PICKING ============ */
 const raycaster = new THREE.Raycaster();
 const floorPlane = new THREE.Plane(new THREE.Vector3(0,1,0), 0);
@@ -959,7 +1022,7 @@ function screenToCell(clientX, clientY){
   if (!raycaster.ray.intersectPlane(floorPlane, hit)) return null;
   return worldToCell(hit.x, hit.z);
 }
-document.querySelectorAll('.palette-item').forEach(el=>{
+document.querySelectorAll('[data-drag]').forEach(el=>{
   el.addEventListener('dragstart', e=> e.dataTransfer.setData('text/plain', el.dataset.drag));
 });
 renderer.domElement.addEventListener('dragover', e=> e.preventDefault());
@@ -971,6 +1034,7 @@ renderer.domElement.addEventListener('drop', e=>{
   if (data.startsWith('furniture:')) placeItem(data.split(':')[1], cell.c, cell.r);
   else if (data === 'zone') placeItem('zone', cell.c, cell.r);
   else if (data === 'human') placeHuman(cell.c, cell.r);
+  else if (data === 'rat') dropRatAt(cell.c, cell.r);
 });
 renderer.domElement.addEventListener('click', e=>{
   if (!pickingEntrance) return;
@@ -985,7 +1049,7 @@ renderer.domElement.addEventListener('click', e=>{
   document.getElementById('btn-set-entrance').classList.remove('active');
   logEvent(`入口已設定 entrance set to ${cellLabel(cell.c,cell.r)}`);
 });
-
+ 
 /* ============ EDITOR PANEL — tabs, lists, sound config ============ */
 const editorPanel = document.getElementById('editor-panel');
 document.getElementById('btn-edit-scene').addEventListener('click', ()=> editorPanel.classList.toggle('open'));
@@ -996,7 +1060,7 @@ document.querySelectorAll('.tab-btn').forEach(btn=>{
     document.querySelectorAll('.tab-panel').forEach(p=> p.classList.toggle('hidden', p.dataset.tabpanel !== btn.dataset.tab));
   });
 });
-
+ 
 function dimStepperHTML(item, axes){
   return axes.map(ax=>`<span class="dim">${ax}:${item[ax]}<button class="mini" data-resize="${item.id}" data-axis="${ax}" data-delta="1">+</button><button class="mini" data-resize="${item.id}" data-axis="${ax}" data-delta="-1">−</button></span>`).join('');
 }
@@ -1004,21 +1068,21 @@ function refreshEditorLists(){
   document.getElementById('d-furniture').textContent = placedItems.filter(i=>ITEM_DEFS[i.type].cat==='furniture').length;
   document.getElementById('d-zones').textContent = placedItems.filter(i=>ITEM_DEFS[i.type].cat==='zone').length;
   document.getElementById('d-humans').textContent = humanItems.length;
-
+ 
   const furnList = placedItems.filter(i=>ITEM_DEFS[i.type].cat==='furniture');
   const listFurn = document.getElementById('list-furniture');
   listFurn.innerHTML = furnList.length ? furnList.map(item=>`
     <div class="placed-row"><div><div class="lbl">${ITEM_DEFS[item.type].label} · ${cellLabel(item.col,item.row)}</div>
     <div class="dims">${dimStepperHTML(item, ['L','W','H'])}</div></div>
     <button class="small danger" data-remove="${item.id}">✕</button></div>`).join('') : '<div class="placed-empty">尚未放置家具 nothing placed yet</div>';
-
+ 
   const zoneList = placedItems.filter(i=>ITEM_DEFS[i.type].cat==='zone');
   const listZones = document.getElementById('list-zones');
   listZones.innerHTML = zoneList.length ? zoneList.map(item=>`
     <div class="placed-row"><div><div class="lbl">${ITEM_DEFS[item.type].label} · ${cellLabel(item.col,item.row)}</div>
     <div class="dims">${dimStepperHTML(item, ['L','W'])}</div></div>
     <button class="small danger" data-remove="${item.id}">✕</button></div>`).join('') : '<div class="placed-empty">尚未設定禁區 no zones yet</div>';
-
+ 
   const listHumans = document.getElementById('list-humans');
   listHumans.innerHTML = humanItems.length ? humanItems.map(item=>`
     <div class="placed-row"><div class="lbl">人員 · ${cellLabel(item.col,item.row)}</div>
@@ -1033,7 +1097,7 @@ document.getElementById('editor-panel').addEventListener('click', e=>{
   if (rsid) resizeItem(parseInt(rsid,10), e.target.getAttribute('data-axis'), parseInt(e.target.getAttribute('data-delta'),10));
 });
 refreshEditorLists();
-
+ 
 function shapeOptionsHTML(sel){
   const opts = [['concentric','同心圓 Concentric'],['arc','弧形 Arc'],['spiky','尖刺 Spiky'],['rattle','急促 Rattle']];
   return opts.map(([v,l])=>`<option value="${v}" ${v===sel?'selected':''}>${l}</option>`).join('');
@@ -1075,7 +1139,7 @@ document.getElementById('sound-tab-content').addEventListener('input', e=>{
   p.baseEff = parseFloat(e.target.value);
   document.querySelector(`[data-effval="${id}"]`).textContent = `${p.baseEff}%`;
 });
-
+ 
 /* ============ TOP BAR CONTROLS ============ */
 document.getElementById('toggle-rotate').addEventListener('change', e=>{ controls.autoRotate = e.target.checked; });
 document.getElementById('toggle-randomize').addEventListener('change', e=>{ randomizeEntrance = e.target.checked; });
@@ -1085,7 +1149,7 @@ document.getElementById('btn-set-entrance').addEventListener('click', e=>{
 });
 document.getElementById('speed-select').addEventListener('change', e=>{ speedMult = parseFloat(e.target.value); });
 document.getElementById('btn-restart').addEventListener('click', ()=> enterPhase(PHASE.IDLE));
-
+ 
 /* ============ ANIMATION LOOP ============ */
 const clock = new THREE.Clock();
 function tick(){
@@ -1094,19 +1158,19 @@ function tick(){
   simSeconds += dt;
   document.getElementById('clock').textContent = fmtClock(simSeconds);
   document.getElementById('d-visited').textContent = visitedCount;
-
+ 
   controls.update();
   updateTrail(simSeconds);
   updateWaves(dt);
-
+ 
   if (deterrenceActive){
     waveSpawnTimer -= dt;
     if (waveSpawnTimer <= 0){ spawnWave(activeDef()); waveSpawnTimer = activeDef().spawnInterval; }
   }
-
+ 
   phaseTime += dt;
   routeRecalcTimer -= dt;
-
+ 
   switch (phase){
     case PHASE.IDLE:
       if (phaseTime > 2.0) enterPhase(PHASE.TRACKING);
@@ -1137,11 +1201,11 @@ function tick(){
       if (phaseTime > 1.2) enterPhase(PHASE.IDLE);
       break;
   }
-
+ 
   renderer.render(scene, camera);
   labelRenderer.render(scene, camera);
 }
-
+ 
 resize();
 tick();
 </script>

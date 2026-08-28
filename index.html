@@ -1,0 +1,1149 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>宮格式住家防鼠系統 — 3D 即時監控</title>
+<meta name="description" content="36x36x36 立體宮格老鼠即時追蹤、動態路徑規劃與聲學驅趕展示" />
+<link rel="icon" href="data:," />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --bg:#f4f6f9; --bg-2:#ffffff; --panel:#ffffff; --panel-2:#eef1f6;
+    --border:#d7dde6; --border-strong:#94a3b8;
+    --text:#161b26; --text-dim:#5b6576; --text-faint:#8a93a6;
+    --blue:#2563eb; --blue-dim:rgba(37,99,235,.10);
+    --amber:#b8730a; --amber-dim:rgba(184,115,10,.12);
+    --red:#dc2626; --red-dim:rgba(220,38,38,.12);
+    --green:#16a34a; --green-dim:rgba(22,163,74,.14);
+    --font-display:'Space Grotesk','Noto Sans TC',sans-serif;
+    --font-body:'Noto Sans TC','Space Grotesk',sans-serif;
+    --font-mono:'JetBrains Mono',monospace;
+    --radius:3px;
+  }
+  *{box-sizing:border-box;}
+  html,body{height:100%;}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:var(--font-body);-webkit-font-smoothing:antialiased;overflow:hidden;}
+  ::selection{background:var(--blue-dim); color:var(--blue);}
+  button,select,input{font-family:var(--font-mono);font-size:11px;letter-spacing:.03em;}
+  button,select{background:var(--panel-2);color:var(--text-dim);border:1px solid var(--border);border-radius:var(--radius);padding:6px 10px;cursor:pointer;transition:.15s;}
+  button:hover,select:hover{color:var(--text);border-color:var(--border-strong);background:#fff;}
+  button:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid var(--blue);outline-offset:1px;}
+  button.active{color:var(--blue);border-color:var(--blue);background:var(--blue-dim);}
+  button.small{padding:2px 7px;font-size:10.5px;line-height:1.4;}
+  button.mini{padding:0 5px;font-size:10px;line-height:1.6;margin-left:2px;}
+  button.danger{color:var(--red);}
+  label.toggle{display:inline-flex;align-items:center;gap:6px;font-family:var(--font-mono);font-size:11px;color:var(--text-dim);letter-spacing:.03em;cursor:pointer;user-select:none;}
+  label.toggle input{accent-color:var(--blue);}
+  input[type=number]{width:56px;background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:3px 5px;color:var(--text);}
+  input[type=range]{accent-color:var(--blue);width:100%;}
+
+  #app{position:relative;width:100vw;height:100vh;display:flex;flex-direction:column;}
+
+  .topbar{flex:0 0 auto;display:flex;align-items:center;justify-content:space-between;gap:14px;padding:10px 16px;border-bottom:1px solid var(--border);background:var(--bg-2);z-index:30;flex-wrap:wrap;box-shadow:0 1px 0 rgba(15,23,42,.02);}
+  .brand{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap;min-width:0;}
+  .brand .mark{font-family:var(--font-mono);font-size:10px;letter-spacing:.12em;color:var(--blue);border:1px solid var(--border);padding:3px 6px;border-radius:var(--radius);white-space:nowrap;background:var(--blue-dim);}
+  .brand h1{font-family:var(--font-display);font-weight:600;font-size:16px;margin:0;letter-spacing:.01em;white-space:nowrap;}
+  .brand .sub{font-family:var(--font-mono);font-size:10px;color:var(--text-faint);letter-spacing:.02em;white-space:nowrap;}
+  .controls{display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+  .controls .group{display:flex;align-items:center;gap:6px;}
+  .controls .sep{width:1px;height:16px;background:var(--border);}
+
+  .layout{flex:1 1 auto;display:flex;min-height:0;}
+  #viewport{position:relative;flex:1 1 auto;min-width:0;background:radial-gradient(ellipse at 50% 15%, #ffffff 0%, var(--bg) 70%);}
+  #viewport canvas{display:block;}
+
+  .overlay{position:absolute;pointer-events:none;z-index:5;font-family:var(--font-mono);}
+  .status-chip{top:12px;left:12px;position:absolute;display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.88);border:1px solid var(--border);padding:6px 11px;border-radius:var(--radius);font-size:11px;letter-spacing:.06em;backdrop-filter:blur(3px);box-shadow:0 1px 4px rgba(15,23,42,.06);}
+  .status-chip .dot{width:7px;height:7px;border-radius:50%;background:var(--blue);box-shadow:0 0 6px var(--blue);}
+  .status-chip.alert .dot{background:var(--amber);box-shadow:0 0 6px var(--amber);}
+  .status-chip.captured .dot{background:var(--green);box-shadow:0 0 6px var(--green);}
+  #status-label{color:var(--text);font-weight:600;}
+  #status-sub{color:var(--text-faint);}
+
+  .legend{bottom:12px;left:12px;position:absolute;background:rgba(255,255,255,.88);border:1px solid var(--border);padding:8px 11px;border-radius:var(--radius);font-size:10px;color:var(--text-dim);letter-spacing:.02em;display:flex;flex-direction:column;gap:4px;backdrop-filter:blur(3px);box-shadow:0 1px 4px rgba(15,23,42,.06);}
+  .legend .row{display:flex;align-items:center;gap:7px;}
+  .legend .swatch{width:9px;height:9px;border-radius:2px;flex:0 0 auto;}
+
+  .coord-readout{bottom:12px;right:12px;position:absolute;background:rgba(255,255,255,.88);border:1px solid var(--border);padding:8px 11px;border-radius:var(--radius);font-size:10.5px;color:var(--text-dim);letter-spacing:.03em;text-align:right;backdrop-filter:blur(3px);box-shadow:0 1px 4px rgba(15,23,42,.06);}
+  .coord-readout b{color:var(--blue);font-weight:700;}
+
+  .label3d{font-family:var(--font-mono);font-size:9.5px;letter-spacing:.04em;color:var(--text-dim);background:rgba(255,255,255,.85);border:1px solid var(--border);padding:2px 5px;border-radius:2px;white-space:nowrap;pointer-events:none;}
+  .label3d.tag-blue{color:var(--blue);border-color:rgba(37,99,235,.35);}
+  .label3d.tag-amber{color:var(--amber);border-color:rgba(184,115,10,.35);}
+  .label3d.tag-green{color:var(--green);border-color:rgba(22,163,74,.35);}
+
+  /* ---- consolidated tabbed editor popup ---- */
+  .editor-toggle{white-space:nowrap;}
+  .editor-panel{
+    position:absolute; top:12px; right:12px; width:280px; max-height:calc(100% - 24px);
+    background:rgba(255,255,255,.98); border:1px solid var(--border); border-radius:var(--radius);
+    box-shadow:0 8px 26px rgba(15,23,42,.14); z-index:20; pointer-events:auto;
+    display:none; flex-direction:column; overflow:hidden;
+  }
+  .editor-panel.open{display:flex;}
+  .editor-head{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);background:var(--panel-2);}
+  .tabs{display:flex;flex:1 1 auto;}
+  .tab-btn{flex:1 1 auto;background:transparent;border:none;border-radius:0;padding:9px 4px;font-size:10px;letter-spacing:.04em;color:var(--text-faint);border-bottom:2px solid transparent;}
+  .tab-btn.active{color:var(--blue);border-bottom:2px solid var(--blue);background:#fff;}
+  .editor-close{border:none;background:transparent;padding:9px 10px;color:var(--text-faint);border-radius:0;}
+  .editor-close:hover{color:var(--red);background:transparent;border:none;}
+  .editor-body{padding:10px;overflow-y:auto;font-family:var(--font-mono);}
+  .tab-panel.hidden{display:none;}
+
+  .palette{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px;}
+  .palette-item{display:flex;flex-direction:column;align-items:center;gap:3px;width:58px;padding:6px 4px;border:1px solid var(--border);border-radius:var(--radius);background:#fff;cursor:grab;font-size:9px;color:var(--text-dim);text-align:center;user-select:none;}
+  .palette-item:active{cursor:grabbing;}
+  .palette-item .swatch{width:20px;height:14px;border-radius:2px;margin-bottom:1px;}
+  .placed-list{max-height:190px;overflow-y:auto;border-top:1px dashed var(--border);padding-top:6px;}
+  .placed-row{display:flex;align-items:flex-start;justify-content:space-between;gap:6px;font-size:10px;color:var(--text-dim);padding:5px 0;border-bottom:1px dashed var(--border);}
+  .placed-row:last-child{border-bottom:none;}
+  .placed-row .lbl{color:var(--text);}
+  .placed-row .dims{margin-top:3px;display:flex;flex-wrap:wrap;gap:6px;}
+  .placed-row .dim{display:inline-flex;align-items:center;color:var(--text-faint);}
+  .placed-empty{font-size:10px;color:var(--text-faint);padding:4px 0;}
+  .editor-hint{font-size:9px;color:var(--text-faint);margin-top:6px;line-height:1.5;}
+
+  .predator-card{border:1px solid var(--border);border-radius:var(--radius);padding:8px;margin-bottom:8px;background:#fff;}
+  .predator-card.active{border-color:var(--blue);background:var(--blue-dim);}
+  .predator-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;font-size:11px;color:var(--text);font-weight:700;}
+  .predator-row{display:flex;align-items:center;justify-content:space-between;gap:6px;margin-bottom:5px;font-size:9.5px;color:var(--text-dim);}
+  .predator-row label{flex:0 0 auto;}
+  .predator-row select{flex:1 1 auto;}
+  .predator-row .freqs{display:flex;align-items:center;gap:4px;}
+
+  /* ---- dashboard: small refreshing blocks ---- */
+  .dashboard{flex:0 0 250px;max-width:250px;border-left:1px solid var(--border);background:var(--bg-2);overflow-y:auto;padding:12px;display:grid;grid-template-columns:1fr 1fr;gap:8px;align-content:start;}
+  .block{border:1px solid var(--border);background:var(--panel);border-radius:var(--radius);padding:8px 9px;}
+  .block.wide{grid-column:1 / -1;}
+  .block .k{font-family:var(--font-mono);font-size:9px;letter-spacing:.06em;color:var(--text-faint);margin-bottom:4px;}
+  .block .v{font-family:var(--font-mono);font-size:13px;font-weight:700;color:var(--text);line-height:1.25;word-break:break-word;}
+  .block .v.blue{color:var(--blue);} .block .v.red{color:var(--red);} .block .v.green{color:var(--green);} .block .v.amber{color:var(--amber);}
+  .block .v.small{font-size:10.5px;font-weight:500;color:var(--text-dim);}
+  .eff-bar{height:5px;border-radius:3px;background:var(--panel-2);margin-top:5px;overflow:hidden;}
+  .eff-bar i{display:block;height:100%;background:var(--amber);}
+
+  .statusbar{flex:0 0 auto;display:flex;align-items:center;justify-content:space-between;padding:6px 16px;border-top:1px solid var(--border);background:var(--bg-2);font-family:var(--font-mono);font-size:9.5px;color:var(--text-faint);letter-spacing:.03em;}
+
+  .dashboard::-webkit-scrollbar,.placed-list::-webkit-scrollbar,.editor-body::-webkit-scrollbar{width:6px;}
+  .dashboard::-webkit-scrollbar-thumb,.placed-list::-webkit-scrollbar-thumb,.editor-body::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
+
+  @media (max-width: 900px){
+    .layout{flex-direction:column;}
+    #viewport{flex:1 1 54vh;min-height:280px;}
+    .dashboard{flex:1 1 auto;max-width:none;border-left:none;border-top:1px solid var(--border);}
+    .brand .sub{display:none;}
+    .editor-panel{width:200px;}
+  }
+</style>
+</head>
+<body>
+<div id="app">
+
+  <header class="topbar">
+    <div class="brand">
+      <span class="mark">GRID 36×36×36</span>
+      <h1>宮格式住家防鼠系統</h1>
+      <span class="sub">LIVE 3D RAT TRACKING — ROUTE &amp; DETERRENCE</span>
+    </div>
+    <div class="controls">
+      <div class="group"><label class="toggle"><input type="checkbox" id="toggle-rotate" /> 自動旋轉 AUTO-ROTATE</label></div>
+      <div class="sep"></div>
+      <div class="group">
+        <button id="btn-set-entrance">🚪 設定入口 ENTRANCE</button>
+        <label class="toggle"><input type="checkbox" id="toggle-randomize" checked /> 隨機 RANDOM</label>
+      </div>
+      <div class="sep"></div>
+      <div class="group">
+        <span class="toggle" style="cursor:default;">速度</span>
+        <select id="speed-select">
+          <option value="0.5">0.5×</option>
+          <option value="1" selected>1×</option>
+          <option value="2">2×</option>
+        </select>
+      </div>
+      <button id="btn-restart">↻ 重新模擬</button>
+      <button id="btn-edit-scene" class="editor-toggle">🛠 場景編輯 EDIT</button>
+    </div>
+  </header>
+
+  <div class="layout">
+    <div id="viewport">
+      <div class="overlay status-chip" id="status-chip">
+        <span class="dot"></span>
+        <span id="status-label">SCANNING</span>
+        <span id="status-sub">— 巡邏中 no subject</span>
+      </div>
+
+      <div class="overlay legend">
+        <div class="row"><span class="swatch" style="background:#16a34a"></span>老鼠 / 已走過宮格 Rat &amp; visited cells</div>
+        <div class="row"><span class="swatch" style="background:#dc2626"></span>理想路徑（動態更新）Ideal route (dynamic)</div>
+        <div class="row"><span class="swatch" style="background:#2563eb"></span>家具 / 人員 障礙物 Furniture &amp; humans</div>
+        <div class="row"><span class="swatch" style="background:#b8730a"></span>聲波 / 禁區 Sound waves &amp; avoidance zones</div>
+      </div>
+
+      <div class="overlay coord-readout" id="coord-readout">GRID —&nbsp;&nbsp;X 0.00&nbsp;&nbsp;Z 0.00</div>
+
+      <div class="editor-panel" id="editor-panel">
+        <div class="editor-head">
+          <div class="tabs">
+            <button class="tab-btn active" data-tab="furniture">家具</button>
+            <button class="tab-btn" data-tab="humans">人員</button>
+            <button class="tab-btn" data-tab="sound">音效</button>
+            <button class="tab-btn" data-tab="zones">禁區</button>
+          </div>
+          <button class="editor-close" id="editor-close">✕</button>
+        </div>
+        <div class="editor-body">
+          <div class="tab-panel" data-tabpanel="furniture">
+            <div class="palette">
+              <div class="palette-item" draggable="true" data-drag="furniture:sofa"><span class="swatch" style="background:#2563eb"></span>沙發</div>
+              <div class="palette-item" draggable="true" data-drag="furniture:chair"><span class="swatch" style="background:#3b82f6"></span>椅子</div>
+              <div class="palette-item" draggable="true" data-drag="furniture:light"><span class="swatch" style="background:#f5c518"></span>燈具</div>
+              <div class="palette-item" draggable="true" data-drag="furniture:shelf"><span class="swatch" style="background:#1d4ed8"></span>層架</div>
+              <div class="palette-item" draggable="true" data-drag="furniture:window"><span class="swatch" style="background:#67c1d6"></span>窗戶</div>
+            </div>
+            <div class="placed-list" id="list-furniture"></div>
+            <div class="editor-hint">拖曳到場景放置；用 +/− 以整數宮格單位調整長寬高。</div>
+          </div>
+          <div class="tab-panel hidden" data-tabpanel="humans">
+            <div class="palette">
+              <div class="palette-item" draggable="true" data-drag="human"><span class="swatch" style="background:#334155"></span>人員</div>
+            </div>
+            <div class="placed-list" id="list-humans"></div>
+            <div class="editor-hint">拖曳放置人員位置，系統會納入路徑規劃考量。</div>
+          </div>
+          <div class="tab-panel hidden" data-tabpanel="sound">
+            <div id="sound-tab-content"></div>
+          </div>
+          <div class="tab-panel hidden" data-tabpanel="zones">
+            <div class="palette">
+              <div class="palette-item" draggable="true" data-drag="zone"><span class="swatch" style="background:#dc2626"></span>禁區</div>
+            </div>
+            <div class="placed-list" id="list-zones"></div>
+            <div class="editor-hint">「禁止接近」區域，老鼠路徑會盡量避開此區。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <aside class="dashboard">
+      <div class="block wide"><div class="k">狀態 STATUS</div><div class="v blue" id="d-status">SCANNING</div></div>
+      <div class="block"><div class="k">目前宮格 CELL</div><div class="v" id="d-cell">—</div></div>
+      <div class="block"><div class="k">速度 VELOCITY</div><div class="v" id="d-vel">0.00 m/s</div></div>
+      <div class="block"><div class="k">入口 ENTRY</div><div class="v small" id="d-entry">—</div></div>
+      <div class="block"><div class="k">目標 GOAL</div><div class="v small" id="d-goal">—</div></div>
+      <div class="block wide"><div class="k">理想路徑 ROUTE</div><div class="v red" id="d-route">—</div></div>
+      <div class="block wide"><div class="k">目前音效 ACTIVE SOUND</div><div class="v amber" id="d-sound">貓頭鷹 Owl</div></div>
+      <div class="block wide">
+        <div class="k">驅趕成效 EFFECTIVENESS</div>
+        <div class="v amber" id="d-eff">—</div>
+        <div class="eff-bar"><i id="d-eff-bar" style="width:0%"></i></div>
+      </div>
+      <div class="block wide"><div class="k">建議音效 SUGGESTED SOUND</div><div class="v small" id="d-suggest">尚無資料 no data yet</div></div>
+      <div class="block"><div class="k">家具 FURN.</div><div class="v" id="d-furniture">0</div></div>
+      <div class="block"><div class="k">人員 HUMAN</div><div class="v" id="d-humans">0</div></div>
+      <div class="block"><div class="k">禁區 ZONES</div><div class="v" id="d-zones">0</div></div>
+      <div class="block"><div class="k">已走宮格 VISITED</div><div class="v green" id="d-visited">0</div></div>
+      <div class="block wide"><div class="k">最新事件 LATEST EVENT</div><div class="v small" id="d-event">—</div></div>
+    </aside>
+  </div>
+
+  <footer class="statusbar">
+    <span>都市老鼠防治 · 芳和實中 — Grid Defense Concept Demo</span>
+    <span id="clock">00:00:00</span>
+  </footer>
+</div>
+
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+} }
+</script>
+
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { CSS2DRenderer, CSS2DObject } from 'three/addons/renderers/CSS2DRenderer.js';
+
+/* ============ CONFIG ============ */
+const GRID = 36, CELL = 0.3, WORLD = GRID * CELL;
+const ROOM_H = WORLD;
+const colLabel = c => { let s=''; c++; while(c>0){ const m=(c-1)%26; s=String.fromCharCode(65+m)+s; c=Math.floor((c-1)/26);} return s; };
+const cellLabel = (c,r) => `${colLabel(c)}-${r+1}`;
+function cellCenter(c,r){ return new THREE.Vector3(-WORLD/2+CELL*(c+0.5), 0, -WORLD/2+CELL*(r+0.5)); }
+function worldToCell(x,z){
+  let c = Math.floor((x+WORLD/2)/CELL);
+  let r = Math.floor((z+WORLD/2)/CELL);
+  c = Math.max(0, Math.min(GRID-1, c));
+  r = Math.max(0, Math.min(GRID-1, r));
+  return {c,r};
+}
+function clamp(v,lo,hi){ return Math.max(lo, Math.min(hi, v)); }
+
+/* ============ RENDERER / SCENE / CAMERA ============ */
+const viewport = document.getElementById('viewport');
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0xf4f6f9);
+scene.fog = new THREE.FogExp2(0xf4f6f9, 0.028);
+
+const camera = new THREE.PerspectiveCamera(42, 1, 0.1, 100);
+camera.position.set(15, 13, 17);
+
+const renderer = new THREE.WebGLRenderer({ antialias:true });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.setClearColor(0xf4f6f9, 1);
+viewport.appendChild(renderer.domElement);
+
+const labelRenderer = new CSS2DRenderer();
+labelRenderer.domElement.style.position='absolute';
+labelRenderer.domElement.style.top='0';
+labelRenderer.domElement.style.left='0';
+labelRenderer.domElement.style.pointerEvents='none';
+viewport.appendChild(labelRenderer.domElement);
+
+function resize(){
+  const w = viewport.clientWidth, h = viewport.clientHeight;
+  camera.aspect = w/h; camera.updateProjectionMatrix();
+  renderer.setSize(w,h); labelRenderer.setSize(w,h);
+}
+window.addEventListener('resize', resize);
+
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.target.set(0, 2, 0);
+controls.enableDamping = true; controls.dampingFactor = 0.08;
+controls.minDistance = 5; controls.maxDistance = 36;
+controls.maxPolarAngle = Math.PI * 0.49;
+
+/* ============ LIGHTING ============ */
+scene.add(new THREE.AmbientLight(0xffffff, 1.15));
+const key = new THREE.DirectionalLight(0xffffff, 0.55);
+key.position.set(10, 16, 8);
+scene.add(key);
+const rim = new THREE.PointLight(0x2563eb, 0.35, 26);
+rim.position.set(-6, 6, -6);
+scene.add(rim);
+
+const roomGroup = new THREE.Group();
+scene.add(roomGroup);
+
+/* ============ ROOM SHELL — high contrast bounding box on all axes ============ */
+{
+  const boxGeo = new THREE.BoxGeometry(WORLD, ROOM_H, WORLD);
+  const edges = new THREE.EdgesGeometry(boxGeo);
+  const shell = new THREE.LineSegments(edges, new THREE.LineBasicMaterial({ color:0x0f172a, transparent:true, opacity:0.85 }));
+  shell.position.y = ROOM_H/2;
+  roomGroup.add(shell);
+
+  const floor = new THREE.Mesh(new THREE.PlaneGeometry(WORLD, WORLD), new THREE.MeshBasicMaterial({ color:0xffffff }));
+  floor.rotation.x = -Math.PI/2; floor.position.y = -0.005;
+  roomGroup.add(floor);
+}
+function buildGridLines(plane){
+  const pts = [];
+  const major = c => c % 6 === 0;
+  for (let i=0;i<=GRID;i++){
+    const p = -WORLD/2 + i*CELL;
+    const isMajor = major(i);
+    if (plane === 'floor'){
+      pts.push([p,0,-WORLD/2, p,0,WORLD/2, isMajor]);
+      pts.push([-WORLD/2,0,p, WORLD/2,0,p, isMajor]);
+    } else if (plane === 'wallX'){
+      pts.push([-WORLD/2,0,p, -WORLD/2,ROOM_H,p, isMajor]);
+      pts.push([-WORLD/2,p+WORLD/2,-WORLD/2, -WORLD/2,p+WORLD/2,WORLD/2, isMajor]);
+    } else if (plane === 'wallZ'){
+      pts.push([p,0,-WORLD/2, p,ROOM_H,-WORLD/2, isMajor]);
+      pts.push([-WORLD/2,p+WORLD/2,-WORLD/2, WORLD/2,p+WORLD/2,-WORLD/2, isMajor]);
+    }
+  }
+  const minorPos=[], majorPos=[];
+  pts.forEach(([x1,y1,z1,x2,y2,z2,isMajor])=>{ (isMajor?majorPos:minorPos).push(x1,y1,z1,x2,y2,z2); });
+  const group = new THREE.Group();
+  const minorGeo = new THREE.BufferGeometry();
+  minorGeo.setAttribute('position', new THREE.Float32BufferAttribute(minorPos,3));
+  group.add(new THREE.LineSegments(minorGeo, new THREE.LineBasicMaterial({ color:0xb9c2d1, transparent:true, opacity:0.6 })));
+  const majorGeo = new THREE.BufferGeometry();
+  majorGeo.setAttribute('position', new THREE.Float32BufferAttribute(majorPos,3));
+  group.add(new THREE.LineSegments(majorGeo, new THREE.LineBasicMaterial({ color:0x475569, transparent:true, opacity:0.85 })));
+  return group;
+}
+roomGroup.add(buildGridLines('floor'));
+roomGroup.add(buildGridLines('wallX'));
+roomGroup.add(buildGridLines('wallZ'));
+
+function makeLabel(text, cls){
+  const div = document.createElement('div');
+  div.className = 'label3d' + (cls?(' '+cls):'');
+  div.textContent = text;
+  return new CSS2DObject(div);
+}
+
+/* ============ ITEM DEFINITIONS (furniture + avoidance zones share a renderer) ============ */
+const ITEM_DEFS = {
+  sofa:   { label:'沙發 Sofa',   cat:'furniture', L:3, W:2, H:2, color:0x2563eb, opacity:0.82, blocking:true,  elevate:'floor' },
+  chair:  { label:'椅子 Chair',  cat:'furniture', L:1, W:1, H:2, color:0x3b82f6, opacity:0.82, blocking:true,  elevate:'floor' },
+  light:  { label:'燈具 Light',  cat:'furniture', L:1, W:1, H:1, color:0xf5c518, opacity:0.9,  blocking:false, elevate:'ceiling' },
+  shelf:  { label:'層架 Shelf',  cat:'furniture', L:1, W:3, H:6, color:0x1d4ed8, opacity:0.82, blocking:true,  elevate:'floor' },
+  window: { label:'窗戶 Window', cat:'furniture', L:1, W:4, H:4, color:0x67c1d6, opacity:0.35, blocking:false, elevate:'mid' },
+  zone:   { label:'禁區 Zone',   cat:'zone',      L:3, W:3, H:4, color:0xdc2626, opacity:0.14, blocking:false, elevate:'floor', costOwn:60, costRing:15 },
+};
+const unitBoxGeo = new THREE.BoxGeometry(1,1,1);
+const unitBoxEdges = new THREE.EdgesGeometry(unitBoxGeo);
+
+let uid = 1;
+const placedItems = [];   // furniture + zones
+const humanItems = [];
+
+function clampFootprint(col,row,L,W){
+  col = clamp(col, 0, GRID-L);
+  row = clamp(row, 0, GRID-W);
+  return {col,row};
+}
+
+function buildItemMesh(item){
+  const def = ITEM_DEFS[item.type];
+  const box = new THREE.Mesh(unitBoxGeo, new THREE.MeshStandardMaterial({ color:def.color, transparent:true, opacity:def.opacity, roughness:0.85, side:THREE.DoubleSide }));
+  const edge = new THREE.LineSegments(unitBoxEdges, new THREE.LineBasicMaterial({ color: def.cat==='zone'?0xdc2626:0x0f172a, transparent:true, opacity:0.6 }));
+  const group = new THREE.Group();
+  group.add(box); group.add(edge);
+  roomGroup.add(group);
+  item.mesh = group; item.boxMesh = box; item.edgeMesh = edge;
+  if (item.type === 'light'){
+    const pl = new THREE.PointLight(0xffe9b0, 0.5, 4);
+    group.add(pl);
+  }
+  updateItemTransform(item);
+}
+function updateItemTransform(item){
+  const def = ITEM_DEFS[item.type];
+  const sx = item.L*CELL, sy = item.H*CELL, sz = item.W*CELL;
+  item.boxMesh.scale.set(sx,sy,sz);
+  item.edgeMesh.scale.set(sx,sy,sz);
+  const cx = -WORLD/2 + CELL*(item.col + item.L/2);
+  const cz = -WORLD/2 + CELL*(item.row + item.W/2);
+  let y;
+  if (def.elevate === 'ceiling') y = ROOM_H - sy/2 - CELL*0.4;
+  else if (def.elevate === 'mid') y = ROOM_H*0.5;
+  else y = sy/2;
+  item.mesh.position.set(cx, y, cz);
+}
+
+function placeItem(type, col, row){
+  const def = ITEM_DEFS[type];
+  if (!def) return;
+  ({col,row} = clampFootprint(col,row,def.L,def.W));
+  const item = { id: uid++, type, col, row, L:def.L, W:def.W, H:def.H };
+  buildItemMesh(item);
+  placedItems.push(item);
+  rebuildGrids(); recomputeRoute(true); refreshEditorLists();
+}
+function resizeItem(id, axis, delta){
+  const item = placedItems.find(i=>i.id===id);
+  if (!item) return;
+  const def = ITEM_DEFS[item.type];
+  if (axis === 'H' && def.cat === 'zone') return;
+  item[axis] = clamp(item[axis] + delta, 1, 10);
+  const fp = clampFootprint(item.col, item.row, item.L, item.W);
+  item.col = fp.col; item.row = fp.row;
+  updateItemTransform(item);
+  rebuildGrids(); recomputeRoute(true); refreshEditorLists();
+}
+function removeItem(id){
+  const idx = placedItems.findIndex(i=>i.id===id);
+  if (idx<0) return;
+  roomGroup.remove(placedItems[idx].mesh);
+  placedItems.splice(idx,1);
+  rebuildGrids(); recomputeRoute(true); refreshEditorLists();
+}
+
+function placeHuman(col,row){
+  col = clamp(col,0,GRID-1); row = clamp(row,0,GRID-1);
+  const item = { id: uid++, col, row };
+  const group = new THREE.Group();
+  const body = new THREE.Mesh(new THREE.CylinderGeometry(0.06,0.08,0.34,10), new THREE.MeshStandardMaterial({ color:0x334155, roughness:0.8 }));
+  body.position.y = 0.17 + CELL*0.02;
+  const head = new THREE.Mesh(new THREE.SphereGeometry(0.065,12,10), new THREE.MeshStandardMaterial({ color:0x334155, roughness:0.8 }));
+  head.position.y = 0.4;
+  group.add(body); group.add(head);
+  const center = cellCenter(col,row);
+  group.position.set(center.x, 0, center.z);
+  roomGroup.add(group);
+  item.mesh = group;
+  humanItems.push(item);
+  rebuildGrids(); recomputeRoute(true); refreshEditorLists();
+}
+function removeHuman(id){
+  const idx = humanItems.findIndex(i=>i.id===id);
+  if (idx<0) return;
+  roomGroup.remove(humanItems[idx].mesh);
+  humanItems.splice(idx,1);
+  rebuildGrids(); recomputeRoute(true); refreshEditorLists();
+}
+
+/* ============ OCCUPANCY + COST GRID ============ */
+let obstacleGrid = [], costGrid = [];
+function spreadCost(cc,cr,valuesByDist){
+  const maxD = Math.max(...Object.keys(valuesByDist).map(Number));
+  for (let r=cr-maxD;r<=cr+maxD;r++){
+    for (let c=cc-maxD;c<=cc+maxD;c++){
+      if (c<0||c>=GRID||r<0||r>=GRID) continue;
+      const d = Math.max(Math.abs(c-cc), Math.abs(r-cr));
+      if (valuesByDist[d]!==undefined) costGrid[r][c] += valuesByDist[d];
+    }
+  }
+}
+function rebuildGrids(){
+  obstacleGrid = Array.from({length:GRID}, ()=> new Array(GRID).fill(false));
+  costGrid = Array.from({length:GRID}, ()=> new Array(GRID).fill(0));
+  placedItems.forEach(item=>{
+    const def = ITEM_DEFS[item.type];
+    if (def.blocking){
+      for (let r=item.row; r<item.row+item.W; r++){
+        for (let c=item.col; c<item.col+item.L; c++){
+          if (c>=0&&c<GRID&&r>=0&&r<GRID) obstacleGrid[r][c] = true;
+        }
+      }
+    }
+    if (def.cat === 'zone'){
+      for (let r=item.row-1; r<=item.row+item.W; r++){
+        for (let c=item.col-1; c<=item.col+item.L; c++){
+          if (c<0||c>=GRID||r<0||r>=GRID) continue;
+          const inside = (c>=item.col && c<item.col+item.L && r>=item.row && r<item.row+item.W);
+          costGrid[r][c] += inside ? def.costOwn : def.costRing;
+        }
+      }
+    }
+  });
+  humanItems.forEach(h=>{
+    if (h.col>=0&&h.col<GRID&&h.row>=0&&h.row<GRID) obstacleGrid[h.row][h.col] = true;
+    spreadCost(h.col, h.row, {0:0, 1:14, 2:6});
+  });
+}
+rebuildGrids();
+
+/* ============ A* PATHFINDING (accounts for furniture, humans, avoidance zones) ============ */
+const NEIGHBORS8 = [[1,0],[-1,0],[0,1],[0,-1],[1,1],[1,-1],[-1,1],[-1,-1]];
+function heuristic(c,r,gc,gr){
+  const dx=Math.abs(c-gc), dy=Math.abs(r-gr);
+  return Math.max(dx,dy) + (Math.SQRT2-1)*Math.min(dx,dy);
+}
+function findPath(sc,sr,gc,gr){
+  if (obstacleGrid[gr] && obstacleGrid[gr][gc]) return null;
+  const key = (c,r)=> r*GRID+c;
+  const nodes = new Map();
+  const start = { c:sc, r:sr, g:0, f:heuristic(sc,sr,gc,gr), parent:null, closed:false };
+  nodes.set(key(sc,sr), start);
+  let openCount = 1, guard = 0;
+  while (openCount > 0 && guard < 6000){
+    guard++;
+    let cur=null, curKey=null;
+    for (const [k,n] of nodes){ if (!n.closed && (!cur || n.f < cur.f)){ cur=n; curKey=k; } }
+    if (!cur) break;
+    if (cur.c===gc && cur.r===gr){
+      const path=[]; let n=cur;
+      while (n){ path.unshift({c:n.c,r:n.r}); n = n.parent!==null ? nodes.get(n.parent) : null; }
+      return path;
+    }
+    cur.closed = true; openCount--;
+    for (const [dc,dr] of NEIGHBORS8){
+      const nc=cur.c+dc, nr=cur.r+dr;
+      if (nc<0||nc>=GRID||nr<0||nr>=GRID) continue;
+      if (obstacleGrid[nr][nc]) continue;
+      const stepCost = ((dc!==0 && dr!==0) ? Math.SQRT2 : 1) + costGrid[nr][nc]*0.14;
+      const tentativeG = cur.g + stepCost;
+      const nk = key(nc,nr);
+      let nn = nodes.get(nk);
+      if (!nn){
+        nn = { c:nc, r:nr, g:tentativeG, f:tentativeG+heuristic(nc,nr,gc,gr), parent:curKey, closed:false };
+        nodes.set(nk, nn); openCount++;
+      } else if (!nn.closed && tentativeG < nn.g){
+        nn.g = tentativeG; nn.f = tentativeG + heuristic(nc,nr,gc,gr); nn.parent = curKey;
+      }
+    }
+  }
+  return null;
+}
+
+/* ============ ROUTE VISUAL — red dashed line + red cell pool, dynamically recalculated ============ */
+let routeLine = new THREE.Line(new THREE.BufferGeometry(), new THREE.LineDashedMaterial({ color:0xdc2626, dashSize:0.12, gapSize:0.08, transparent:true, opacity:0.9 }));
+roomGroup.add(routeLine);
+const ROUTE_POOL_SIZE = 140;
+const routePool = [];
+for (let i=0;i<ROUTE_POOL_SIZE;i++){
+  const m = new THREE.Mesh(new THREE.PlaneGeometry(CELL*0.86, CELL*0.86), new THREE.MeshBasicMaterial({ color:0xdc2626, transparent:true, opacity:0.26, side:THREE.DoubleSide }));
+  m.rotation.x = -Math.PI/2; m.visible = false;
+  roomGroup.add(m);
+  routePool.push(m);
+}
+let currentRoute = null;
+function updateRouteVisual(path){
+  currentRoute = path;
+  routePool.forEach(m=> m.visible=false);
+  if (!path || path.length < 2){
+    routeLine.geometry.setFromPoints([]);
+    document.getElementById('d-route').textContent = path ? `${path.length} 格` : '無可行路徑';
+    return;
+  }
+  const pts = path.map(p=>{ const c=cellCenter(p.c,p.r); c.y=0.05; return c; });
+  routeLine.geometry.dispose();
+  routeLine.geometry = new THREE.BufferGeometry().setFromPoints(pts);
+  routeLine.computeLineDistances();
+  path.forEach((p,i)=>{
+    if (i < ROUTE_POOL_SIZE){
+      const c = cellCenter(p.c,p.r);
+      const m = routePool[i];
+      m.position.set(c.x, 0.012, c.z);
+      m.visible = true;
+    }
+  });
+  document.getElementById('d-route').textContent = `${path.length} 格 CELLS`;
+}
+
+/* ============ VISITED TRAIL — green highlight on cells rat passes through ============ */
+const TRAIL_POOL_SIZE = 220;
+const trailPool = [];
+for (let i=0;i<TRAIL_POOL_SIZE;i++){
+  const m = new THREE.Mesh(new THREE.PlaneGeometry(CELL*0.9, CELL*0.9), new THREE.MeshBasicMaterial({ color:0x16a34a, transparent:true, opacity:0, side:THREE.DoubleSide }));
+  m.rotation.x = -Math.PI/2; m.visible=false;
+  roomGroup.add(m);
+  trailPool.push({ mesh:m, born:0, active:false });
+}
+let trailCursor = 0, visitedCount = 0;
+const FADE_TIME = 7.5;
+function markVisited(col,row,now){
+  const c = cellCenter(col,row);
+  const slot = trailPool[trailCursor];
+  trailCursor = (trailCursor+1) % TRAIL_POOL_SIZE;
+  slot.mesh.position.set(c.x, 0.01, c.z);
+  slot.mesh.visible = true;
+  slot.mesh.material.opacity = 0.5;
+  slot.born = now; slot.active = true;
+  visitedCount++;
+}
+function updateTrail(now){
+  trailPool.forEach(slot=>{
+    if (!slot.active) return;
+    const t = (now - slot.born) / FADE_TIME;
+    if (t >= 1){ slot.active=false; slot.mesh.visible=false; return; }
+    slot.mesh.material.opacity = 0.5*(1-t);
+  });
+}
+
+/* ============ ENTRANCE + GOAL MARKERS ============ */
+const GOAL_CELL = { c: GRID-3, r: GRID-3 };
+let entranceCell = { c: 1, r: Math.floor(GRID/2) };
+let manualEntrance = null;
+let randomizeEntrance = true;
+let pickingEntrance = false;
+
+{
+  const c = cellCenter(GOAL_CELL.c, GOAL_CELL.r);
+  const ring = new THREE.Mesh(new THREE.RingGeometry(0.11,0.14,32), new THREE.MeshBasicMaterial({ color:0x2563eb, transparent:true, opacity:0.85, side:THREE.DoubleSide }));
+  ring.rotation.x = -Math.PI/2; ring.position.set(c.x,0.015,c.z);
+  roomGroup.add(ring);
+  const lbl = makeLabel(`GOAL · ${cellLabel(GOAL_CELL.c,GOAL_CELL.r)}`, 'tag-blue');
+  lbl.position.set(c.x, 0.3, c.z);
+  roomGroup.add(lbl);
+}
+const entranceRing = new THREE.Mesh(new THREE.RingGeometry(0.11,0.14,32), new THREE.MeshBasicMaterial({ color:0x0f172a, transparent:true, opacity:0.75, side:THREE.DoubleSide }));
+entranceRing.rotation.x = -Math.PI/2;
+roomGroup.add(entranceRing);
+const entranceLabel = makeLabel('ENTRY', 'tag-blue');
+roomGroup.add(entranceLabel);
+function placeEntranceMarker(c,r){
+  const center = cellCenter(c,r);
+  entranceRing.position.set(center.x, 0.016, center.z);
+  entranceLabel.position.set(center.x, 0.28, center.z);
+  entranceLabel.element.textContent = `ENTRY · ${cellLabel(c,r)}`;
+}
+placeEntranceMarker(entranceCell.c, entranceCell.r);
+function pickRandomEntrance(){
+  const edgeCells = [];
+  for (let i=0;i<GRID;i++){
+    [[i,0],[i,GRID-1],[0,i],[GRID-1,i]].forEach(([c,r])=>{ if (!obstacleGrid[r][c]) edgeCells.push({c,r}); });
+  }
+  if (edgeCells.length === 0) return { c:0, r:0 };
+  return edgeCells[Math.floor(Math.random()*edgeCells.length)];
+}
+
+/* ============ PREDATOR SOUND SYSTEM — visible waves + configurable presets ============ */
+const PREDATORS = [
+  { id:'owl',   label:'貓頭鷹 Owl',   shape:'concentric', color:0xf59e0b, freqLow:20,   freqHigh:800,   spawnInterval:0.9,  baseEff:70 },
+  { id:'kite',  label:'黑翅鳶 Kite',  shape:'arc',         color:0xea580c, freqLow:500,  freqHigh:3000,  spawnInterval:0.7,  baseEff:60 },
+  { id:'cat',   label:'家貓 Cat',     shape:'spiky',       color:0xdb2777, freqLow:1000, freqHigh:8000,  spawnInterval:0.5,  baseEff:55 },
+  { id:'snake', label:'蛇 Snake',     shape:'rattle',      color:0x65a30d, freqLow:2000, freqHigh:12000, spawnInterval:0.18, baseEff:45 },
+];
+let activePredatorId = 'owl';
+const statsByPredator = {};
+PREDATORS.forEach(p=> statsByPredator[p.id] = { count:0, totalEff:0 });
+
+const speakerPos = new THREE.Vector3(WORLD/2 - 0.15, ROOM_H*0.5, WORLD*0.28);
+{
+  const box = new THREE.Mesh(new THREE.BoxGeometry(0.18,0.18,0.08), new THREE.MeshStandardMaterial({ color:0x1e293b, roughness:0.7 }));
+  box.position.copy(speakerPos);
+  roomGroup.add(box);
+  const lbl = makeLabel('SPEAKER', 'tag-amber');
+  lbl.position.set(speakerPos.x, speakerPos.y+0.16, speakerPos.z);
+  roomGroup.add(lbl);
+}
+function buildSpikyRing(color){
+  const spikes = 10, inner = 0.02, outer = 0.05;
+  const pts = [];
+  for (let i=0;i<=spikes*2;i++){
+    const rr = (i%2===0) ? outer : inner;
+    const a = (i/(spikes*2)) * Math.PI*2;
+    pts.push(new THREE.Vector3(Math.cos(a)*rr, Math.sin(a)*rr, 0));
+  }
+  const geo = new THREE.BufferGeometry().setFromPoints(pts);
+  const mat = new THREE.LineBasicMaterial({ color, transparent:true, opacity:0.7 });
+  return new THREE.LineLoop(geo, mat);
+}
+const activeWaves = [];
+function spawnWave(predator){
+  let mesh, life, maxScale, rotSpeed = 0;
+  if (predator.shape === 'concentric' || predator.shape === 'rattle'){
+    const geo = new THREE.RingGeometry(0.03, 0.05, 32);
+    const mat = new THREE.MeshBasicMaterial({ color:predator.color, transparent:true, opacity:0.55, side:THREE.DoubleSide });
+    mesh = new THREE.Mesh(geo, mat);
+    life = predator.shape === 'rattle' ? 0.45 : 1.3;
+    maxScale = predator.shape === 'rattle' ? 5 : 13;
+  } else if (predator.shape === 'arc'){
+    const geo = new THREE.RingGeometry(0.03, 0.055, 24, 1, 0, Math.PI*0.6);
+    const mat = new THREE.MeshBasicMaterial({ color:predator.color, transparent:true, opacity:0.55, side:THREE.DoubleSide });
+    mesh = new THREE.Mesh(geo, mat);
+    life = 1.1; maxScale = 11; rotSpeed = 1.4;
+  } else {
+    mesh = buildSpikyRing(predator.color);
+    life = 0.85; maxScale = 9;
+  }
+  mesh.rotation.x = -Math.PI/2;
+  mesh.position.copy(speakerPos);
+  roomGroup.add(mesh);
+  activeWaves.push({ mesh, life, elapsed:0, maxScale, rotSpeed, isLine: predator.shape==='spiky' });
+}
+function updateWaves(dt){
+  for (let i=activeWaves.length-1;i>=0;i--){
+    const w = activeWaves[i];
+    w.elapsed += dt;
+    const t = w.elapsed / w.life;
+    if (t >= 1){
+      roomGroup.remove(w.mesh);
+      w.mesh.geometry.dispose(); w.mesh.material.dispose();
+      activeWaves.splice(i,1);
+      continue;
+    }
+    const s = 0.3 + t * w.maxScale;
+    w.mesh.scale.set(s,s,s);
+    w.mesh.material.opacity = (w.isLine?0.7:0.55) * (1-t);
+    if (w.rotSpeed) w.mesh.rotation.z += dt * w.rotSpeed;
+  }
+}
+
+let deterrenceActive = false;
+let lowRiskStreak = 0;
+let waveSpawnTimer = 0;
+let currentSessionEff = null;
+function activeDef(){ return PREDATORS.find(p=>p.id===activePredatorId); }
+
+function activateDeterrence(){
+  deterrenceActive = true;
+  const p = activeDef();
+  currentSessionEff = clamp(p.baseEff + (Math.random()*20-10), 5, 98);
+  waveSpawnTimer = 0;
+  logEvent(`聲學驅趕啟動 — ${p.label}（預估成效 ${Math.round(currentSessionEff)}%）`);
+  document.getElementById('d-sound').textContent = p.label;
+  document.getElementById('d-eff').textContent = `${Math.round(currentSessionEff)}%`;
+  document.getElementById('d-eff-bar').style.width = `${currentSessionEff}%`;
+}
+function deactivateDeterrence(){
+  deterrenceActive = false;
+  const p = activeDef();
+  if (currentSessionEff !== null){
+    statsByPredator[p.id].count++;
+    statsByPredator[p.id].totalEff += currentSessionEff;
+    logEvent(`已脫離高風險區 — ${p.label} 本次成效 ${Math.round(currentSessionEff)}%`);
+  }
+  currentSessionEff = null;
+  document.getElementById('d-eff').textContent = '—';
+  document.getElementById('d-eff-bar').style.width = '0%';
+  refreshSuggestion();
+}
+function refreshSuggestion(){
+  const untried = PREDATORS.find(p=> statsByPredator[p.id].count===0);
+  let text;
+  if (untried){
+    text = `建議嘗試 ${untried.label}（尚無資料）`;
+  } else {
+    let best = null;
+    PREDATORS.forEach(p=>{
+      const s = statsByPredator[p.id];
+      const avg = s.totalEff / s.count;
+      if (!best || avg > best.avg) best = { label:p.label, avg };
+    });
+    text = best ? `${best.label}（平均成效 ${Math.round(best.avg)}%）` : '尚無資料';
+  }
+  document.getElementById('d-suggest').textContent = text;
+}
+refreshSuggestion();
+
+/* ============ RAT ============ */
+const ratGroup = new THREE.Group();
+const ratMat = new THREE.MeshStandardMaterial({ color:0x16a34a, emissive:0x0b3d20, roughness:0.5 });
+const ratBody = new THREE.Mesh(new THREE.SphereGeometry(0.075,12,10), ratMat);
+ratBody.scale.set(1,0.62,1.55);
+ratGroup.add(ratBody);
+const ratHead = new THREE.Mesh(new THREE.SphereGeometry(0.05,10,8), ratMat);
+ratHead.position.set(0,0.01,0.11);
+ratGroup.add(ratHead);
+const ratTail = new THREE.Mesh(new THREE.CylinderGeometry(0.006,0.002,0.16,6), ratMat);
+ratTail.rotation.x = Math.PI/2; ratTail.position.set(0,0,-0.15);
+ratGroup.add(ratTail);
+const ratLight = new THREE.PointLight(0x16a34a, 0.7, 2.2);
+ratLight.position.y = 0.2;
+ratGroup.add(ratLight);
+const ratLabel = makeLabel('SUBJECT_01', 'tag-green');
+ratLabel.position.set(0,0.24,0);
+ratGroup.add(ratLabel);
+ratGroup.visible = false;
+roomGroup.add(ratGroup);
+
+const rat = { col:0, row:0, prevCol:0, prevRow:0, stepFrom:new THREE.Vector3(), stepTo:new THREE.Vector3(), stepT:1, stepDuration:0.55 };
+function easeInOut(t){ return t<0.5 ? 2*t*t : 1-Math.pow(-2*t+2,2)/2; }
+
+function spawnRat(){
+  const start = (randomizeEntrance || !manualEntrance) ? pickRandomEntrance() : manualEntrance;
+  entranceCell = start;
+  placeEntranceMarker(start.c, start.r);
+  rat.col = start.c; rat.row = start.r; rat.prevCol = start.c; rat.prevRow = start.r;
+  const c = cellCenter(start.c, start.r); c.y = 0.09;
+  rat.stepFrom.copy(c); rat.stepTo.copy(c); rat.stepT = 1; rat.stepDuration = 0.55;
+  ratGroup.position.copy(c);
+  ratGroup.visible = true;
+  trailPool.forEach(s=>{ s.active=false; s.mesh.visible=false; });
+  visitedCount = 0;
+  deterrenceActive = false; lowRiskStreak = 0; currentSessionEff = null;
+  document.getElementById('d-eff').textContent = '—';
+  document.getElementById('d-eff-bar').style.width = '0%';
+  markVisited(start.c, start.r, simSeconds);
+  recomputeRoute(true);
+}
+function validNeighbors(c,r){
+  const out = [];
+  for (const [dc,dr] of NEIGHBORS8){
+    const nc=c+dc, nr=r+dr;
+    if (nc<0||nc>=GRID||nr<0||nr>=GRID) continue;
+    if (obstacleGrid[nr][nc]) continue;
+    out.push({c:nc,r:nr});
+  }
+  return out;
+}
+function decideNextCell(){
+  const neighbors = validNeighbors(rat.col, rat.row);
+  if (neighbors.length === 0) return { c:rat.col, r:rat.row };
+  let pathNext = null;
+  if (currentRoute && currentRoute.length > 1){
+    const idx = currentRoute.findIndex(p=> p.c===rat.col && p.r===rat.row);
+    if (idx >= 0 && idx < currentRoute.length-1){
+      const cand = currentRoute[idx+1];
+      if (neighbors.some(n=> n.c===cand.c && n.r===cand.r)) pathNext = cand;
+    }
+  }
+  const effBoost = deterrenceActive && currentSessionEff!==null ? currentSessionEff/100 : 0;
+  const pFollow = 0.46 + effBoost*0.3;
+  const pBack = 0.16 + (deterrenceActive ? (1-effBoost)*0.14 : 0);
+  const roll = Math.random();
+  if (roll < pFollow && pathNext) return pathNext;
+  if (roll < pFollow + pBack){
+    const back = neighbors.find(n=> n.c===rat.prevCol && n.r===rat.prevRow);
+    if (back) return back;
+  }
+  return neighbors[Math.floor(Math.random()*neighbors.length)];
+}
+function updateRat(dt){
+  rat.stepT += dt / rat.stepDuration;
+  if (rat.stepT > 1) rat.stepT = 1;
+  const pos = new THREE.Vector3().lerpVectors(rat.stepFrom, rat.stepTo, easeInOut(rat.stepT));
+  ratGroup.position.copy(pos);
+  const dir = new THREE.Vector3().subVectors(rat.stepTo, rat.stepFrom);
+  if (dir.lengthSq() > 0.0001) ratGroup.rotation.y = Math.atan2(dir.x, dir.z);
+
+  document.getElementById('coord-readout').innerHTML = `GRID <b>${cellLabel(rat.col,rat.row)}</b>&nbsp;&nbsp;X ${pos.x.toFixed(2)}&nbsp;&nbsp;Z ${pos.z.toFixed(2)}`;
+  document.getElementById('d-cell').textContent = cellLabel(rat.col,rat.row);
+  document.getElementById('d-vel').textContent = `${(CELL/rat.stepDuration).toFixed(2)} m/s`;
+
+  if (rat.stepT >= 1){
+    const next = decideNextCell();
+    rat.prevCol = rat.col; rat.prevRow = rat.row;
+    rat.col = next.c; rat.row = next.r;
+    rat.stepFrom.copy(rat.stepTo);
+    const c = cellCenter(rat.col, rat.row); c.y = 0.09;
+    rat.stepTo.copy(c);
+    rat.stepT = 0;
+    const effBoost = deterrenceActive && currentSessionEff!==null ? currentSessionEff/100 : 0;
+    rat.stepDuration = deterrenceActive ? 0.55 * (1 - effBoost*0.35) : 0.55;
+    markVisited(rat.col, rat.row, simSeconds);
+    return true;
+  }
+  return false;
+}
+
+/* ============ ROUTE RECOMPUTE ============ */
+let routeRecalcTimer = 0;
+function recomputeRoute(force){
+  if (!ratGroup.visible && !force) return;
+  const path = findPath(rat.col, rat.row, GOAL_CELL.c, GOAL_CELL.r);
+  updateRouteVisual(path);
+}
+
+/* ============ STATE MACHINE ============ */
+const PHASE = { IDLE:'idle', TRACKING:'tracking', CAPTURED:'captured', COOLDOWN:'cooldown' };
+let phase = PHASE.IDLE, phaseTime = 0, speedMult = 1;
+const statusChip = document.getElementById('status-chip');
+const statusLabel = document.getElementById('status-label');
+const statusSub = document.getElementById('status-sub');
+const dEvent = document.getElementById('d-event');
+function setStatus(kind, label, sub){
+  statusChip.className = 'overlay status-chip' + (kind?(' '+kind):'');
+  statusLabel.textContent = label; statusSub.textContent = sub;
+  document.getElementById('d-status').textContent = label;
+}
+function logEvent(text){ dEvent.textContent = text; }
+
+function enterPhase(p){
+  phase = p; phaseTime = 0;
+  if (p === PHASE.IDLE){
+    setStatus('', 'SCANNING', '— 巡邏中 no subject');
+    ratGroup.visible = false;
+    document.getElementById('d-cell').textContent = '—';
+    document.getElementById('d-vel').textContent = '0.00 m/s';
+    document.getElementById('d-route').textContent = '—';
+    routePool.forEach(m=> m.visible=false);
+    routeLine.geometry.setFromPoints([]);
+    logEvent('等待下一次入侵事件 waiting for next incursion');
+  } else if (p === PHASE.TRACKING){
+    spawnRat();
+    setStatus('', 'TRACKING', '— 偵測到入侵個體 subject detected');
+    logEvent(`入侵偵測 — Grid ${cellLabel(entranceCell.c, entranceCell.r)}`);
+  } else if (p === PHASE.CAPTURED){
+    setStatus('captured', 'CAPTURED', '— 已抵達生態誘捕區 secured at goal');
+    logEvent(`個體抵達 Grid ${cellLabel(GOAL_CELL.c, GOAL_CELL.r)}`);
+  } else if (p === PHASE.COOLDOWN){
+    logEvent('重置巡邏狀態 resetting patrol');
+  }
+  document.getElementById('d-entry').textContent = cellLabel(entranceCell.c, entranceCell.r);
+  document.getElementById('d-goal').textContent = cellLabel(GOAL_CELL.c, GOAL_CELL.r);
+}
+enterPhase(PHASE.IDLE);
+
+/* ============ CLOCK ============ */
+let simSeconds = 6*3600 + 14*60;
+function fmtClock(s){
+  s = Math.floor(s);
+  const h=String(Math.floor(s/3600)%24).padStart(2,'0');
+  const m=String(Math.floor(s/60)%60).padStart(2,'0');
+  const sec=String(s%60).padStart(2,'0');
+  return `${h}:${m}:${sec}`;
+}
+
+/* ============ DRAG & DROP + ENTRANCE PICKING ============ */
+const raycaster = new THREE.Raycaster();
+const floorPlane = new THREE.Plane(new THREE.Vector3(0,1,0), 0);
+function screenToCell(clientX, clientY){
+  const rect = renderer.domElement.getBoundingClientRect();
+  const ndc = new THREE.Vector2(((clientX-rect.left)/rect.width)*2-1, -((clientY-rect.top)/rect.height)*2+1);
+  raycaster.setFromCamera(ndc, camera);
+  const hit = new THREE.Vector3();
+  if (!raycaster.ray.intersectPlane(floorPlane, hit)) return null;
+  return worldToCell(hit.x, hit.z);
+}
+document.querySelectorAll('.palette-item').forEach(el=>{
+  el.addEventListener('dragstart', e=> e.dataTransfer.setData('text/plain', el.dataset.drag));
+});
+renderer.domElement.addEventListener('dragover', e=> e.preventDefault());
+renderer.domElement.addEventListener('drop', e=>{
+  e.preventDefault();
+  const data = e.dataTransfer.getData('text/plain');
+  const cell = screenToCell(e.clientX, e.clientY);
+  if (!cell) return;
+  if (data.startsWith('furniture:')) placeItem(data.split(':')[1], cell.c, cell.r);
+  else if (data === 'zone') placeItem('zone', cell.c, cell.r);
+  else if (data === 'human') placeHuman(cell.c, cell.r);
+});
+renderer.domElement.addEventListener('click', e=>{
+  if (!pickingEntrance) return;
+  const cell = screenToCell(e.clientX, e.clientY);
+  if (!cell) return;
+  if (obstacleGrid[cell.r][cell.c]){ logEvent('該宮格已被佔用 cell is occupied'); return; }
+  manualEntrance = { c:cell.c, r:cell.r };
+  document.getElementById('toggle-randomize').checked = false;
+  randomizeEntrance = false;
+  placeEntranceMarker(cell.c, cell.r);
+  pickingEntrance = false;
+  document.getElementById('btn-set-entrance').classList.remove('active');
+  logEvent(`入口已設定 entrance set to ${cellLabel(cell.c,cell.r)}`);
+});
+
+/* ============ EDITOR PANEL — tabs, lists, sound config ============ */
+const editorPanel = document.getElementById('editor-panel');
+document.getElementById('btn-edit-scene').addEventListener('click', ()=> editorPanel.classList.toggle('open'));
+document.getElementById('editor-close').addEventListener('click', ()=> editorPanel.classList.remove('open'));
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.tab-btn').forEach(b=> b.classList.toggle('active', b===btn));
+    document.querySelectorAll('.tab-panel').forEach(p=> p.classList.toggle('hidden', p.dataset.tabpanel !== btn.dataset.tab));
+  });
+});
+
+function dimStepperHTML(item, axes){
+  return axes.map(ax=>`<span class="dim">${ax}:${item[ax]}<button class="mini" data-resize="${item.id}" data-axis="${ax}" data-delta="1">+</button><button class="mini" data-resize="${item.id}" data-axis="${ax}" data-delta="-1">−</button></span>`).join('');
+}
+function refreshEditorLists(){
+  document.getElementById('d-furniture').textContent = placedItems.filter(i=>ITEM_DEFS[i.type].cat==='furniture').length;
+  document.getElementById('d-zones').textContent = placedItems.filter(i=>ITEM_DEFS[i.type].cat==='zone').length;
+  document.getElementById('d-humans').textContent = humanItems.length;
+
+  const furnList = placedItems.filter(i=>ITEM_DEFS[i.type].cat==='furniture');
+  const listFurn = document.getElementById('list-furniture');
+  listFurn.innerHTML = furnList.length ? furnList.map(item=>`
+    <div class="placed-row"><div><div class="lbl">${ITEM_DEFS[item.type].label} · ${cellLabel(item.col,item.row)}</div>
+    <div class="dims">${dimStepperHTML(item, ['L','W','H'])}</div></div>
+    <button class="small danger" data-remove="${item.id}">✕</button></div>`).join('') : '<div class="placed-empty">尚未放置家具 nothing placed yet</div>';
+
+  const zoneList = placedItems.filter(i=>ITEM_DEFS[i.type].cat==='zone');
+  const listZones = document.getElementById('list-zones');
+  listZones.innerHTML = zoneList.length ? zoneList.map(item=>`
+    <div class="placed-row"><div><div class="lbl">${ITEM_DEFS[item.type].label} · ${cellLabel(item.col,item.row)}</div>
+    <div class="dims">${dimStepperHTML(item, ['L','W'])}</div></div>
+    <button class="small danger" data-remove="${item.id}">✕</button></div>`).join('') : '<div class="placed-empty">尚未設定禁區 no zones yet</div>';
+
+  const listHumans = document.getElementById('list-humans');
+  listHumans.innerHTML = humanItems.length ? humanItems.map(item=>`
+    <div class="placed-row"><div class="lbl">人員 · ${cellLabel(item.col,item.row)}</div>
+    <button class="small danger" data-remove-human="${item.id}">✕</button></div>`).join('') : '<div class="placed-empty">尚未放置人員 nothing placed yet</div>';
+}
+document.getElementById('editor-panel').addEventListener('click', e=>{
+  const rid = e.target.getAttribute('data-remove');
+  const hid = e.target.getAttribute('data-remove-human');
+  const rsid = e.target.getAttribute('data-resize');
+  if (rid) removeItem(parseInt(rid,10));
+  if (hid) removeHuman(parseInt(hid,10));
+  if (rsid) resizeItem(parseInt(rsid,10), e.target.getAttribute('data-axis'), parseInt(e.target.getAttribute('data-delta'),10));
+});
+refreshEditorLists();
+
+function shapeOptionsHTML(sel){
+  const opts = [['concentric','同心圓 Concentric'],['arc','弧形 Arc'],['spiky','尖刺 Spiky'],['rattle','急促 Rattle']];
+  return opts.map(([v,l])=>`<option value="${v}" ${v===sel?'selected':''}>${l}</option>`).join('');
+}
+function renderSoundTab(){
+  const el = document.getElementById('sound-tab-content');
+  el.innerHTML = PREDATORS.map(p=>`
+    <div class="predator-card ${p.id===activePredatorId?'active':''}" data-pred="${p.id}">
+      <div class="predator-head"><span>${p.label}</span>
+        <button class="small ${p.id===activePredatorId?'active':''}" data-use="${p.id}">${p.id===activePredatorId?'使用中':'使用'}</button>
+      </div>
+      <div class="predator-row"><label>波形</label><select data-shape="${p.id}">${shapeOptionsHTML(p.shape)}</select></div>
+      <div class="predator-row"><label>頻率 Hz</label><span class="freqs">
+        <input type="number" data-freqlow="${p.id}" value="${p.freqLow}" />–
+        <input type="number" data-freqhigh="${p.id}" value="${p.freqHigh}" />
+      </span></div>
+      <div class="predator-row"><label>基準成效 <span data-effval="${p.id}">${p.baseEff}%</span></label>
+        <input type="range" min="10" max="95" value="${p.baseEff}" data-eff="${p.id}" style="width:80px" />
+      </div>
+    </div>`).join('');
+}
+renderSoundTab();
+document.getElementById('sound-tab-content').addEventListener('click', e=>{
+  const useId = e.target.getAttribute('data-use');
+  if (useId){ activePredatorId = useId; renderSoundTab(); document.getElementById('d-sound').textContent = activeDef().label; }
+});
+document.getElementById('sound-tab-content').addEventListener('change', e=>{
+  const id = e.target.getAttribute('data-shape') || e.target.getAttribute('data-freqlow') || e.target.getAttribute('data-freqhigh');
+  const p = PREDATORS.find(pp=>pp.id===id);
+  if (!p) return;
+  if (e.target.hasAttribute('data-shape')) p.shape = e.target.value;
+  if (e.target.hasAttribute('data-freqlow')) p.freqLow = parseFloat(e.target.value)||0;
+  if (e.target.hasAttribute('data-freqhigh')) p.freqHigh = parseFloat(e.target.value)||0;
+});
+document.getElementById('sound-tab-content').addEventListener('input', e=>{
+  const id = e.target.getAttribute('data-eff');
+  if (!id) return;
+  const p = PREDATORS.find(pp=>pp.id===id);
+  p.baseEff = parseFloat(e.target.value);
+  document.querySelector(`[data-effval="${id}"]`).textContent = `${p.baseEff}%`;
+});
+
+/* ============ TOP BAR CONTROLS ============ */
+document.getElementById('toggle-rotate').addEventListener('change', e=>{ controls.autoRotate = e.target.checked; });
+document.getElementById('toggle-randomize').addEventListener('change', e=>{ randomizeEntrance = e.target.checked; });
+document.getElementById('btn-set-entrance').addEventListener('click', e=>{
+  pickingEntrance = !pickingEntrance;
+  e.target.classList.toggle('active', pickingEntrance);
+});
+document.getElementById('speed-select').addEventListener('change', e=>{ speedMult = parseFloat(e.target.value); });
+document.getElementById('btn-restart').addEventListener('click', ()=> enterPhase(PHASE.IDLE));
+
+/* ============ ANIMATION LOOP ============ */
+const clock = new THREE.Clock();
+function tick(){
+  requestAnimationFrame(tick);
+  const dt = Math.min(0.05, clock.getDelta()) * speedMult;
+  simSeconds += dt;
+  document.getElementById('clock').textContent = fmtClock(simSeconds);
+  document.getElementById('d-visited').textContent = visitedCount;
+
+  controls.update();
+  updateTrail(simSeconds);
+  updateWaves(dt);
+
+  if (deterrenceActive){
+    waveSpawnTimer -= dt;
+    if (waveSpawnTimer <= 0){ spawnWave(activeDef()); waveSpawnTimer = activeDef().spawnInterval; }
+  }
+
+  phaseTime += dt;
+  routeRecalcTimer -= dt;
+
+  switch (phase){
+    case PHASE.IDLE:
+      if (phaseTime > 2.0) enterPhase(PHASE.TRACKING);
+      break;
+    case PHASE.TRACKING: {
+      const moved = updateRat(dt);
+      if (moved){
+        const risk = costGrid[rat.row][rat.col] > 6;
+        if (risk){
+          lowRiskStreak = 0;
+          if (!deterrenceActive) activateDeterrence();
+        } else {
+          lowRiskStreak++;
+          if (deterrenceActive && lowRiskStreak >= 3) deactivateDeterrence();
+        }
+        if (routeRecalcTimer <= 0){ recomputeRoute(false); routeRecalcTimer = 1.1; }
+      }
+      if (rat.col === GOAL_CELL.c && rat.row === GOAL_CELL.r && rat.stepT >= 1){
+        if (deterrenceActive) deactivateDeterrence();
+        enterPhase(PHASE.CAPTURED);
+      }
+      break;
+    }
+    case PHASE.CAPTURED:
+      if (phaseTime > 2.2) enterPhase(PHASE.COOLDOWN);
+      break;
+    case PHASE.COOLDOWN:
+      if (phaseTime > 1.2) enterPhase(PHASE.IDLE);
+      break;
+  }
+
+  renderer.render(scene, camera);
+  labelRenderer.render(scene, camera);
+}
+
+resize();
+tick();
+</script>
+</body>
+</html>

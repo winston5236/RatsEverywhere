@@ -1,138 +1,151 @@
 <!doctype html>
-<html lang="zh-Hant">
+<html lang="en">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>宮格式住家防鼠系統 — 3D 即時監控</title>
-<meta name="description" content="36x36x36 立體宮格老鼠即時追蹤、動態路徑規劃與聲學驅趕展示" />
+<title>Grid-Based Home Rodent Defense System — Live 3D Monitor</title>
+<meta name="description" content="36x36x36 3D grid rat tracking, dynamic route planning, and acoustic deterrence concept demo" />
 <link rel="icon" href="data:," />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&family=Roboto+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
 <style>
   :root{
     --bg:#f4f6f9; --bg-2:#ffffff; --panel:#ffffff; --panel-2:#eef1f6;
-    --border:#d7dde6; --border-strong:#94a3b8;
-    --text:#161b26; --text-dim:#5b6576; --text-faint:#8a93a6;
-    --blue:#2563eb; --blue-dim:rgba(37,99,235,.10);
-    --amber:#b8730a; --amber-dim:rgba(184,115,10,.12);
-    --red:#dc2626; --red-dim:rgba(220,38,38,.12);
-    --green:#16a34a; --green-dim:rgba(22,163,74,.14);
-    --font-display:'Space Grotesk','Noto Sans TC',sans-serif;
-    --font-body:'Noto Sans TC','Space Grotesk',sans-serif;
-    --font-mono:'JetBrains Mono',monospace;
-    --radius:3px;
+    --border:#dadce0; --border-strong:#9aa0a6;
+    --text:#202124; --text-dim:#5f6368; --text-faint:#80868b;
+    --blue:#1a73e8; --blue-dim:rgba(26,115,232,.10);
+    --amber:#e37400; --amber-dim:rgba(227,116,0,.12);
+    --red:#d93025; --red-dim:rgba(217,48,37,.12);
+    --green:#188038; --green-dim:rgba(24,128,56,.14);
+    --font-display:'Roboto',sans-serif;
+    --font-body:'Roboto',sans-serif;
+    --font-mono:'Roboto Mono',monospace;
+    --radius:8px;
+    --radius-lg:14px;
   }
   *{box-sizing:border-box;}
   html,body{height:100%;}
   body{margin:0;background:var(--bg);color:var(--text);font-family:var(--font-body);-webkit-font-smoothing:antialiased;overflow:hidden;}
   ::selection{background:var(--blue-dim); color:var(--blue);}
-  button,select,input{font-family:var(--font-mono);font-size:11px;letter-spacing:.03em;}
-  button,select{background:var(--panel-2);color:var(--text-dim);border:1px solid var(--border);border-radius:var(--radius);padding:6px 10px;cursor:pointer;transition:.15s;}
-  button:hover,select:hover{color:var(--text);border-color:var(--border-strong);background:#fff;}
+  button,select,input{font-family:var(--font-body);font-size:12.5px;letter-spacing:.01em;}
+  button,select{background:var(--panel-2);color:var(--text-dim);border:1px solid var(--border);border-radius:var(--radius);padding:7px 12px;cursor:pointer;transition:.15s;font-weight:500;}
+  button:hover,select:hover{color:var(--text);border-color:var(--border-strong);background:#fff;box-shadow:0 1px 2px rgba(60,64,67,.15);}
   button:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid var(--blue);outline-offset:1px;}
   button.active{color:var(--blue);border-color:var(--blue);background:var(--blue-dim);}
   button.small{padding:2px 7px;font-size:10.5px;line-height:1.4;}
   button.mini{padding:0 5px;font-size:10px;line-height:1.6;margin-left:2px;}
   button.danger{color:var(--red);}
-  label.toggle{display:inline-flex;align-items:center;gap:6px;font-family:var(--font-mono);font-size:11px;color:var(--text-dim);letter-spacing:.03em;cursor:pointer;user-select:none;}
+  label.toggle{display:inline-flex;align-items:center;gap:6px;font-family:var(--font-body);font-size:12.5px;color:var(--text-dim);letter-spacing:.01em;cursor:pointer;user-select:none;}
   label.toggle input{accent-color:var(--blue);}
-  input[type=number]{width:56px;background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:3px 5px;color:var(--text);}
+  input[type=number]{width:56px;background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:4px 6px;color:var(--text);font-family:var(--font-mono);}
   input[type=range]{accent-color:var(--blue);width:100%;}
- 
+  input[type=text],input[type=password]{background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:5px 8px;color:var(--text);font-family:var(--font-body);}
+
   #app{position:relative;width:100vw;height:100vh;display:flex;flex-direction:column;}
- 
-  .topbar{flex:0 0 auto;display:flex;align-items:center;justify-content:space-between;gap:14px;padding:10px 16px;border-bottom:1px solid var(--border);background:var(--bg-2);z-index:30;flex-wrap:wrap;box-shadow:0 1px 0 rgba(15,23,42,.02);}
+
+  .topbar{flex:0 0 auto;display:flex;align-items:center;justify-content:space-between;gap:14px;padding:10px 16px;border-bottom:1px solid var(--border);background:var(--bg-2);z-index:30;flex-wrap:wrap;box-shadow:0 1px 2px rgba(60,64,67,.08);}
   .brand{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap;min-width:0;}
-  .brand .mark{font-family:var(--font-mono);font-size:10px;letter-spacing:.12em;color:var(--blue);border:1px solid var(--border);padding:3px 6px;border-radius:var(--radius);white-space:nowrap;background:var(--blue-dim);}
-  .brand h1{font-family:var(--font-display);font-weight:600;font-size:16px;margin:0;letter-spacing:.01em;white-space:nowrap;}
-  .brand .sub{font-family:var(--font-mono);font-size:10px;color:var(--text-faint);letter-spacing:.02em;white-space:nowrap;}
+  .brand .mark{font-family:var(--font-mono);font-size:10px;letter-spacing:.08em;color:var(--blue);border:1px solid var(--border);padding:3px 7px;border-radius:var(--radius);white-space:nowrap;background:var(--blue-dim);}
+  .brand h1{font-family:var(--font-display);font-weight:600;font-size:17px;margin:0;letter-spacing:0;white-space:nowrap;}
+  .brand .sub{font-family:var(--font-body);font-size:11px;color:var(--text-faint);letter-spacing:.01em;white-space:nowrap;}
   .controls{display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
   .controls .group{display:flex;align-items:center;gap:6px;}
   .controls .sep{width:1px;height:16px;background:var(--border);}
- 
+
   .layout{flex:1 1 auto;display:flex;min-height:0;}
   #viewport{position:relative;flex:1 1 auto;min-width:0;background:radial-gradient(ellipse at 50% 15%, #ffffff 0%, var(--bg) 70%);}
   #viewport canvas{display:block;}
- 
-  .overlay{position:absolute;pointer-events:none;z-index:5;font-family:var(--font-mono);}
-  .status-chip{top:12px;left:12px;position:absolute;display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.88);border:1px solid var(--border);padding:6px 11px;border-radius:var(--radius);font-size:11px;letter-spacing:.06em;backdrop-filter:blur(3px);box-shadow:0 1px 4px rgba(15,23,42,.06);}
+
+  .overlay{position:absolute;pointer-events:none;z-index:5;font-family:var(--font-body);}
+  .status-chip{top:12px;left:12px;position:absolute;display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.92);border:1px solid var(--border);padding:7px 12px;border-radius:var(--radius);font-size:12px;letter-spacing:.02em;backdrop-filter:blur(3px);box-shadow:0 1px 3px rgba(60,64,67,.12);}
   .status-chip .dot{width:7px;height:7px;border-radius:50%;background:var(--blue);box-shadow:0 0 6px var(--blue);}
   .status-chip.alert .dot{background:var(--amber);box-shadow:0 0 6px var(--amber);}
   .status-chip.captured .dot{background:var(--green);box-shadow:0 0 6px var(--green);}
   #status-label{color:var(--text);font-weight:600;}
   #status-sub{color:var(--text-faint);}
- 
-  .legend{bottom:12px;left:12px;position:absolute;background:rgba(255,255,255,.88);border:1px solid var(--border);padding:8px 11px;border-radius:var(--radius);font-size:10px;color:var(--text-dim);letter-spacing:.02em;display:flex;flex-direction:column;gap:4px;backdrop-filter:blur(3px);box-shadow:0 1px 4px rgba(15,23,42,.06);}
+
+  .legend{bottom:12px;left:12px;position:absolute;background:rgba(255,255,255,.92);border:1px solid var(--border);padding:9px 12px;border-radius:var(--radius);font-size:11px;color:var(--text-dim);letter-spacing:.01em;display:flex;flex-direction:column;gap:5px;backdrop-filter:blur(3px);box-shadow:0 1px 3px rgba(60,64,67,.12);}
   .legend .row{display:flex;align-items:center;gap:7px;}
   .legend .swatch{width:9px;height:9px;border-radius:2px;flex:0 0 auto;}
- 
-  .coord-readout{bottom:12px;right:12px;position:absolute;background:rgba(255,255,255,.88);border:1px solid var(--border);padding:8px 11px;border-radius:var(--radius);font-size:10.5px;color:var(--text-dim);letter-spacing:.03em;text-align:right;backdrop-filter:blur(3px);box-shadow:0 1px 4px rgba(15,23,42,.06);}
+
+  .coord-readout{bottom:12px;right:12px;position:absolute;background:rgba(255,255,255,.92);border:1px solid var(--border);padding:8px 12px;border-radius:var(--radius);font-size:11px;font-family:var(--font-mono);color:var(--text-dim);letter-spacing:.01em;text-align:right;backdrop-filter:blur(3px);box-shadow:0 1px 3px rgba(60,64,67,.12);}
   .coord-readout b{color:var(--blue);font-weight:700;}
- 
-  .label3d{font-family:var(--font-mono);font-size:9.5px;letter-spacing:.04em;color:var(--text-dim);background:rgba(255,255,255,.85);border:1px solid var(--border);padding:2px 5px;border-radius:2px;white-space:nowrap;pointer-events:none;}
-  .label3d.tag-blue{color:var(--blue);border-color:rgba(37,99,235,.35);}
-  .label3d.tag-amber{color:var(--amber);border-color:rgba(184,115,10,.35);}
-  .label3d.tag-green{color:var(--green);border-color:rgba(22,163,74,.35);}
- 
+
+  .label3d{font-family:var(--font-mono);font-size:9.5px;letter-spacing:.02em;color:var(--text-dim);background:rgba(255,255,255,.9);border:1px solid var(--border);padding:2px 6px;border-radius:4px;white-space:nowrap;pointer-events:none;}
+  .label3d.tag-blue{color:var(--blue);border-color:rgba(26,115,232,.35);}
+  .label3d.tag-amber{color:var(--amber);border-color:rgba(227,116,0,.35);}
+  .label3d.tag-green{color:var(--green);border-color:rgba(24,128,56,.35);}
+
   /* ---- consolidated tabbed editor popup ---- */
   .editor-toggle{white-space:nowrap;}
   .editor-panel{
-    position:absolute; top:12px; right:12px; width:280px; max-height:calc(100% - 24px);
-    background:rgba(255,255,255,.98); border:1px solid var(--border); border-radius:var(--radius);
-    box-shadow:0 8px 26px rgba(15,23,42,.14); z-index:20; pointer-events:auto;
+    position:absolute; top:12px; right:12px; width:290px; max-height:calc(100% - 24px);
+    background:rgba(255,255,255,.99); border:1px solid var(--border); border-radius:var(--radius-lg);
+    box-shadow:0 4px 6px rgba(60,64,67,.08), 0 8px 24px rgba(60,64,67,.14); z-index:20; pointer-events:auto;
     display:none; flex-direction:column; overflow:hidden;
   }
   .editor-panel.open{display:flex;}
-  .editor-head{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);background:var(--panel-2);}
+
+  .account-status{font-family:var(--font-body);font-size:12.5px;color:var(--text-dim);letter-spacing:.01em;white-space:nowrap;}
+  .account-panel{
+    position:absolute; top:12px; left:50%; transform:translateX(-50%); width:290px;
+    background:rgba(255,255,255,.99); border:1px solid var(--border); border-radius:var(--radius-lg);
+    box-shadow:0 4px 6px rgba(60,64,67,.08), 0 8px 24px rgba(60,64,67,.14); z-index:25; pointer-events:auto;
+    display:none; flex-direction:column; overflow:hidden;
+  }
+  .account-panel.open{display:flex;}
+  .hidden{display:none !important;}
+  .editor-head{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);background:var(--panel-2);border-radius:var(--radius-lg) var(--radius-lg) 0 0;}
   .tabs{display:flex;flex:1 1 auto;}
-  .tab-btn{flex:1 1 auto;background:transparent;border:none;border-radius:0;padding:9px 4px;font-size:10px;letter-spacing:.04em;color:var(--text-faint);border-bottom:2px solid transparent;}
+  .tab-btn{flex:1 1 auto;background:transparent;border:none;border-radius:0;padding:10px 4px;font-size:10.5px;font-family:var(--font-body);font-weight:500;letter-spacing:.02em;color:var(--text-faint);border-bottom:2px solid transparent;}
   .tab-btn.active{color:var(--blue);border-bottom:2px solid var(--blue);background:#fff;}
-  .editor-close{border:none;background:transparent;padding:9px 10px;color:var(--text-faint);border-radius:0;}
-  .editor-close:hover{color:var(--red);background:transparent;border:none;}
-  .editor-body{padding:10px;overflow-y:auto;font-family:var(--font-mono);}
+  .editor-close{border:none;background:transparent;padding:9px 12px;color:var(--text-faint);border-radius:0;}
+  .editor-close:hover{color:var(--red);background:transparent;border:none;box-shadow:none;}
+  .editor-body{padding:12px;overflow-y:auto;font-family:var(--font-body);}
   .tab-panel.hidden{display:none;}
- 
-  .palette{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px;}
-  .palette-item{display:flex;flex-direction:column;align-items:center;gap:3px;width:58px;padding:6px 4px;border:1px solid var(--border);border-radius:var(--radius);background:#fff;cursor:grab;font-size:9px;color:var(--text-dim);text-align:center;user-select:none;}
+
+  .palette{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:9px;}
+  .palette-item{display:flex;flex-direction:column;align-items:center;gap:4px;width:60px;padding:7px 4px;border:1px solid var(--border);border-radius:var(--radius);background:#fff;cursor:grab;font-size:10px;font-family:var(--font-body);color:var(--text-dim);text-align:center;user-select:none;transition:.15s;}
+  .palette-item:hover{border-color:var(--blue);box-shadow:0 1px 3px rgba(60,64,67,.14);}
   .palette-item:active{cursor:grabbing;}
-  .palette-item .swatch{width:20px;height:14px;border-radius:2px;margin-bottom:1px;}
-  .placed-list{max-height:190px;overflow-y:auto;border-top:1px dashed var(--border);padding-top:6px;}
-  .placed-row{display:flex;align-items:flex-start;justify-content:space-between;gap:6px;font-size:10px;color:var(--text-dim);padding:5px 0;border-bottom:1px dashed var(--border);}
+  .palette-item .swatch{width:22px;height:15px;border-radius:3px;margin-bottom:1px;}
+  .placed-list{max-height:190px;overflow-y:auto;border-top:1px solid var(--border);padding-top:8px;}
+  .placed-row{display:flex;align-items:flex-start;justify-content:space-between;gap:6px;font-size:11px;font-family:var(--font-body);color:var(--text-dim);padding:6px 0;border-bottom:1px solid var(--panel-2);}
   .placed-row:last-child{border-bottom:none;}
   .placed-row .lbl{color:var(--text);}
-  .placed-row .dims{margin-top:3px;display:flex;flex-wrap:wrap;gap:6px;}
+  .placed-row .dims{margin-top:4px;display:flex;flex-wrap:wrap;gap:6px;font-family:var(--font-mono);}
   .placed-row .dim{display:inline-flex;align-items:center;color:var(--text-faint);}
-  .placed-empty{font-size:10px;color:var(--text-faint);padding:4px 0;}
-  .editor-hint{font-size:9px;color:var(--text-faint);margin-top:6px;line-height:1.5;}
- 
-  .predator-card{border:1px solid var(--border);border-radius:var(--radius);padding:8px;margin-bottom:8px;background:#fff;}
+  .placed-empty{font-size:11px;color:var(--text-faint);padding:4px 0;}
+  .editor-hint{font-size:10px;color:var(--text-faint);margin-top:7px;line-height:1.5;}
+
+  .predator-card{border:1px solid var(--border);border-radius:var(--radius);padding:9px;margin-bottom:9px;background:#fff;}
   .predator-card.active{border-color:var(--blue);background:var(--blue-dim);}
-  .predator-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;font-size:11px;color:var(--text);font-weight:700;}
-  .predator-row{display:flex;align-items:center;justify-content:space-between;gap:6px;margin-bottom:5px;font-size:9.5px;color:var(--text-dim);}
+  .predator-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:7px;font-size:12px;color:var(--text);font-weight:600;font-family:var(--font-body);}
+  .predator-row{display:flex;align-items:center;justify-content:space-between;gap:6px;margin-bottom:6px;font-size:10.5px;font-family:var(--font-body);color:var(--text-dim);}
   .predator-row label{flex:0 0 auto;}
   .predator-row select{flex:1 1 auto;}
-  .predator-row .freqs{display:flex;align-items:center;gap:4px;}
- 
+  .predator-row .freqs{display:flex;align-items:center;gap:4px;font-family:var(--font-mono);}
+
   /* ---- dashboard: small refreshing blocks ---- */
   .dashboard{flex:0 0 250px;max-width:250px;border-left:1px solid var(--border);background:var(--bg-2);overflow-y:auto;padding:12px;display:grid;grid-template-columns:1fr 1fr;gap:8px;align-content:start;}
-  .block{border:1px solid var(--border);background:var(--panel);border-radius:var(--radius);padding:8px 9px;}
+  .block{border:1px solid var(--border);background:var(--panel);border-radius:var(--radius);padding:9px 10px;}
   .block.wide{grid-column:1 / -1;}
-  .block .k{font-family:var(--font-mono);font-size:9px;letter-spacing:.06em;color:var(--text-faint);margin-bottom:4px;}
-  .block .v{font-family:var(--font-mono);font-size:13px;font-weight:700;color:var(--text);line-height:1.25;word-break:break-word;}
+  .block .k{font-family:var(--font-body);font-size:10px;font-weight:500;letter-spacing:.02em;color:var(--text-faint);margin-bottom:4px;}
+  .block .v{font-family:var(--font-mono);font-size:13px;font-weight:700;color:var(--text);line-height:1.3;word-break:break-word;}
   .block .v.blue{color:var(--blue);} .block .v.red{color:var(--red);} .block .v.green{color:var(--green);} .block .v.amber{color:var(--amber);}
-  .block .v.small{font-size:10.5px;font-weight:500;color:var(--text-dim);}
+  .block .v.small{font-size:10.5px;font-weight:500;color:var(--text-dim);font-family:var(--font-body);}
   .eff-bar{height:5px;border-radius:3px;background:var(--panel-2);margin-top:5px;overflow:hidden;}
   .eff-bar i{display:block;height:100%;background:var(--amber);}
- 
-  .statusbar{flex:0 0 auto;display:flex;align-items:center;justify-content:space-between;padding:6px 16px;border-top:1px solid var(--border);background:var(--bg-2);font-family:var(--font-mono);font-size:9.5px;color:var(--text-faint);letter-spacing:.03em;}
- 
+
+  .statusbar{flex:0 0 auto;display:flex;align-items:center;justify-content:space-between;padding:7px 16px;border-top:1px solid var(--border);background:var(--bg-2);font-family:var(--font-body);font-size:10.5px;color:var(--text-faint);letter-spacing:.01em;}
+
   .dashboard::-webkit-scrollbar,.placed-list::-webkit-scrollbar,.editor-body::-webkit-scrollbar{width:6px;}
   .dashboard::-webkit-scrollbar-thumb,.placed-list::-webkit-scrollbar-thumb,.editor-body::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
- 
-  .rat-drag-handle{display:inline-flex;align-items:center;gap:5px;padding:6px 10px;border:1px solid rgba(22,163,74,.4);border-radius:var(--radius);background:var(--green-dim);color:var(--green);cursor:grab;font-family:var(--font-mono);font-size:11px;letter-spacing:.03em;user-select:none;white-space:nowrap;}
+
+  .rat-drag-handle{display:inline-flex;align-items:center;gap:5px;padding:7px 12px;border:1px solid rgba(24,128,56,.4);border-radius:var(--radius);background:var(--green-dim);color:var(--green);cursor:grab;font-family:var(--font-body);font-size:12.5px;font-weight:500;letter-spacing:.01em;user-select:none;white-space:nowrap;}
   .rat-drag-handle:active{cursor:grabbing;}
- 
+
   @media (max-width: 900px){
     .layout{flex-direction:column;}
     #viewport{flex:1 1 54vh;min-height:280px;}
@@ -144,138 +157,173 @@
 </head>
 <body>
 <div id="app">
- 
+
   <header class="topbar">
     <div class="brand">
       <span class="mark">GRID 36×36×36</span>
-      <h1>宮格式住家防鼠系統</h1>
+      <h1>Grid-Based Rodent Defense System</h1>
       <span class="sub">LIVE 3D RAT TRACKING — ROUTE &amp; DETERRENCE</span>
     </div>
     <div class="controls">
-      <div class="group"><label class="toggle"><input type="checkbox" id="toggle-rotate" /> 自動旋轉 AUTO-ROTATE</label></div>
+      <div class="group"><label class="toggle"><input type="checkbox" id="toggle-rotate" /> Auto-rotate</label></div>
       <div class="sep"></div>
       <div class="group">
-        <button id="btn-set-entrance">🚪 設定入口 ENTRANCE</button>
-        <label class="toggle"><input type="checkbox" id="toggle-randomize" checked /> 隨機 RANDOM</label>
+        <button id="btn-set-entrance">🚪 Set entrance</button>
+        <label class="toggle"><input type="checkbox" id="toggle-randomize" checked /> Randomize</label>
       </div>
       <div class="sep"></div>
       <div class="group">
-        <span class="rat-drag-handle" draggable="true" data-drag="rat" title="拖曳到場景中，手動設定老鼠目前位置（測試用）">🐀 拖曳老鼠 DRAG RAT</span>
+        <span class="rat-drag-handle" draggable="true" data-drag="rat" title="Drag into the scene to manually set the rat's current position (for mock/testing purposes)">🐀 Drag rat</span>
       </div>
       <div class="sep"></div>
       <div class="group">
-        <span class="toggle" style="cursor:default;">速度</span>
+        <span class="toggle" style="cursor:default;">Speed</span>
         <select id="speed-select">
           <option value="0.5">0.5×</option>
           <option value="1" selected>1×</option>
           <option value="2">2×</option>
         </select>
       </div>
-      <button id="btn-restart">↻ 重新模擬</button>
-      <button id="btn-edit-scene" class="editor-toggle">🛠 場景編輯 EDIT</button>
+      <button id="btn-restart">↻ Restart simulation</button>
+      <button id="btn-edit-scene" class="editor-toggle">🛠 Edit scene</button>
+      <div class="sep"></div>
+      <div class="group">
+        <span id="account-status" class="account-status">👤 Guest</span>
+        <button id="btn-account">Log in</button>
+        <button id="btn-save-setup" class="hidden">💾 Save</button>
+      </div>
     </div>
   </header>
- 
+
   <div class="layout">
     <div id="viewport">
       <div class="overlay status-chip" id="status-chip">
         <span class="dot"></span>
         <span id="status-label">SCANNING</span>
-        <span id="status-sub">— 巡邏中 no subject</span>
+        <span id="status-sub">— patrolling, no subject</span>
       </div>
- 
+
       <div class="overlay legend">
-        <div class="row"><span class="swatch" style="background:#16a34a"></span>老鼠 / 已走過宮格 Rat &amp; visited cells</div>
-        <div class="row"><span class="swatch" style="background:#dc2626"></span>理想路徑（動態更新）Ideal route (dynamic)</div>
-        <div class="row"><span class="swatch" style="background:#2563eb"></span>家具 / 人員 障礙物 Furniture &amp; humans</div>
-        <div class="row"><span class="swatch" style="background:#b8730a"></span>聲波 / 禁區 Sound waves &amp; avoidance zones</div>
+        <div class="row"><span class="swatch" style="background:#188038"></span>Rat &amp; visited cells</div>
+        <div class="row"><span class="swatch" style="background:#d93025"></span>Ideal route (dynamic)</div>
+        <div class="row"><span class="swatch" style="background:#1a73e8"></span>Furniture &amp; humans</div>
+        <div class="row"><span class="swatch" style="background:#e37400"></span>Sound waves &amp; avoidance zones</div>
       </div>
- 
+
       <div class="overlay coord-readout" id="coord-readout">GRID —&nbsp;&nbsp;X 0.00&nbsp;&nbsp;Z 0.00</div>
- 
+
+      <div class="account-panel" id="account-panel">
+        <div class="editor-head">
+          <div class="tabs" style="flex:1;padding:10px 14px;color:var(--text);font-weight:600;font-size:11px;letter-spacing:.04em;">ACCOUNT</div>
+          <button class="editor-close" id="account-close">✕</button>
+        </div>
+        <div class="editor-body">
+          <div id="account-logged-out">
+            <div class="predator-row"><label>Username</label><input type="text" id="acc-username" style="width:150px" /></div>
+            <div class="predator-row"><label>Password</label><input type="password" id="acc-password" style="width:150px" /></div>
+            <div style="display:flex;gap:6px;margin-top:8px;">
+              <button id="btn-login" class="small">Log in</button>
+              <button id="btn-register" class="small">Register</button>
+            </div>
+            <div class="editor-hint" id="account-msg"></div>
+            <div class="editor-hint">Accounts are stored only in this browser (localStorage) — this is not a real cloud system. For demos and personal testing only; don't use a real password.</div>
+          </div>
+          <div id="account-logged-in" class="hidden">
+            <div class="predator-row"><label>Current account</label><b id="acc-current-name">—</b></div>
+            <div style="display:flex;gap:6px;margin-top:6px;flex-wrap:wrap;">
+              <button id="btn-manual-save" class="small">💾 Save setup</button>
+              <button id="btn-logout" class="small danger">Log out</button>
+            </div>
+            <div class="editor-hint" id="account-save-status">Not saved yet</div>
+            <div class="editor-hint">Furniture, humans, avoidance zones, sound settings, and entrance settings autosave to this account. Guest mode is not saved.</div>
+          </div>
+        </div>
+      </div>
+
       <div class="editor-panel" id="editor-panel">
         <div class="editor-head">
           <div class="tabs">
-            <button class="tab-btn active" data-tab="furniture">家具</button>
-            <button class="tab-btn" data-tab="humans">人員</button>
-            <button class="tab-btn" data-tab="sound">音效</button>
-            <button class="tab-btn" data-tab="zones">禁區</button>
+            <button class="tab-btn active" data-tab="furniture">Furniture</button>
+            <button class="tab-btn" data-tab="humans">Humans</button>
+            <button class="tab-btn" data-tab="sound">Sound</button>
+            <button class="tab-btn" data-tab="zones">Zones</button>
           </div>
           <button class="editor-close" id="editor-close">✕</button>
         </div>
         <div class="editor-body">
           <div class="tab-panel" data-tabpanel="furniture">
             <div class="palette">
-              <div class="palette-item" draggable="true" data-drag="furniture:sofa"><span class="swatch" style="background:#2563eb"></span>沙發</div>
-              <div class="palette-item" draggable="true" data-drag="furniture:chair"><span class="swatch" style="background:#3b82f6"></span>椅子</div>
-              <div class="palette-item" draggable="true" data-drag="furniture:light"><span class="swatch" style="background:#f5c518"></span>燈具</div>
-              <div class="palette-item" draggable="true" data-drag="furniture:shelf"><span class="swatch" style="background:#1d4ed8"></span>層架</div>
-              <div class="palette-item" draggable="true" data-drag="furniture:window"><span class="swatch" style="background:#67c1d6"></span>窗戶</div>
+              <div class="palette-item" draggable="true" data-drag="furniture:sofa"><span class="swatch" style="background:#1a73e8"></span>Sofa</div>
+              <div class="palette-item" draggable="true" data-drag="furniture:chair"><span class="swatch" style="background:#3b82f6"></span>Chair</div>
+              <div class="palette-item" draggable="true" data-drag="furniture:light"><span class="swatch" style="background:#f5c518"></span>Light</div>
+              <div class="palette-item" draggable="true" data-drag="furniture:shelf"><span class="swatch" style="background:#1d4ed8"></span>Shelf</div>
+              <div class="palette-item" draggable="true" data-drag="furniture:window"><span class="swatch" style="background:#67c1d6"></span>Window</div>
+              <div class="palette-item" draggable="true" data-drag="furniture:wall"><span class="swatch" style="background:#64748b"></span>Wall</div>
             </div>
             <div class="placed-list" id="list-furniture"></div>
-            <div class="editor-hint">拖曳到場景放置；用 +/− 以整數宮格單位調整長寬高。</div>
+            <div class="editor-hint">Drag an icon onto the scene to place it. A silhouette preview shows where it will land. Use +/− to resize in whole grid units.</div>
           </div>
           <div class="tab-panel hidden" data-tabpanel="humans">
             <div class="palette">
-              <div class="palette-item" draggable="true" data-drag="human"><span class="swatch" style="background:#334155"></span>人員</div>
+              <div class="palette-item" draggable="true" data-drag="human"><span class="swatch" style="background:#334155"></span>Human</div>
             </div>
             <div class="placed-list" id="list-humans"></div>
-            <div class="editor-hint">拖曳放置人員位置，系統會納入路徑規劃考量。</div>
+            <div class="editor-hint">Drag to place a person. The route planner takes their position into account.</div>
           </div>
           <div class="tab-panel hidden" data-tabpanel="sound">
             <div id="sound-tab-content"></div>
           </div>
           <div class="tab-panel hidden" data-tabpanel="zones">
             <div class="palette">
-              <div class="palette-item" draggable="true" data-drag="zone"><span class="swatch" style="background:#dc2626"></span>禁區</div>
+              <div class="palette-item" draggable="true" data-drag="zone"><span class="swatch" style="background:#d93025"></span>Zone</div>
             </div>
             <div class="placed-list" id="list-zones"></div>
-            <div class="editor-hint">「禁止接近」區域，老鼠路徑會盡量避開此區。</div>
+            <div class="editor-hint">"Do not approach" areas — the rat's route strongly avoids these.</div>
           </div>
         </div>
       </div>
     </div>
- 
+
     <aside class="dashboard">
-      <div class="block wide"><div class="k">狀態 STATUS</div><div class="v blue" id="d-status">SCANNING</div></div>
-      <div class="block"><div class="k">目前宮格 CELL</div><div class="v" id="d-cell">—</div></div>
-      <div class="block"><div class="k">速度 VELOCITY</div><div class="v" id="d-vel">0.00 m/s</div></div>
-      <div class="block"><div class="k">入口 ENTRY</div><div class="v small" id="d-entry">—</div></div>
-      <div class="block"><div class="k">目標 GOAL</div><div class="v small" id="d-goal">—</div></div>
-      <div class="block wide"><div class="k">理想路徑 ROUTE</div><div class="v red" id="d-route">—</div></div>
-      <div class="block wide"><div class="k">目前音效 ACTIVE SOUND</div><div class="v amber" id="d-sound">貓頭鷹 Owl</div></div>
+      <div class="block wide"><div class="k">STATUS</div><div class="v blue" id="d-status">SCANNING</div></div>
+      <div class="block"><div class="k">CELL</div><div class="v" id="d-cell">—</div></div>
+      <div class="block"><div class="k">VELOCITY</div><div class="v" id="d-vel">0.00 m/s</div></div>
+      <div class="block"><div class="k">ENTRY</div><div class="v small" id="d-entry">—</div></div>
+      <div class="block"><div class="k">GOAL</div><div class="v small" id="d-goal">—</div></div>
+      <div class="block wide"><div class="k">IDEAL ROUTE</div><div class="v red" id="d-route">—</div></div>
+      <div class="block wide"><div class="k">ACTIVE SOUND</div><div class="v amber" id="d-sound">Owl</div></div>
       <div class="block wide">
-        <div class="k">驅趕成效 EFFECTIVENESS</div>
+        <div class="k">EFFECTIVENESS</div>
         <div class="v amber" id="d-eff">—</div>
         <div class="eff-bar"><i id="d-eff-bar" style="width:0%"></i></div>
       </div>
-      <div class="block wide"><div class="k">建議音效 SUGGESTED SOUND</div><div class="v small" id="d-suggest">尚無資料 no data yet</div></div>
-      <div class="block"><div class="k">家具 FURN.</div><div class="v" id="d-furniture">0</div></div>
-      <div class="block"><div class="k">人員 HUMAN</div><div class="v" id="d-humans">0</div></div>
-      <div class="block"><div class="k">禁區 ZONES</div><div class="v" id="d-zones">0</div></div>
-      <div class="block"><div class="k">已走宮格 VISITED</div><div class="v green" id="d-visited">0</div></div>
-      <div class="block wide"><div class="k">最新事件 LATEST EVENT</div><div class="v small" id="d-event">—</div></div>
+      <div class="block wide"><div class="k">SUGGESTED SOUND</div><div class="v small" id="d-suggest">No data yet</div></div>
+      <div class="block"><div class="k">FURNITURE</div><div class="v" id="d-furniture">0</div></div>
+      <div class="block"><div class="k">HUMANS</div><div class="v" id="d-humans">0</div></div>
+      <div class="block"><div class="k">ZONES</div><div class="v" id="d-zones">0</div></div>
+      <div class="block"><div class="k">VISITED</div><div class="v green" id="d-visited">0</div></div>
+      <div class="block wide"><div class="k">LATEST EVENT</div><div class="v small" id="d-event">—</div></div>
     </aside>
   </div>
- 
+
   <footer class="statusbar">
-    <span>都市老鼠防治 · 芳和實中 — Grid Defense Concept Demo</span>
+    <span>Urban Rat Control · Grid Defense Concept Demo</span>
     <span id="clock">00:00:00</span>
   </footer>
 </div>
- 
+
 <script type="importmap">
 { "imports": {
   "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
   "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
 } }
 </script>
- 
+
 <script type="module">
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { CSS2DRenderer, CSS2DObject } from 'three/addons/renderers/CSS2DRenderer.js';
- 
+
 /* ============ CONFIG ============ */
 const GRID = 36, CELL = 0.3, WORLD = GRID * CELL;
 const ROOM_H = WORLD;
@@ -290,53 +338,53 @@ function worldToCell(x,z){
   return {c,r};
 }
 function clamp(v,lo,hi){ return Math.max(lo, Math.min(hi, v)); }
- 
+
 /* ============ RENDERER / SCENE / CAMERA ============ */
 const viewport = document.getElementById('viewport');
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0xf4f6f9);
 scene.fog = new THREE.FogExp2(0xf4f6f9, 0.028);
- 
+
 const camera = new THREE.PerspectiveCamera(42, 1, 0.1, 100);
 camera.position.set(15, 13, 17);
- 
+
 const renderer = new THREE.WebGLRenderer({ antialias:true });
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 renderer.setClearColor(0xf4f6f9, 1);
 viewport.appendChild(renderer.domElement);
- 
+
 const labelRenderer = new CSS2DRenderer();
 labelRenderer.domElement.style.position='absolute';
 labelRenderer.domElement.style.top='0';
 labelRenderer.domElement.style.left='0';
 labelRenderer.domElement.style.pointerEvents='none';
 viewport.appendChild(labelRenderer.domElement);
- 
+
 function resize(){
   const w = viewport.clientWidth, h = viewport.clientHeight;
   camera.aspect = w/h; camera.updateProjectionMatrix();
   renderer.setSize(w,h); labelRenderer.setSize(w,h);
 }
 window.addEventListener('resize', resize);
- 
+
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.target.set(0, 2, 0);
 controls.enableDamping = true; controls.dampingFactor = 0.08;
 controls.minDistance = 5; controls.maxDistance = 36;
 controls.maxPolarAngle = Math.PI * 0.49;
- 
+
 /* ============ LIGHTING ============ */
 scene.add(new THREE.AmbientLight(0xffffff, 1.15));
 const key = new THREE.DirectionalLight(0xffffff, 0.55);
 key.position.set(10, 16, 8);
 scene.add(key);
-const rim = new THREE.PointLight(0x2563eb, 0.35, 26);
+const rim = new THREE.PointLight(0x1a73e8, 0.35, 26);
 rim.position.set(-6, 6, -6);
 scene.add(rim);
- 
+
 const roomGroup = new THREE.Group();
 scene.add(roomGroup);
- 
+
 /* ============ ROOM SHELL — high contrast bounding box on all axes ============ */
 {
   const boxGeo = new THREE.BoxGeometry(WORLD, ROOM_H, WORLD);
@@ -344,7 +392,7 @@ scene.add(roomGroup);
   const shell = new THREE.LineSegments(edges, new THREE.LineBasicMaterial({ color:0x0f172a, transparent:true, opacity:0.85 }));
   shell.position.y = ROOM_H/2;
   roomGroup.add(shell);
- 
+
   const floor = new THREE.Mesh(new THREE.PlaneGeometry(WORLD, WORLD), new THREE.MeshBasicMaterial({ color:0xffffff }));
   floor.rotation.x = -Math.PI/2; floor.position.y = -0.005;
   roomGroup.add(floor);
@@ -380,72 +428,151 @@ function buildGridLines(plane){
 roomGroup.add(buildGridLines('floor'));
 roomGroup.add(buildGridLines('wallX'));
 roomGroup.add(buildGridLines('wallZ'));
- 
+
 function makeLabel(text, cls){
   const div = document.createElement('div');
   div.className = 'label3d' + (cls?(' '+cls):'');
   div.textContent = text;
   return new CSS2DObject(div);
 }
- 
+
 /* ============ ITEM DEFINITIONS (furniture + avoidance zones share a renderer) ============ */
+/* 'climbable' furniture (sofa/chair/shelf) never blocks the rat — it runs up and across
+   the top surface (heightGrid). 'blocking' furniture (walls) is a true hard obstacle —
+   the rat cannot climb over it regardless of height, only route around it via adjacent
+   cells (left/right). Only walls and humans are hard-blocked; everything else is either
+   climbable terrain or purely decorative (lights/windows, ignored for movement). */
 const ITEM_DEFS = {
-  sofa:   { label:'沙發 Sofa',   cat:'furniture', L:3, W:2, H:2, color:0x2563eb, opacity:0.82, blocking:true,  elevate:'floor' },
-  chair:  { label:'椅子 Chair',  cat:'furniture', L:1, W:1, H:2, color:0x3b82f6, opacity:0.82, blocking:true,  elevate:'floor' },
-  light:  { label:'燈具 Light',  cat:'furniture', L:1, W:1, H:1, color:0xf5c518, opacity:0.9,  blocking:false, elevate:'ceiling' },
-  shelf:  { label:'層架 Shelf',  cat:'furniture', L:1, W:3, H:6, color:0x1d4ed8, opacity:0.82, blocking:true,  elevate:'floor' },
-  window: { label:'窗戶 Window', cat:'furniture', L:1, W:4, H:4, color:0x67c1d6, opacity:0.35, blocking:false, elevate:'mid' },
-  zone:   { label:'禁區 Zone',   cat:'zone',      L:3, W:3, H:4, color:0xdc2626, opacity:0.14, blocking:false, elevate:'floor', costOwn:60, costRing:15 },
+  sofa:   { label:'Sofa',   cat:'furniture', L:3, W:2, H:2, color:0x1a73e8, opacity:0.86, climbable:true,  blocking:false, elevate:'floor' },
+  chair:  { label:'Chair',  cat:'furniture', L:1, W:1, H:2, color:0x3b82f6, opacity:0.86, climbable:true,  blocking:false, elevate:'floor' },
+  light:  { label:'Light',  cat:'furniture', L:1, W:1, H:1, color:0xf5c518, opacity:0.9,  climbable:false, blocking:false, elevate:'ceiling' },
+  shelf:  { label:'Shelf',  cat:'furniture', L:1, W:3, H:6, color:0x1d4ed8, opacity:0.86, climbable:true,  blocking:false, elevate:'floor' },
+  window: { label:'Window', cat:'furniture', L:1, W:4, H:4, color:0x67c1d6, opacity:0.35, climbable:false, blocking:false, elevate:'mid' },
+  wall:   { label:'Wall',   cat:'furniture', L:5, W:1, H:8, color:0x64748b, opacity:0.92, climbable:false, blocking:true,  elevate:'floor' },
+  zone:   { label:'Zone',   cat:'zone',      L:3, W:3, H:4, color:0xd93025, opacity:0.14, climbable:false, blocking:false, elevate:'floor', costOwn:60, costRing:15 },
 };
-const unitBoxGeo = new THREE.BoxGeometry(1,1,1);
-const unitBoxEdges = new THREE.EdgesGeometry(unitBoxGeo);
- 
+
 let uid = 1;
 const placedItems = [];   // furniture + zones
 const humanItems = [];
- 
+
 function clampFootprint(col,row,L,W){
   col = clamp(col, 0, GRID-L);
   row = clamp(row, 0, GRID-W);
   return {col,row};
 }
- 
-function buildItemMesh(item){
-  const def = ITEM_DEFS[item.type];
-  const box = new THREE.Mesh(unitBoxGeo, new THREE.MeshStandardMaterial({ color:def.color, transparent:true, opacity:def.opacity, roughness:0.85, side:THREE.DoubleSide }));
-  const edge = new THREE.LineSegments(unitBoxEdges, new THREE.LineBasicMaterial({ color: def.cat==='zone'?0xdc2626:0x0f172a, transparent:true, opacity:0.6 }));
-  const group = new THREE.Group();
-  group.add(box); group.add(edge);
-  roomGroup.add(group);
-  item.mesh = group; item.boxMesh = box; item.edgeMesh = edge;
-  if (item.type === 'light'){
-    const pl = new THREE.PointLight(0xffe9b0, 0.5, 4);
-    group.add(pl);
+
+/* ---- procedural per-type furniture "models" (built from primitives, not shared boxes) ---- */
+function clearGroup(group){
+  while (group.children.length){
+    const child = group.children.pop();
+    if (child.geometry) child.geometry.dispose();
+    if (child.material) child.material.dispose();
+    group.remove(child);
   }
-  updateItemTransform(item);
 }
-function updateItemTransform(item){
+function addBoxPart(group, w,h,d, color, x,y,z, opts={}){
+  const geo = new THREE.BoxGeometry(Math.max(w,0.004), Math.max(h,0.004), Math.max(d,0.004));
+  const mat = new THREE.MeshStandardMaterial({ color, transparent:true, opacity: opts.opacity ?? 0.86, roughness: opts.roughness ?? 0.82, side: opts.doubleSide ? THREE.DoubleSide : THREE.FrontSide });
+  const mesh = new THREE.Mesh(geo, mat);
+  mesh.position.set(x,y,z);
+  group.add(mesh);
+  if (!opts.noEdges){
+    const edges = new THREE.LineSegments(new THREE.EdgesGeometry(geo), new THREE.LineBasicMaterial({ color: opts.edgeColor ?? 0x0f172a, transparent:true, opacity:0.5 }));
+    edges.position.copy(mesh.position);
+    group.add(edges);
+  }
+  return mesh;
+}
+function addCylPart(group, radiusTop, radiusBottom, height, color, x,y,z, opts={}){
+  const geo = new THREE.CylinderGeometry(radiusTop, radiusBottom, height, opts.segments||10);
+  const mesh = new THREE.Mesh(geo, new THREE.MeshStandardMaterial({ color, roughness: opts.roughness ?? 0.7 }));
+  mesh.position.set(x,y,z);
+  group.add(mesh);
+  return mesh;
+}
+function baseY(def, sy){
+  if (def.elevate === 'ceiling') return ROOM_H - sy - CELL*0.4;
+  if (def.elevate === 'mid') return ROOM_H*0.5 - sy/2;
+  return 0;
+}
+/* parts are built bottom-anchored: local y in [0,sy], x in [-sx/2,sx/2], z in [-sz/2,sz/2] */
+function buildFurnitureParts(group, type, sx, sy, sz, color){
+  if (type === 'sofa'){
+    addBoxPart(group, sx, sy*0.42, sz, color, 0, sy*0.21, 0);
+    addBoxPart(group, sx, sy*0.58, sz*0.2, color, 0, sy*0.71, -sz/2+sz*0.1);
+    addBoxPart(group, sx*0.14, sy*0.5, sz, color, -sx/2+sx*0.07, sy*0.5, 0);
+    addBoxPart(group, sx*0.14, sy*0.5, sz, color, sx/2-sx*0.07, sy*0.5, 0);
+  } else if (type === 'chair'){
+    addBoxPart(group, sx*0.86, sy*0.1, sz*0.86, color, 0, sy*0.42, 0);
+    addBoxPart(group, sx*0.86, sy*0.5, sz*0.12, color, 0, sy*0.72, -sz/2+sz*0.07);
+    const legR = Math.max(0.012, Math.min(sx,sz)*0.05);
+    const legH = sy*0.42;
+    const lx = sx*0.36, lz = sz*0.36;
+    [[-lx,-lz],[lx,-lz],[-lx,lz],[lx,lz]].forEach(([ex,ez])=>{
+      addCylPart(group, legR, legR, legH, 0x334155, ex, legH/2, ez);
+    });
+  } else if (type === 'light'){
+    const stemR = Math.max(0.008, Math.min(sx,sz)*0.06);
+    const stemH = sy*0.65;
+    addCylPart(group, stemR, stemR, stemH, 0x334155, 0, sy - stemH/2, 0);
+    const shadeR = Math.max(sx,sz)*0.42;
+    const shade = new THREE.Mesh(
+      new THREE.ConeGeometry(shadeR, sy*0.32, 16, 1, true),
+      new THREE.MeshStandardMaterial({ color, emissive:0x5a4415, roughness:0.4, side:THREE.DoubleSide })
+    );
+    shade.position.set(0, sy*0.16, 0);
+    group.add(shade);
+  } else if (type === 'shelf'){
+    const postT = Math.max(0.02, sx*0.14);
+    addBoxPart(group, postT, sy, postT, color, -sx/2+postT/2, sy/2, -sz/2+postT/2);
+    addBoxPart(group, postT, sy, postT, color, -sx/2+postT/2, sy/2, sz/2-postT/2);
+    addBoxPart(group, postT, sy, postT, color, sx/2-postT/2, sy/2, -sz/2+postT/2);
+    addBoxPart(group, postT, sy, postT, color, sx/2-postT/2, sy/2, sz/2-postT/2);
+    const levels = Math.max(2, Math.min(6, Math.round(sy/(CELL*1.15))));
+    const boardT = Math.max(0.012, sy/levels*0.18);
+    for (let i=0;i<levels;i++){
+      addBoxPart(group, sx, boardT, sz, color, 0, (i+0.5)/levels*sy, 0);
+    }
+  } else if (type === 'window'){
+    const frameT = Math.max(0.02, Math.min(sy,sz)*0.08);
+    addBoxPart(group, sx, frameT, sz, 0x475569, 0, sy-frameT/2, 0);
+    addBoxPart(group, sx, frameT, sz, 0x475569, 0, frameT/2, 0);
+    addBoxPart(group, sx, sy, frameT, 0x475569, 0, sy/2, -sz/2+frameT/2);
+    addBoxPart(group, sx, sy, frameT, 0x475569, 0, sy/2, sz/2-frameT/2);
+    const mullT = frameT*0.7;
+    addBoxPart(group, sx, mullT, sz, 0x64748b, 0, sy/2, 0);
+    addBoxPart(group, sx, sy, mullT, 0x64748b, 0, sy/2, 0);
+    addBoxPart(group, sx*0.4, sy*0.86, sz*0.86, color, 0, sy/2, 0, { opacity:0.28, doubleSide:true, noEdges:true });
+  } else {
+    /* wall (and any other flat/solid item) — a plain slab is correct for a wall */
+    addBoxPart(group, sx, sy, sz, color, 0, sy/2, 0);
+  }
+}
+function refreshItemMesh(item){
   const def = ITEM_DEFS[item.type];
+  if (!item.mesh){
+    item.mesh = new THREE.Group();
+    roomGroup.add(item.mesh);
+  } else {
+    clearGroup(item.mesh);
+  }
   const sx = item.L*CELL, sy = item.H*CELL, sz = item.W*CELL;
-  item.boxMesh.scale.set(sx,sy,sz);
-  item.edgeMesh.scale.set(sx,sy,sz);
+  buildFurnitureParts(item.mesh, item.type, sx, sy, sz, def.color);
+  if (item.type === 'light') item.mesh.add(new THREE.PointLight(0xffe9b0, 0.5, 4));
   const cx = -WORLD/2 + CELL*(item.col + item.L/2);
   const cz = -WORLD/2 + CELL*(item.row + item.W/2);
-  let y;
-  if (def.elevate === 'ceiling') y = ROOM_H - sy/2 - CELL*0.4;
-  else if (def.elevate === 'mid') y = ROOM_H*0.5;
-  else y = sy/2;
-  item.mesh.position.set(cx, y, cz);
+  item.mesh.position.set(cx, baseY(def, sy), cz);
 }
- 
+
 function placeItem(type, col, row){
   const def = ITEM_DEFS[type];
   if (!def) return;
   ({col,row} = clampFootprint(col,row,def.L,def.W));
   const item = { id: uid++, type, col, row, L:def.L, W:def.W, H:def.H };
-  buildItemMesh(item);
+  refreshItemMesh(item);
   placedItems.push(item);
-  rebuildGrids(); recomputeRoute(true); refreshEditorLists();
+  rebuildGrids(); recomputeRoute(true); refreshEditorLists(); scheduleAutosave();
 }
 function resizeItem(id, axis, delta){
   const item = placedItems.find(i=>i.id===id);
@@ -455,17 +582,17 @@ function resizeItem(id, axis, delta){
   item[axis] = clamp(item[axis] + delta, 1, 10);
   const fp = clampFootprint(item.col, item.row, item.L, item.W);
   item.col = fp.col; item.row = fp.row;
-  updateItemTransform(item);
-  rebuildGrids(); recomputeRoute(true); refreshEditorLists();
+  refreshItemMesh(item);
+  rebuildGrids(); recomputeRoute(true); refreshEditorLists(); scheduleAutosave();
 }
 function removeItem(id){
   const idx = placedItems.findIndex(i=>i.id===id);
   if (idx<0) return;
   roomGroup.remove(placedItems[idx].mesh);
   placedItems.splice(idx,1);
-  rebuildGrids(); recomputeRoute(true); refreshEditorLists();
+  rebuildGrids(); recomputeRoute(true); refreshEditorLists(); scheduleAutosave();
 }
- 
+
 function placeHuman(col,row){
   col = clamp(col,0,GRID-1); row = clamp(row,0,GRID-1);
   const item = { id: uid++, col, row };
@@ -480,18 +607,23 @@ function placeHuman(col,row){
   roomGroup.add(group);
   item.mesh = group;
   humanItems.push(item);
-  rebuildGrids(); recomputeRoute(true); refreshEditorLists();
+  rebuildGrids(); recomputeRoute(true); refreshEditorLists(); scheduleAutosave();
 }
 function removeHuman(id){
   const idx = humanItems.findIndex(i=>i.id===id);
   if (idx<0) return;
   roomGroup.remove(humanItems[idx].mesh);
   humanItems.splice(idx,1);
-  rebuildGrids(); recomputeRoute(true); refreshEditorLists();
+  rebuildGrids(); recomputeRoute(true); refreshEditorLists(); scheduleAutosave();
 }
- 
-/* ============ OCCUPANCY + COST GRID ============ */
-let obstacleGrid = [], costGrid = [];
+
+/* ============ OCCUPANCY + COST + HEIGHT GRID ============ */
+/* obstacleGrid: hard-blocked cells (humans only — you can't stand on a person).
+   costGrid: soft avoidance weighting (avoidance zones + proximity to humans).
+   heightGrid: surface elevation the rat runs along at each cell — 0 for open floor,
+   or the top of whatever climbable furniture/wall occupies that cell, so the rat
+   climbs up and travels across furniture/walls instead of being blocked by them. */
+let obstacleGrid = [], costGrid = [], heightGrid = [];
 function spreadCost(cc,cr,valuesByDist){
   const maxD = Math.max(...Object.keys(valuesByDist).map(Number));
   for (let r=cr-maxD;r<=cr+maxD;r++){
@@ -502,12 +634,26 @@ function spreadCost(cc,cr,valuesByDist){
     }
   }
 }
+function cellSurfaceY(col,row){
+  if (row<0||row>=GRID||col<0||col>=GRID) return 0;
+  return heightGrid[row][col] || 0;
+}
 function rebuildGrids(){
   obstacleGrid = Array.from({length:GRID}, ()=> new Array(GRID).fill(false));
   costGrid = Array.from({length:GRID}, ()=> new Array(GRID).fill(0));
+  heightGrid = Array.from({length:GRID}, ()=> new Array(GRID).fill(0));
   placedItems.forEach(item=>{
     const def = ITEM_DEFS[item.type];
+    if (def.climbable){
+      const topH = item.H * CELL;
+      for (let r=item.row; r<item.row+item.W; r++){
+        for (let c=item.col; c<item.col+item.L; c++){
+          if (c>=0&&c<GRID&&r>=0&&r<GRID) heightGrid[r][c] = Math.max(heightGrid[r][c], topH);
+        }
+      }
+    }
     if (def.blocking){
+      /* walls: a true hard obstacle — never climbable over the top, only routable around */
       for (let r=item.row; r<item.row+item.W; r++){
         for (let c=item.col; c<item.col+item.L; c++){
           if (c>=0&&c<GRID&&r>=0&&r<GRID) obstacleGrid[r][c] = true;
@@ -530,8 +676,8 @@ function rebuildGrids(){
   });
 }
 rebuildGrids();
- 
-/* ============ A* PATHFINDING (accounts for furniture, humans, avoidance zones) ============ */
+
+/* ============ A* PATHFINDING (accounts for furniture/walls as climbable terrain, humans, avoidance zones) ============ */
 const NEIGHBORS8 = [[1,0],[-1,0],[0,1],[0,-1],[1,1],[1,-1],[-1,1],[-1,-1]];
 function heuristic(c,r,gc,gr){
   const dx=Math.abs(c-gc), dy=Math.abs(r-gr);
@@ -559,7 +705,8 @@ function findPath(sc,sr,gc,gr){
       const nc=cur.c+dc, nr=cur.r+dr;
       if (nc<0||nc>=GRID||nr<0||nr>=GRID) continue;
       if (obstacleGrid[nr][nc]) continue;
-      const stepCost = ((dc!==0 && dr!==0) ? Math.SQRT2 : 1) + costGrid[nr][nc]*0.14;
+      const climbDelta = Math.abs((heightGrid[nr][nc]||0) - (heightGrid[cur.r][cur.c]||0));
+      const stepCost = ((dc!==0 && dr!==0) ? Math.SQRT2 : 1) + costGrid[nr][nc]*0.14 + climbDelta*2.2;
       const tentativeG = cur.g + stepCost;
       const nk = key(nc,nr);
       let nn = nodes.get(nk);
@@ -573,14 +720,14 @@ function findPath(sc,sr,gc,gr){
   }
   return null;
 }
- 
+
 /* ============ ROUTE VISUAL — red dashed line + red cell pool, dynamically recalculated ============ */
-let routeLine = new THREE.Line(new THREE.BufferGeometry(), new THREE.LineDashedMaterial({ color:0xdc2626, dashSize:0.12, gapSize:0.08, transparent:true, opacity:0.9 }));
+let routeLine = new THREE.Line(new THREE.BufferGeometry(), new THREE.LineDashedMaterial({ color:0xd93025, dashSize:0.12, gapSize:0.08, transparent:true, opacity:0.9 }));
 roomGroup.add(routeLine);
 const ROUTE_POOL_SIZE = 140;
 const routePool = [];
 for (let i=0;i<ROUTE_POOL_SIZE;i++){
-  const m = new THREE.Mesh(new THREE.PlaneGeometry(CELL*0.86, CELL*0.86), new THREE.MeshBasicMaterial({ color:0xdc2626, transparent:true, opacity:0.26, side:THREE.DoubleSide }));
+  const m = new THREE.Mesh(new THREE.PlaneGeometry(CELL*0.86, CELL*0.86), new THREE.MeshBasicMaterial({ color:0xd93025, transparent:true, opacity:0.26, side:THREE.DoubleSide }));
   m.rotation.x = -Math.PI/2; m.visible = false;
   roomGroup.add(m);
   routePool.push(m);
@@ -591,10 +738,10 @@ function updateRouteVisual(path){
   routePool.forEach(m=> m.visible=false);
   if (!path || path.length < 2){
     routeLine.geometry.setFromPoints([]);
-    document.getElementById('d-route').textContent = path ? `${path.length} 格` : '無可行路徑';
+    document.getElementById('d-route').textContent = path ? `${path.length} cells` : 'No viable path';
     return;
   }
-  const pts = path.map(p=>{ const c=cellCenter(p.c,p.r); c.y=0.05; return c; });
+  const pts = path.map(p=>{ const c=cellCenter(p.c,p.r); c.y=cellSurfaceY(p.c,p.r)+0.05; return c; });
   routeLine.geometry.dispose();
   routeLine.geometry = new THREE.BufferGeometry().setFromPoints(pts);
   routeLine.computeLineDistances();
@@ -602,18 +749,18 @@ function updateRouteVisual(path){
     if (i < ROUTE_POOL_SIZE){
       const c = cellCenter(p.c,p.r);
       const m = routePool[i];
-      m.position.set(c.x, 0.012, c.z);
+      m.position.set(c.x, cellSurfaceY(p.c,p.r)+0.012, c.z);
       m.visible = true;
     }
   });
-  document.getElementById('d-route').textContent = `${path.length} 格 CELLS`;
+  document.getElementById('d-route').textContent = `${path.length} cells`;
 }
- 
+
 /* ============ VISITED TRAIL — green highlight on cells rat passes through ============ */
 const TRAIL_POOL_SIZE = 220;
 const trailPool = [];
 for (let i=0;i<TRAIL_POOL_SIZE;i++){
-  const m = new THREE.Mesh(new THREE.PlaneGeometry(CELL*0.9, CELL*0.9), new THREE.MeshBasicMaterial({ color:0x16a34a, transparent:true, opacity:0, side:THREE.DoubleSide }));
+  const m = new THREE.Mesh(new THREE.PlaneGeometry(CELL*0.9, CELL*0.9), new THREE.MeshBasicMaterial({ color:0x188038, transparent:true, opacity:0, side:THREE.DoubleSide }));
   m.rotation.x = -Math.PI/2; m.visible=false;
   roomGroup.add(m);
   trailPool.push({ mesh:m, born:0, active:false });
@@ -624,7 +771,7 @@ function markVisited(col,row,now){
   const c = cellCenter(col,row);
   const slot = trailPool[trailCursor];
   trailCursor = (trailCursor+1) % TRAIL_POOL_SIZE;
-  slot.mesh.position.set(c.x, 0.01, c.z);
+  slot.mesh.position.set(c.x, cellSurfaceY(col,row)+0.012, c.z);
   slot.mesh.visible = true;
   slot.mesh.material.opacity = 0.5;
   slot.born = now; slot.active = true;
@@ -638,17 +785,17 @@ function updateTrail(now){
     slot.mesh.material.opacity = 0.5*(1-t);
   });
 }
- 
+
 /* ============ ENTRANCE + GOAL MARKERS ============ */
 const GOAL_CELL = { c: GRID-3, r: GRID-3 };
 let entranceCell = { c: 1, r: Math.floor(GRID/2) };
 let manualEntrance = null;
 let randomizeEntrance = true;
 let pickingEntrance = false;
- 
+
 {
   const c = cellCenter(GOAL_CELL.c, GOAL_CELL.r);
-  const ring = new THREE.Mesh(new THREE.RingGeometry(0.11,0.14,32), new THREE.MeshBasicMaterial({ color:0x2563eb, transparent:true, opacity:0.85, side:THREE.DoubleSide }));
+  const ring = new THREE.Mesh(new THREE.RingGeometry(0.11,0.14,32), new THREE.MeshBasicMaterial({ color:0x1a73e8, transparent:true, opacity:0.85, side:THREE.DoubleSide }));
   ring.rotation.x = -Math.PI/2; ring.position.set(c.x,0.015,c.z);
   roomGroup.add(ring);
   const lbl = makeLabel(`GOAL · ${cellLabel(GOAL_CELL.c,GOAL_CELL.r)}`, 'tag-blue');
@@ -675,26 +822,43 @@ function pickRandomEntrance(){
   if (edgeCells.length === 0) return { c:0, r:0 };
   return edgeCells[Math.floor(Math.random()*edgeCells.length)];
 }
- 
+
 /* ============ PREDATOR SOUND SYSTEM — visible waves + configurable presets ============ */
 const PREDATORS = [
-  { id:'owl',   label:'貓頭鷹 Owl',   shape:'concentric', color:0xf59e0b, freqLow:20,   freqHigh:800,   spawnInterval:0.9,  baseEff:70 },
-  { id:'kite',  label:'黑翅鳶 Kite',  shape:'arc',         color:0xea580c, freqLow:500,  freqHigh:3000,  spawnInterval:0.7,  baseEff:60 },
-  { id:'cat',   label:'家貓 Cat',     shape:'spiky',       color:0xdb2777, freqLow:1000, freqHigh:8000,  spawnInterval:0.5,  baseEff:55 },
-  { id:'snake', label:'蛇 Snake',     shape:'rattle',      color:0x65a30d, freqLow:2000, freqHigh:12000, spawnInterval:0.18, baseEff:45 },
+  { id:'owl',   label:'Owl',           shape:'concentric', color:0xf59e0b, freqLow:20,   freqHigh:800,   spawnInterval:0.9,  baseEff:70 },
+  { id:'kite',  label:'Black-winged Kite', shape:'arc',     color:0xea580c, freqLow:500,  freqHigh:3000,  spawnInterval:0.7,  baseEff:60 },
+  { id:'cat',   label:'Cat',           shape:'spiky',       color:0xdb2777, freqLow:1000, freqHigh:8000,  spawnInterval:0.5,  baseEff:55 },
+  { id:'snake', label:'Snake',         shape:'rattle',      color:0x65a30d, freqLow:2000, freqHigh:12000, spawnInterval:0.18, baseEff:45 },
 ];
 let activePredatorId = 'owl';
 const statsByPredator = {};
 PREDATORS.forEach(p=> statsByPredator[p.id] = { count:0, totalEff:0 });
- 
+
 const speakerPos = new THREE.Vector3(WORLD/2 - 0.15, ROOM_H*0.5, WORLD*0.28);
+const speakerRig = new THREE.Group();
+speakerRig.position.copy(speakerPos);
+roomGroup.add(speakerRig);
 {
   const box = new THREE.Mesh(new THREE.BoxGeometry(0.18,0.18,0.08), new THREE.MeshStandardMaterial({ color:0x1e293b, roughness:0.7 }));
-  box.position.copy(speakerPos);
-  roomGroup.add(box);
-  const lbl = makeLabel('SPEAKER', 'tag-amber');
-  lbl.position.set(speakerPos.x, speakerPos.y+0.16, speakerPos.z);
-  roomGroup.add(lbl);
+  speakerRig.add(box);
+  const aimArrow = new THREE.Mesh(new THREE.ConeGeometry(0.035,0.16,10), new THREE.MeshStandardMaterial({ color:0xe37400, roughness:0.6 }));
+  aimArrow.rotation.x = Math.PI/2;
+  aimArrow.position.set(0,0,0.16);
+  speakerRig.add(aimArrow);
+  const lbl = makeLabel('SPEAKER · AUTO-AIM', 'tag-amber');
+  lbl.position.set(0, 0.16, 0);
+  speakerRig.add(lbl);
+}
+function shortestAngleDiff(a,b){
+  let d = (b-a) % (Math.PI*2);
+  if (d > Math.PI) d -= Math.PI*2;
+  if (d < -Math.PI) d += Math.PI*2;
+  return d;
+}
+function computeRatForwardDir(){
+  const d = new THREE.Vector3().subVectors(rat.stepTo, rat.stepFrom);
+  if (d.lengthSq() < 0.0001) return new THREE.Vector3(0,0,1);
+  return d.normalize();
 }
 function buildSpikyRing(color){
   const spikes = 10, inner = 0.02, outer = 0.05;
@@ -708,28 +872,85 @@ function buildSpikyRing(color){
   const mat = new THREE.LineBasicMaterial({ color, transparent:true, opacity:0.7 });
   return new THREE.LineLoop(geo, mat);
 }
+
+/* persistent translucent beam showing the FULL range of the active sound — narrow at the
+   emitter (behind the rat), widening out past the rat, so the whole reach is always visible */
+const rangeCone = new THREE.Mesh(
+  new THREE.ConeGeometry(1, 1, 28, 1, true),
+  new THREE.MeshBasicMaterial({ color:0xf59e0b, transparent:true, opacity:0.12, side:THREE.DoubleSide, depthWrite:false })
+);
+rangeCone.visible = false;
+roomGroup.add(rangeCone);
+const RANGE_LENGTH = CELL*6.4, RANGE_RADIUS = CELL*1.6;
+function updateRangeCone(originPos, dir, colorHex){
+  rangeCone.visible = true;
+  const center = originPos.clone().addScaledVector(dir, RANGE_LENGTH/2);
+  rangeCone.position.copy(center);
+  const q = new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0,1,0), dir.clone().negate());
+  rangeCone.quaternion.copy(q);
+  rangeCone.scale.set(RANGE_RADIUS, RANGE_LENGTH, RANGE_RADIUS);
+  rangeCone.material.color.setHex(colorHex);
+}
+
+/* waves spawn behind the rat and travel forward through it — a visible, self-aiming
+   "sound wall" that pushes the rat onward whenever the active predator sound is effective */
 const activeWaves = [];
-function spawnWave(predator){
+function spawnWave(predator, originPos, dir){
   let mesh, life, maxScale, rotSpeed = 0;
   if (predator.shape === 'concentric' || predator.shape === 'rattle'){
     const geo = new THREE.RingGeometry(0.03, 0.05, 32);
-    const mat = new THREE.MeshBasicMaterial({ color:predator.color, transparent:true, opacity:0.55, side:THREE.DoubleSide });
+    const mat = new THREE.MeshBasicMaterial({ color:predator.color, transparent:true, opacity:0.62, side:THREE.DoubleSide });
     mesh = new THREE.Mesh(geo, mat);
-    life = predator.shape === 'rattle' ? 0.45 : 1.3;
-    maxScale = predator.shape === 'rattle' ? 5 : 13;
+    life = predator.shape === 'rattle' ? 0.4 : 1.0;
+    maxScale = predator.shape === 'rattle' ? 3.2 : 6.5;
   } else if (predator.shape === 'arc'){
     const geo = new THREE.RingGeometry(0.03, 0.055, 24, 1, 0, Math.PI*0.6);
-    const mat = new THREE.MeshBasicMaterial({ color:predator.color, transparent:true, opacity:0.55, side:THREE.DoubleSide });
+    const mat = new THREE.MeshBasicMaterial({ color:predator.color, transparent:true, opacity:0.62, side:THREE.DoubleSide });
     mesh = new THREE.Mesh(geo, mat);
-    life = 1.1; maxScale = 11; rotSpeed = 1.4;
+    life = 0.9; maxScale = 6; rotSpeed = 1.2;
   } else {
     mesh = buildSpikyRing(predator.color);
-    life = 0.85; maxScale = 9;
+    life = 0.75; maxScale = 4.5;
   }
-  mesh.rotation.x = -Math.PI/2;
-  mesh.position.copy(speakerPos);
+  const q = new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0,0,1), dir);
+  mesh.quaternion.copy(q);
+  mesh.position.copy(originPos);
   roomGroup.add(mesh);
-  activeWaves.push({ mesh, life, elapsed:0, maxScale, rotSpeed, isLine: predator.shape==='spiky' });
+  const travelDist = CELL*3.4;
+  activeWaves.push({ mesh, life, elapsed:0, maxScale, rotSpeed, isLine: predator.shape==='spiky', originPos: originPos.clone(), dir: dir.clone(), travelDist, hit:false, colorHex: predator.color });
+}
+
+/* brief flash where a wavefront actually reaches the rat, so the "hit" reads clearly */
+const impactFlashes = [];
+let ratHitFlashTimer = 0;
+function spawnImpact(pos, colorHex){
+  const mesh = new THREE.Mesh(new THREE.SphereGeometry(0.05,10,8), new THREE.MeshBasicMaterial({ color:colorHex, transparent:true, opacity:0.85 }));
+  mesh.position.copy(pos);
+  roomGroup.add(mesh);
+  impactFlashes.push({ mesh, life:0.35, elapsed:0 });
+  ratHitFlashTimer = 0.3;
+}
+function updateImpacts(dt){
+  for (let i=impactFlashes.length-1;i>=0;i--){
+    const w = impactFlashes[i];
+    w.elapsed += dt;
+    const t = w.elapsed / w.life;
+    if (t >= 1){
+      roomGroup.remove(w.mesh);
+      w.mesh.geometry.dispose(); w.mesh.material.dispose();
+      impactFlashes.splice(i,1);
+      continue;
+    }
+    const s = 0.3 + t*3.4;
+    w.mesh.scale.set(s,s,s);
+    w.mesh.material.opacity = 0.85 * (1-t);
+  }
+  if (ratHitFlashTimer > 0){
+    ratHitFlashTimer -= dt;
+    ratMat.emissive.setHex(0xf59e0b);
+  } else {
+    ratMat.emissive.setHex(0x0b3d20);
+  }
 }
 function updateWaves(dt){
   for (let i=activeWaves.length-1;i>=0;i--){
@@ -743,24 +964,30 @@ function updateWaves(dt){
       continue;
     }
     const s = 0.3 + t * w.maxScale;
-    w.mesh.scale.set(s,s,s);
-    w.mesh.material.opacity = (w.isLine?0.7:0.55) * (1-t);
-    if (w.rotSpeed) w.mesh.rotation.z += dt * w.rotSpeed;
+    w.mesh.scale.set(s,s,1);
+    w.mesh.position.copy(w.originPos).addScaledVector(w.dir, w.travelDist * t);
+    w.mesh.material.opacity = (w.isLine?0.7:0.62) * (1 - t*0.7);
+    if (w.rotSpeed) w.mesh.rotateZ(dt * w.rotSpeed);
+    if (!w.hit && w.mesh.position.distanceTo(ratGroup.position) < CELL*0.75){
+      w.hit = true;
+      spawnImpact(ratGroup.position.clone(), w.colorHex);
+    }
   }
 }
- 
+
+
 let deterrenceActive = false;
 let lowRiskStreak = 0;
 let waveSpawnTimer = 0;
 let currentSessionEff = null;
 function activeDef(){ return PREDATORS.find(p=>p.id===activePredatorId); }
- 
+
 function activateDeterrence(){
   deterrenceActive = true;
   const p = activeDef();
   currentSessionEff = clamp(p.baseEff + (Math.random()*20-10), 5, 98);
   waveSpawnTimer = 0;
-  logEvent(`聲學驅趕啟動 — ${p.label}（預估成效 ${Math.round(currentSessionEff)}%）`);
+  logEvent(`Acoustic deterrence engaged — ${p.label} (est. effectiveness ${Math.round(currentSessionEff)}%)`);
   document.getElementById('d-sound').textContent = p.label;
   document.getElementById('d-eff').textContent = `${Math.round(currentSessionEff)}%`;
   document.getElementById('d-eff-bar').style.width = `${currentSessionEff}%`;
@@ -771,7 +998,7 @@ function deactivateDeterrence(){
   if (currentSessionEff !== null){
     statsByPredator[p.id].count++;
     statsByPredator[p.id].totalEff += currentSessionEff;
-    logEvent(`已脫離高風險區 — ${p.label} 本次成效 ${Math.round(currentSessionEff)}%`);
+    logEvent(`Left the high-risk zone — ${p.label} scored ${Math.round(currentSessionEff)}% this run`);
   }
   currentSessionEff = null;
   document.getElementById('d-eff').textContent = '—';
@@ -782,7 +1009,7 @@ function refreshSuggestion(){
   const untried = PREDATORS.find(p=> statsByPredator[p.id].count===0);
   let text;
   if (untried){
-    text = `建議嘗試 ${untried.label}（尚無資料）`;
+    text = `Try ${untried.label} (no data yet)`;
   } else {
     let best = null;
     PREDATORS.forEach(p=>{
@@ -790,15 +1017,15 @@ function refreshSuggestion(){
       const avg = s.totalEff / s.count;
       if (!best || avg > best.avg) best = { label:p.label, avg };
     });
-    text = best ? `${best.label}（平均成效 ${Math.round(best.avg)}%）` : '尚無資料';
+    text = best ? `${best.label} (avg. effectiveness ${Math.round(best.avg)}%)` : 'No data yet';
   }
   document.getElementById('d-suggest').textContent = text;
 }
 refreshSuggestion();
- 
+
 /* ============ RAT ============ */
 const ratGroup = new THREE.Group();
-const ratMat = new THREE.MeshStandardMaterial({ color:0x16a34a, emissive:0x0b3d20, roughness:0.5 });
+const ratMat = new THREE.MeshStandardMaterial({ color:0x188038, emissive:0x0b3d20, roughness:0.5 });
 const ratBody = new THREE.Mesh(new THREE.SphereGeometry(0.075,12,10), ratMat);
 ratBody.scale.set(1,0.62,1.55);
 ratGroup.add(ratBody);
@@ -808,7 +1035,7 @@ ratGroup.add(ratHead);
 const ratTail = new THREE.Mesh(new THREE.CylinderGeometry(0.006,0.002,0.16,6), ratMat);
 ratTail.rotation.x = Math.PI/2; ratTail.position.set(0,0,-0.15);
 ratGroup.add(ratTail);
-const ratLight = new THREE.PointLight(0x16a34a, 0.7, 2.2);
+const ratLight = new THREE.PointLight(0x188038, 0.7, 2.2);
 ratLight.position.y = 0.2;
 ratGroup.add(ratLight);
 const ratLabel = makeLabel('SUBJECT_01', 'tag-green');
@@ -816,10 +1043,10 @@ ratLabel.position.set(0,0.24,0);
 ratGroup.add(ratLabel);
 ratGroup.visible = false;
 roomGroup.add(ratGroup);
- 
+
 const rat = { col:0, row:0, prevCol:0, prevRow:0, stepFrom:new THREE.Vector3(), stepTo:new THREE.Vector3(), stepT:1, stepDuration:0.55 };
 function easeInOut(t){ return t<0.5 ? 2*t*t : 1-Math.pow(-2*t+2,2)/2; }
- 
+
 /* --- free-roam target: keeps the rat ranging widely across the grid instead of
    camping near the goal; only overridden by the ideal route while fleeing --- */
 let roamTarget = { c:0, r:0 };
@@ -836,13 +1063,13 @@ function pickRoamTarget(){
   }
   return fallback || { c:rat.col, r:rat.row };
 }
- 
+
 function spawnRat(overrideStart){
   const start = overrideStart || ((randomizeEntrance || !manualEntrance) ? pickRandomEntrance() : manualEntrance);
   entranceCell = start;
   placeEntranceMarker(start.c, start.r);
   rat.col = start.c; rat.row = start.r; rat.prevCol = start.c; rat.prevRow = start.r;
-  const c = cellCenter(start.c, start.r); c.y = 0.09;
+  const c = cellCenter(start.c, start.r); c.y = cellSurfaceY(start.c, start.r) + 0.09;
   rat.stepFrom.copy(c); rat.stepTo.copy(c); rat.stepT = 1; rat.stepDuration = 0.55;
   ratGroup.position.copy(c);
   ratGroup.visible = true;
@@ -856,16 +1083,16 @@ function spawnRat(overrideStart){
   roamTimer = 5 + Math.random()*4;
   recomputeRoute(true);
 }
- 
+
 /* manual drag-and-drop placement of the rat itself (mock/testing) */
 function dropRatAt(col,row){
-  if (obstacleGrid[row][col]){ logEvent('該宮格已被佔用，無法放置老鼠 cell occupied'); return; }
+  if (obstacleGrid[row][col]){ logEvent('That cell is occupied — cannot place the rat there'); return; }
   spawnRat({ c:col, r:row });
   phase = PHASE.TRACKING; phaseTime = 0;
-  setStatus('', 'TRACKING', '— 手動放置個體 manually placed subject');
-  logEvent(`老鼠已手動放置於 Grid ${cellLabel(col,row)}`);
+  setStatus('', 'TRACKING', '— manually placed subject');
+  logEvent(`Rat manually placed at grid ${cellLabel(col,row)}`);
 }
- 
+
 function validNeighbors(c,r){
   const out = [];
   for (const [dc,dr] of NEIGHBORS8){
@@ -879,7 +1106,7 @@ function validNeighbors(c,r){
 function decideNextCell(){
   const neighbors = validNeighbors(rat.col, rat.row);
   if (neighbors.length === 0) return { c:rat.col, r:rat.row };
- 
+
   if (deterrenceActive){
     /* fleeing: bias strongly toward the ideal route to the goal, scaled by sound effectiveness */
     let pathNext = null;
@@ -901,7 +1128,7 @@ function decideNextCell(){
     }
     return neighbors[Math.floor(Math.random()*neighbors.length)];
   }
- 
+
   /* free roaming: mostly random/back-and-forth, loosely drifting toward a far, periodically-refreshed target */
   let toward = null, bestDist = Infinity;
   neighbors.forEach(n=>{
@@ -925,23 +1152,26 @@ function updateRat(dt){
   ratGroup.position.copy(pos);
   const dir = new THREE.Vector3().subVectors(rat.stepTo, rat.stepFrom);
   if (dir.lengthSq() > 0.0001) ratGroup.rotation.y = Math.atan2(dir.x, dir.z);
- 
+
   document.getElementById('coord-readout').innerHTML = `GRID <b>${cellLabel(rat.col,rat.row)}</b>&nbsp;&nbsp;X ${pos.x.toFixed(2)}&nbsp;&nbsp;Z ${pos.z.toFixed(2)}`;
   document.getElementById('d-cell').textContent = cellLabel(rat.col,rat.row);
   document.getElementById('d-vel').textContent = `${(CELL/rat.stepDuration).toFixed(2)} m/s`;
- 
+
   if (rat.stepT >= 1){
     const next = decideNextCell();
     rat.prevCol = rat.col; rat.prevRow = rat.row;
     rat.col = next.c; rat.row = next.r;
     rat.stepFrom.copy(rat.stepTo);
-    const c = cellCenter(rat.col, rat.row); c.y = 0.09;
+    const c = cellCenter(rat.col, rat.row); c.y = cellSurfaceY(rat.col, rat.row) + 0.09;
     rat.stepTo.copy(c);
     rat.stepT = 0;
     const effBoost = deterrenceActive && currentSessionEff!==null ? currentSessionEff/100 : 0;
-    rat.stepDuration = deterrenceActive ? 0.55 * (1 - effBoost*0.35) : 0.55;
+    let duration = deterrenceActive ? 0.55 * (1 - effBoost*0.35) : 0.55;
+    const climbing = Math.abs(c.y - rat.stepFrom.y) > 0.001;
+    if (climbing) duration *= 1.6; // climbing furniture/walls is slower than a flat run
+    rat.stepDuration = duration;
     markVisited(rat.col, rat.row, simSeconds);
- 
+
     roamTimer -= rat.stepDuration;
     const distToRoam = Math.max(Math.abs(rat.col-roamTarget.c), Math.abs(rat.row-roamTarget.r));
     if (!deterrenceActive && (distToRoam <= 1 || roamTimer <= 0)){
@@ -952,7 +1182,7 @@ function updateRat(dt){
   }
   return false;
 }
- 
+
 /* ============ ROUTE RECOMPUTE ============ */
 let routeRecalcTimer = 0;
 function recomputeRoute(force){
@@ -960,7 +1190,7 @@ function recomputeRoute(force){
   const path = findPath(rat.col, rat.row, GOAL_CELL.c, GOAL_CELL.r);
   updateRouteVisual(path);
 }
- 
+
 /* ============ STATE MACHINE ============ */
 const PHASE = { IDLE:'idle', TRACKING:'tracking', CAPTURED:'captured', COOLDOWN:'cooldown' };
 let phase = PHASE.IDLE, phaseTime = 0, speedMult = 1;
@@ -974,33 +1204,33 @@ function setStatus(kind, label, sub){
   document.getElementById('d-status').textContent = label;
 }
 function logEvent(text){ dEvent.textContent = text; }
- 
+
 function enterPhase(p){
   phase = p; phaseTime = 0;
   if (p === PHASE.IDLE){
-    setStatus('', 'SCANNING', '— 巡邏中 no subject');
+    setStatus('', 'SCANNING', '— patrolling, no subject');
     ratGroup.visible = false;
     document.getElementById('d-cell').textContent = '—';
     document.getElementById('d-vel').textContent = '0.00 m/s';
     document.getElementById('d-route').textContent = '—';
     routePool.forEach(m=> m.visible=false);
     routeLine.geometry.setFromPoints([]);
-    logEvent('等待下一次入侵事件 waiting for next incursion');
+    logEvent('Waiting for next incursion');
   } else if (p === PHASE.TRACKING){
     spawnRat();
-    setStatus('', 'TRACKING', '— 偵測到入侵個體 subject detected');
-    logEvent(`入侵偵測 — Grid ${cellLabel(entranceCell.c, entranceCell.r)}`);
+    setStatus('', 'TRACKING', '— subject detected');
+    logEvent(`Incursion detected — grid ${cellLabel(entranceCell.c, entranceCell.r)}`);
   } else if (p === PHASE.CAPTURED){
-    setStatus('captured', 'CAPTURED', '— 已抵達生態誘捕區 secured at goal');
-    logEvent(`個體抵達 Grid ${cellLabel(GOAL_CELL.c, GOAL_CELL.r)}`);
+    setStatus('captured', 'CAPTURED', '— secured at goal');
+    logEvent(`Subject reached grid ${cellLabel(GOAL_CELL.c, GOAL_CELL.r)}`);
   } else if (p === PHASE.COOLDOWN){
-    logEvent('重置巡邏狀態 resetting patrol');
+    logEvent('Resetting patrol');
   }
   document.getElementById('d-entry').textContent = cellLabel(entranceCell.c, entranceCell.r);
   document.getElementById('d-goal').textContent = cellLabel(GOAL_CELL.c, GOAL_CELL.r);
 }
 enterPhase(PHASE.IDLE);
- 
+
 /* ============ CLOCK ============ */
 let simSeconds = 6*3600 + 14*60;
 function fmtClock(s){
@@ -1010,7 +1240,7 @@ function fmtClock(s){
   const sec=String(s%60).padStart(2,'0');
   return `${h}:${m}:${sec}`;
 }
- 
+
 /* ============ DRAG & DROP + ENTRANCE PICKING ============ */
 const raycaster = new THREE.Raycaster();
 const floorPlane = new THREE.Plane(new THREE.Vector3(0,1,0), 0);
@@ -1022,12 +1252,93 @@ function screenToCell(clientX, clientY){
   if (!raycaster.ray.intersectPlane(floorPlane, hit)) return null;
   return worldToCell(hit.x, hit.z);
 }
+
+/* --- drag placement silhouette — shows exactly where the dragged object will land ---
+   dataTransfer.getData() only reliably returns a value on 'drop' (browser security
+   restriction), so the dragged type is tracked separately from 'dragstart' instead. */
+let draggingType = null;
+const dragPreviewVolume = new THREE.Mesh(
+  new THREE.BoxGeometry(1,1,1),
+  new THREE.MeshBasicMaterial({ color:0x1a73e8, transparent:true, opacity:0.28, side:THREE.DoubleSide, depthWrite:false })
+);
+dragPreviewVolume.visible = false;
+roomGroup.add(dragPreviewVolume);
+const dragPreviewEdges = new THREE.LineSegments(
+  new THREE.EdgesGeometry(new THREE.BoxGeometry(1,1,1)),
+  new THREE.LineBasicMaterial({ color:0x1a73e8, transparent:true, opacity:0.9 })
+);
+dragPreviewEdges.visible = false;
+roomGroup.add(dragPreviewEdges);
+const dragPreviewFootprint = new THREE.Mesh(
+  new THREE.PlaneGeometry(1,1),
+  new THREE.MeshBasicMaterial({ color:0x1a73e8, transparent:true, opacity:0.24, side:THREE.DoubleSide, depthWrite:false })
+);
+dragPreviewFootprint.rotation.x = -Math.PI/2;
+dragPreviewFootprint.visible = false;
+roomGroup.add(dragPreviewFootprint);
+
+function dragPreviewSpec(type){
+  if (type.startsWith('furniture:')){
+    const def = ITEM_DEFS[type.split(':')[1]];
+    return def ? { L:def.L, W:def.W, H:def.H, color:def.color } : null;
+  }
+  if (type === 'zone'){
+    const def = ITEM_DEFS.zone;
+    return { L:def.L, W:def.W, H:def.H, color:def.color };
+  }
+  if (type === 'human') return { L:1, W:1, H:2, color:0x334155 };
+  if (type === 'rat') return { L:1, W:1, H:1, color:0x188038 };
+  return null;
+}
+function showDragPreview(col,row,spec){
+  const sx = spec.L*CELL, sy = Math.max(spec.H*CELL, CELL*0.2), sz = spec.W*CELL;
+  const cx = -WORLD/2 + CELL*(col+spec.L/2);
+  const cz = -WORLD/2 + CELL*(row+spec.W/2);
+  dragPreviewVolume.scale.set(sx,sy,sz);
+  dragPreviewVolume.position.set(cx, sy/2, cz);
+  dragPreviewVolume.material.color.setHex(spec.color);
+  dragPreviewVolume.visible = true;
+
+  dragPreviewEdges.scale.copy(dragPreviewVolume.scale);
+  dragPreviewEdges.position.copy(dragPreviewVolume.position);
+  dragPreviewEdges.material.color.setHex(spec.color);
+  dragPreviewEdges.visible = true;
+
+  dragPreviewFootprint.scale.set(sx, sz, 1);
+  dragPreviewFootprint.position.set(cx, 0.018, cz);
+  dragPreviewFootprint.material.color.setHex(spec.color);
+  dragPreviewFootprint.visible = true;
+}
+function hideDragPreview(){
+  dragPreviewVolume.visible = false;
+  dragPreviewEdges.visible = false;
+  dragPreviewFootprint.visible = false;
+}
+function updateDragPreview(clientX, clientY){
+  if (!draggingType){ hideDragPreview(); return; }
+  const spec = dragPreviewSpec(draggingType);
+  const cell = screenToCell(clientX, clientY);
+  if (!spec || !cell){ hideDragPreview(); return; }
+  const { col, row } = clampFootprint(cell.c, cell.r, spec.L, spec.W);
+  showDragPreview(col, row, spec);
+}
+
 document.querySelectorAll('[data-drag]').forEach(el=>{
-  el.addEventListener('dragstart', e=> e.dataTransfer.setData('text/plain', el.dataset.drag));
+  el.addEventListener('dragstart', e=>{
+    e.dataTransfer.setData('text/plain', el.dataset.drag);
+    draggingType = el.dataset.drag;
+  });
+  el.addEventListener('dragend', ()=>{ draggingType = null; hideDragPreview(); });
 });
-renderer.domElement.addEventListener('dragover', e=> e.preventDefault());
+renderer.domElement.addEventListener('dragover', e=>{
+  e.preventDefault();
+  updateDragPreview(e.clientX, e.clientY);
+});
+renderer.domElement.addEventListener('dragleave', ()=> hideDragPreview());
 renderer.domElement.addEventListener('drop', e=>{
   e.preventDefault();
+  hideDragPreview();
+  draggingType = null;
   const data = e.dataTransfer.getData('text/plain');
   const cell = screenToCell(e.clientX, e.clientY);
   if (!cell) return;
@@ -1040,16 +1351,17 @@ renderer.domElement.addEventListener('click', e=>{
   if (!pickingEntrance) return;
   const cell = screenToCell(e.clientX, e.clientY);
   if (!cell) return;
-  if (obstacleGrid[cell.r][cell.c]){ logEvent('該宮格已被佔用 cell is occupied'); return; }
+  if (obstacleGrid[cell.r][cell.c]){ logEvent('That cell is occupied'); return; }
   manualEntrance = { c:cell.c, r:cell.r };
   document.getElementById('toggle-randomize').checked = false;
   randomizeEntrance = false;
   placeEntranceMarker(cell.c, cell.r);
   pickingEntrance = false;
   document.getElementById('btn-set-entrance').classList.remove('active');
-  logEvent(`入口已設定 entrance set to ${cellLabel(cell.c,cell.r)}`);
+  logEvent(`Entrance set to ${cellLabel(cell.c,cell.r)}`);
+  scheduleAutosave();
 });
- 
+
 /* ============ EDITOR PANEL — tabs, lists, sound config ============ */
 const editorPanel = document.getElementById('editor-panel');
 document.getElementById('btn-edit-scene').addEventListener('click', ()=> editorPanel.classList.toggle('open'));
@@ -1060,7 +1372,7 @@ document.querySelectorAll('.tab-btn').forEach(btn=>{
     document.querySelectorAll('.tab-panel').forEach(p=> p.classList.toggle('hidden', p.dataset.tabpanel !== btn.dataset.tab));
   });
 });
- 
+
 function dimStepperHTML(item, axes){
   return axes.map(ax=>`<span class="dim">${ax}:${item[ax]}<button class="mini" data-resize="${item.id}" data-axis="${ax}" data-delta="1">+</button><button class="mini" data-resize="${item.id}" data-axis="${ax}" data-delta="-1">−</button></span>`).join('');
 }
@@ -1068,25 +1380,25 @@ function refreshEditorLists(){
   document.getElementById('d-furniture').textContent = placedItems.filter(i=>ITEM_DEFS[i.type].cat==='furniture').length;
   document.getElementById('d-zones').textContent = placedItems.filter(i=>ITEM_DEFS[i.type].cat==='zone').length;
   document.getElementById('d-humans').textContent = humanItems.length;
- 
+
   const furnList = placedItems.filter(i=>ITEM_DEFS[i.type].cat==='furniture');
   const listFurn = document.getElementById('list-furniture');
   listFurn.innerHTML = furnList.length ? furnList.map(item=>`
     <div class="placed-row"><div><div class="lbl">${ITEM_DEFS[item.type].label} · ${cellLabel(item.col,item.row)}</div>
     <div class="dims">${dimStepperHTML(item, ['L','W','H'])}</div></div>
-    <button class="small danger" data-remove="${item.id}">✕</button></div>`).join('') : '<div class="placed-empty">尚未放置家具 nothing placed yet</div>';
- 
+    <button class="small danger" data-remove="${item.id}">✕</button></div>`).join('') : '<div class="placed-empty">Nothing placed yet</div>';
+
   const zoneList = placedItems.filter(i=>ITEM_DEFS[i.type].cat==='zone');
   const listZones = document.getElementById('list-zones');
   listZones.innerHTML = zoneList.length ? zoneList.map(item=>`
     <div class="placed-row"><div><div class="lbl">${ITEM_DEFS[item.type].label} · ${cellLabel(item.col,item.row)}</div>
     <div class="dims">${dimStepperHTML(item, ['L','W'])}</div></div>
-    <button class="small danger" data-remove="${item.id}">✕</button></div>`).join('') : '<div class="placed-empty">尚未設定禁區 no zones yet</div>';
- 
+    <button class="small danger" data-remove="${item.id}">✕</button></div>`).join('') : '<div class="placed-empty">No zones yet</div>';
+
   const listHumans = document.getElementById('list-humans');
   listHumans.innerHTML = humanItems.length ? humanItems.map(item=>`
-    <div class="placed-row"><div class="lbl">人員 · ${cellLabel(item.col,item.row)}</div>
-    <button class="small danger" data-remove-human="${item.id}">✕</button></div>`).join('') : '<div class="placed-empty">尚未放置人員 nothing placed yet</div>';
+    <div class="placed-row"><div class="lbl">Human · ${cellLabel(item.col,item.row)}</div>
+    <button class="small danger" data-remove-human="${item.id}">✕</button></div>`).join('') : '<div class="placed-empty">Nothing placed yet</div>';
 }
 document.getElementById('editor-panel').addEventListener('click', e=>{
   const rid = e.target.getAttribute('data-remove');
@@ -1097,9 +1409,9 @@ document.getElementById('editor-panel').addEventListener('click', e=>{
   if (rsid) resizeItem(parseInt(rsid,10), e.target.getAttribute('data-axis'), parseInt(e.target.getAttribute('data-delta'),10));
 });
 refreshEditorLists();
- 
+
 function shapeOptionsHTML(sel){
-  const opts = [['concentric','同心圓 Concentric'],['arc','弧形 Arc'],['spiky','尖刺 Spiky'],['rattle','急促 Rattle']];
+  const opts = [['concentric','Concentric'],['arc','Arc'],['spiky','Spiky'],['rattle','Rattle']];
   return opts.map(([v,l])=>`<option value="${v}" ${v===sel?'selected':''}>${l}</option>`).join('');
 }
 function renderSoundTab(){
@@ -1107,14 +1419,14 @@ function renderSoundTab(){
   el.innerHTML = PREDATORS.map(p=>`
     <div class="predator-card ${p.id===activePredatorId?'active':''}" data-pred="${p.id}">
       <div class="predator-head"><span>${p.label}</span>
-        <button class="small ${p.id===activePredatorId?'active':''}" data-use="${p.id}">${p.id===activePredatorId?'使用中':'使用'}</button>
+        <button class="small ${p.id===activePredatorId?'active':''}" data-use="${p.id}">${p.id===activePredatorId?'Active':'Use'}</button>
       </div>
-      <div class="predator-row"><label>波形</label><select data-shape="${p.id}">${shapeOptionsHTML(p.shape)}</select></div>
-      <div class="predator-row"><label>頻率 Hz</label><span class="freqs">
+      <div class="predator-row"><label>Wave shape</label><select data-shape="${p.id}">${shapeOptionsHTML(p.shape)}</select></div>
+      <div class="predator-row"><label>Frequency (Hz)</label><span class="freqs">
         <input type="number" data-freqlow="${p.id}" value="${p.freqLow}" />–
         <input type="number" data-freqhigh="${p.id}" value="${p.freqHigh}" />
       </span></div>
-      <div class="predator-row"><label>基準成效 <span data-effval="${p.id}">${p.baseEff}%</span></label>
+      <div class="predator-row"><label>Base effectiveness <span data-effval="${p.id}">${p.baseEff}%</span></label>
         <input type="range" min="10" max="95" value="${p.baseEff}" data-eff="${p.id}" style="width:80px" />
       </div>
     </div>`).join('');
@@ -1122,7 +1434,7 @@ function renderSoundTab(){
 renderSoundTab();
 document.getElementById('sound-tab-content').addEventListener('click', e=>{
   const useId = e.target.getAttribute('data-use');
-  if (useId){ activePredatorId = useId; renderSoundTab(); document.getElementById('d-sound').textContent = activeDef().label; }
+  if (useId){ activePredatorId = useId; renderSoundTab(); document.getElementById('d-sound').textContent = activeDef().label; scheduleAutosave(); }
 });
 document.getElementById('sound-tab-content').addEventListener('change', e=>{
   const id = e.target.getAttribute('data-shape') || e.target.getAttribute('data-freqlow') || e.target.getAttribute('data-freqhigh');
@@ -1131,6 +1443,7 @@ document.getElementById('sound-tab-content').addEventListener('change', e=>{
   if (e.target.hasAttribute('data-shape')) p.shape = e.target.value;
   if (e.target.hasAttribute('data-freqlow')) p.freqLow = parseFloat(e.target.value)||0;
   if (e.target.hasAttribute('data-freqhigh')) p.freqHigh = parseFloat(e.target.value)||0;
+  scheduleAutosave();
 });
 document.getElementById('sound-tab-content').addEventListener('input', e=>{
   const id = e.target.getAttribute('data-eff');
@@ -1138,18 +1451,181 @@ document.getElementById('sound-tab-content').addEventListener('input', e=>{
   const p = PREDATORS.find(pp=>pp.id===id);
   p.baseEff = parseFloat(e.target.value);
   document.querySelector(`[data-effval="${id}"]`).textContent = `${p.baseEff}%`;
+  scheduleAutosave();
 });
- 
+
 /* ============ TOP BAR CONTROLS ============ */
 document.getElementById('toggle-rotate').addEventListener('change', e=>{ controls.autoRotate = e.target.checked; });
-document.getElementById('toggle-randomize').addEventListener('change', e=>{ randomizeEntrance = e.target.checked; });
+document.getElementById('toggle-randomize').addEventListener('change', e=>{ randomizeEntrance = e.target.checked; scheduleAutosave(); });
 document.getElementById('btn-set-entrance').addEventListener('click', e=>{
   pickingEntrance = !pickingEntrance;
   e.target.classList.toggle('active', pickingEntrance);
 });
 document.getElementById('speed-select').addEventListener('change', e=>{ speedMult = parseFloat(e.target.value); });
 document.getElementById('btn-restart').addEventListener('click', ()=> enterPhase(PHASE.IDLE));
- 
+
+/* ============ ACCOUNTS — client-side only (localStorage), lets different browsers/
+   users on this device keep separate saved space setups. Not a real secure backend. ============ */
+const LS_USERS = 'ratgrid_users_v1';
+const LS_CURRENT = 'ratgrid_current_user_v1';
+const LS_SETUP_PREFIX = 'ratgrid_setup_v1_';
+
+function loadUsers(){
+  try { return JSON.parse(localStorage.getItem(LS_USERS)) || {}; } catch(e){ return {}; }
+}
+function saveUsers(users){ try { localStorage.setItem(LS_USERS, JSON.stringify(users)); } catch(e){ /* storage unavailable */ } }
+
+let currentUser = null;
+let saveTimer = null;
+
+function serializeSetup(){
+  return {
+    placedItems: placedItems.map(it=>({ type:it.type, col:it.col, row:it.row, L:it.L, W:it.W, H:it.H })),
+    humanItems: humanItems.map(it=>({ col:it.col, row:it.row })),
+    activePredatorId,
+    predators: PREDATORS.map(p=>({ id:p.id, shape:p.shape, freqLow:p.freqLow, freqHigh:p.freqHigh, baseEff:p.baseEff })),
+    manualEntrance, randomizeEntrance,
+  };
+}
+function clearScene(){
+  placedItems.forEach(it=> roomGroup.remove(it.mesh));
+  placedItems.length = 0;
+  humanItems.forEach(it=> roomGroup.remove(it.mesh));
+  humanItems.length = 0;
+}
+function applySetup(data){
+  clearScene();
+  (data.placedItems||[]).forEach(d=>{
+    if (!ITEM_DEFS[d.type]) return;
+    const item = { id: uid++, type:d.type, col:d.col, row:d.row, L:d.L, W:d.W, H:d.H };
+    refreshItemMesh(item);
+    placedItems.push(item);
+  });
+  (data.humanItems||[]).forEach(d=> placeHumanMesh(d.col, d.row));
+  (data.predators||[]).forEach(saved=>{
+    const p = PREDATORS.find(pp=>pp.id===saved.id);
+    if (p){ p.shape=saved.shape; p.freqLow=saved.freqLow; p.freqHigh=saved.freqHigh; p.baseEff=saved.baseEff; }
+  });
+  if (data.activePredatorId) activePredatorId = data.activePredatorId;
+  if (typeof data.randomizeEntrance === 'boolean'){
+    randomizeEntrance = data.randomizeEntrance;
+    document.getElementById('toggle-randomize').checked = randomizeEntrance;
+  }
+  manualEntrance = data.manualEntrance || null;
+  rebuildGrids();
+  recomputeRoute(true);
+  refreshEditorLists();
+  renderSoundTab();
+  document.getElementById('d-sound').textContent = activeDef().label;
+}
+/* shared with placeHuman() but skips the autosave/rebuild side-effects, for bulk loading */
+function placeHumanMesh(col,row){
+  const item = { id: uid++, col, row };
+  const group = new THREE.Group();
+  const body = new THREE.Mesh(new THREE.CylinderGeometry(0.06,0.08,0.34,10), new THREE.MeshStandardMaterial({ color:0x334155, roughness:0.8 }));
+  body.position.y = 0.17 + CELL*0.02;
+  const head = new THREE.Mesh(new THREE.SphereGeometry(0.065,12,10), new THREE.MeshStandardMaterial({ color:0x334155, roughness:0.8 }));
+  head.position.y = 0.4;
+  group.add(body); group.add(head);
+  const center = cellCenter(col,row);
+  group.position.set(center.x, 0, center.z);
+  roomGroup.add(group);
+  item.mesh = group;
+  humanItems.push(item);
+}
+function scheduleAutosave(){
+  if (!currentUser) return;
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(()=> saveCurrentSetup(true), 900);
+}
+function saveCurrentSetup(silent){
+  if (!currentUser) return;
+  try {
+    localStorage.setItem(LS_SETUP_PREFIX + currentUser, JSON.stringify(serializeSetup()));
+    const el = document.getElementById('account-save-status');
+    if (el) el.textContent = `Saved · ${fmtClock(simSeconds)}`;
+    if (!silent) logEvent(`Scene setup saved to account ${currentUser}`);
+  } catch(e){
+    if (!silent) logEvent('Save failed (browser storage unavailable or full)');
+  }
+}
+function loadSetupFor(username){
+  const raw = localStorage.getItem(LS_SETUP_PREFIX + username);
+  if (raw){
+    try { applySetup(JSON.parse(raw)); } catch(e){ clearScene(); rebuildGrids(); recomputeRoute(true); refreshEditorLists(); }
+  } else {
+    clearScene(); rebuildGrids(); recomputeRoute(true); refreshEditorLists();
+  }
+}
+function setAccountUI(){
+  const loggedIn = !!currentUser;
+  document.getElementById('account-logged-out').classList.toggle('hidden', loggedIn);
+  document.getElementById('account-logged-in').classList.toggle('hidden', !loggedIn);
+  document.getElementById('acc-current-name').textContent = currentUser || '—';
+  document.getElementById('account-status').textContent = loggedIn ? `👤 ${currentUser}` : '👤 Guest';
+  document.getElementById('btn-save-setup').classList.toggle('hidden', !loggedIn);
+  document.getElementById('btn-account').textContent = loggedIn ? 'Account' : 'Log in';
+}
+
+document.getElementById('btn-account').addEventListener('click', ()=> document.getElementById('account-panel').classList.toggle('open'));
+document.getElementById('account-close').addEventListener('click', ()=> document.getElementById('account-panel').classList.remove('open'));
+document.getElementById('btn-save-setup').addEventListener('click', ()=> saveCurrentSetup(false));
+document.getElementById('btn-manual-save').addEventListener('click', ()=> saveCurrentSetup(false));
+
+document.getElementById('btn-register').addEventListener('click', ()=>{
+  const u = document.getElementById('acc-username').value.trim();
+  const p = document.getElementById('acc-password').value;
+  const msg = document.getElementById('account-msg');
+  if (!u || !p){ msg.textContent = 'Enter a username and password'; return; }
+  const users = loadUsers();
+  if (users[u]){ msg.textContent = 'That account already exists — log in instead'; return; }
+  users[u] = p;
+  saveUsers(users);
+  currentUser = u;
+  try { localStorage.setItem(LS_CURRENT, u); } catch(e){}
+  msg.textContent = '';
+  setAccountUI();
+  clearScene(); rebuildGrids(); recomputeRoute(true); refreshEditorLists();
+  saveCurrentSetup(true);
+  document.getElementById('account-panel').classList.remove('open');
+  logEvent(`Registered and logged in as ${u}`);
+});
+document.getElementById('btn-login').addEventListener('click', ()=>{
+  const u = document.getElementById('acc-username').value.trim();
+  const p = document.getElementById('acc-password').value;
+  const msg = document.getElementById('account-msg');
+  const users = loadUsers();
+  if (!users[u]){ msg.textContent = 'No such account — register first'; return; }
+  if (users[u] !== p){ msg.textContent = 'Incorrect password'; return; }
+  currentUser = u;
+  try { localStorage.setItem(LS_CURRENT, u); } catch(e){}
+  msg.textContent = '';
+  setAccountUI();
+  loadSetupFor(u);
+  document.getElementById('account-panel').classList.remove('open');
+  logEvent(`Logged in as ${u} — loaded saved scene`);
+});
+document.getElementById('btn-logout').addEventListener('click', ()=>{
+  currentUser = null;
+  try { localStorage.removeItem(LS_CURRENT); } catch(e){}
+  setAccountUI();
+  clearScene(); rebuildGrids(); recomputeRoute(true); refreshEditorLists();
+  logEvent('Logged out — scene reset to guest mode');
+});
+
+/* restore session on load, if a browser account was already logged in */
+(function restoreSession(){
+  let saved = null;
+  try { saved = localStorage.getItem(LS_CURRENT); } catch(e){}
+  if (saved && loadUsers()[saved]){
+    currentUser = saved;
+    setAccountUI();
+    loadSetupFor(saved);
+  } else {
+    setAccountUI();
+  }
+})();
+
 /* ============ ANIMATION LOOP ============ */
 const clock = new THREE.Clock();
 function tick(){
@@ -1158,19 +1634,32 @@ function tick(){
   simSeconds += dt;
   document.getElementById('clock').textContent = fmtClock(simSeconds);
   document.getElementById('d-visited').textContent = visitedCount;
- 
+
   controls.update();
   updateTrail(simSeconds);
   updateWaves(dt);
- 
-  if (deterrenceActive){
+  updateImpacts(dt);
+
+  if (deterrenceActive && ratGroup.visible){
+    const dir = computeRatForwardDir();
+    const originPos = ratGroup.position.clone().addScaledVector(dir, -CELL*2.2);
+    originPos.y = CELL*2;
+    const aimVec = new THREE.Vector3().subVectors(originPos, speakerPos);
+    if (aimVec.lengthSq() > 0.0001){
+      const targetAngle = Math.atan2(aimVec.x, aimVec.z);
+      speakerRig.rotation.y += shortestAngleDiff(speakerRig.rotation.y, targetAngle) * Math.min(1, dt*4);
+    }
+    updateRangeCone(originPos, dir, activeDef().color);
     waveSpawnTimer -= dt;
-    if (waveSpawnTimer <= 0){ spawnWave(activeDef()); waveSpawnTimer = activeDef().spawnInterval; }
+    if (waveSpawnTimer <= 0){ spawnWave(activeDef(), originPos, dir); waveSpawnTimer = activeDef().spawnInterval; }
+  } else {
+    speakerRig.rotation.y += shortestAngleDiff(speakerRig.rotation.y, 0) * Math.min(1, dt*2);
+    rangeCone.visible = false;
   }
- 
+
   phaseTime += dt;
   routeRecalcTimer -= dt;
- 
+
   switch (phase){
     case PHASE.IDLE:
       if (phaseTime > 2.0) enterPhase(PHASE.TRACKING);
@@ -1201,11 +1690,11 @@ function tick(){
       if (phaseTime > 1.2) enterPhase(PHASE.IDLE);
       break;
   }
- 
+
   renderer.render(scene, camera);
   labelRenderer.render(scene, camera);
 }
- 
+
 resize();
 tick();
 </script>

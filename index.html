@@ -18,6 +18,7 @@
     --amber:#e37400; --amber-dim:rgba(227,116,0,.12);
     --red:#d93025; --red-dim:rgba(217,48,37,.12);
     --green:#188038; --green-dim:rgba(24,128,56,.14);
+    --chrome:#202124; --chrome-deep:#16181c;
     --font-display:'Roboto',sans-serif;
     --font-body:'Roboto',sans-serif;
     --font-mono:'Roboto Mono',monospace;
@@ -36,22 +37,22 @@
   button.small{padding:2px 7px;font-size:10.5px;line-height:1.4;}
   button.mini{padding:0 5px;font-size:10px;line-height:1.6;margin-left:2px;}
   button.danger{color:var(--red);}
-  label.toggle{display:inline-flex;align-items:center;gap:6px;font-family:var(--font-body);font-size:12.5px;color:var(--text-dim);letter-spacing:.01em;cursor:pointer;user-select:none;}
-  label.toggle input{accent-color:var(--blue);}
+  label.toggle{display:inline-flex;align-items:center;gap:6px;font-family:var(--font-body);font-size:12.5px;color:rgba(255,255,255,.92);letter-spacing:.01em;cursor:pointer;user-select:none;}
+  label.toggle input{accent-color:#fff;}
   input[type=number]{width:56px;background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:4px 6px;color:var(--text);font-family:var(--font-mono);}
   input[type=range]{accent-color:var(--blue);width:100%;}
   input[type=text],input[type=password]{background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:5px 8px;color:var(--text);font-family:var(--font-body);}
 
   #app{position:relative;width:100vw;height:100vh;display:flex;flex-direction:column;}
 
-  .topbar{flex:0 0 auto;display:flex;align-items:center;justify-content:space-between;gap:14px;padding:10px 16px;border-bottom:1px solid var(--border);background:var(--bg-2);z-index:30;flex-wrap:wrap;box-shadow:0 1px 2px rgba(60,64,67,.08);}
+  .topbar{flex:0 0 auto;display:flex;align-items:center;justify-content:space-between;gap:14px;padding:10px 16px;border-bottom:1px solid rgba(255,255,255,.1);background:var(--chrome);z-index:30;flex-wrap:wrap;box-shadow:0 1px 3px rgba(60,64,67,.2);}
   .brand{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap;min-width:0;}
-  .brand .mark{font-family:var(--font-mono);font-size:10px;letter-spacing:.08em;color:var(--blue);border:1px solid var(--border);padding:3px 7px;border-radius:var(--radius);white-space:nowrap;background:var(--blue-dim);}
-  .brand h1{font-family:var(--font-display);font-weight:600;font-size:17px;margin:0;letter-spacing:0;white-space:nowrap;}
-  .brand .sub{font-family:var(--font-body);font-size:11px;color:var(--text-faint);letter-spacing:.01em;white-space:nowrap;}
+  .brand .mark{font-family:var(--font-mono);font-size:10px;letter-spacing:.08em;color:#fff;border:1px solid rgba(255,255,255,.4);padding:3px 7px;border-radius:var(--radius);white-space:nowrap;background:rgba(255,255,255,.16);}
+  .brand h1{font-family:var(--font-display);font-weight:600;font-size:17px;margin:0;letter-spacing:0;white-space:nowrap;color:#fff;}
+  .brand .sub{font-family:var(--font-body);font-size:11px;color:rgba(255,255,255,.78);letter-spacing:.01em;white-space:nowrap;}
   .controls{display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
   .controls .group{display:flex;align-items:center;gap:6px;}
-  .controls .sep{width:1px;height:16px;background:var(--border);}
+  .controls .sep{width:1px;height:16px;background:rgba(255,255,255,.32);}
 
   .layout{flex:1 1 auto;display:flex;min-height:0;}
   #viewport{position:relative;flex:1 1 auto;min-width:0;background:radial-gradient(ellipse at 50% 15%, #ffffff 0%, var(--bg) 70%);}
@@ -81,27 +82,27 @@
   .editor-toggle{white-space:nowrap;}
   .editor-panel{
     position:absolute; top:12px; right:12px; width:290px; max-height:calc(100% - 24px);
-    background:rgba(255,255,255,.99); border:1px solid var(--border); border-radius:var(--radius-lg);
-    box-shadow:0 4px 6px rgba(60,64,67,.08), 0 8px 24px rgba(60,64,67,.14); z-index:20; pointer-events:auto;
+    background:var(--chrome); border:1px solid rgba(255,255,255,.1); border-radius:var(--radius-lg);
+    box-shadow:0 4px 6px rgba(60,64,67,.12), 0 8px 24px rgba(60,64,67,.22); z-index:20; pointer-events:auto;
     display:none; flex-direction:column; overflow:hidden;
   }
   .editor-panel.open{display:flex;}
 
-  .account-status{font-family:var(--font-body);font-size:12.5px;color:var(--text-dim);letter-spacing:.01em;white-space:nowrap;}
+  .account-status{font-family:var(--font-body);font-size:12.5px;color:rgba(255,255,255,.92);letter-spacing:.01em;white-space:nowrap;}
   .account-panel{
     position:absolute; top:12px; left:50%; transform:translateX(-50%); width:290px;
-    background:rgba(255,255,255,.99); border:1px solid var(--border); border-radius:var(--radius-lg);
-    box-shadow:0 4px 6px rgba(60,64,67,.08), 0 8px 24px rgba(60,64,67,.14); z-index:25; pointer-events:auto;
+    background:var(--chrome); border:1px solid rgba(255,255,255,.1); border-radius:var(--radius-lg);
+    box-shadow:0 4px 6px rgba(60,64,67,.12), 0 8px 24px rgba(60,64,67,.22); z-index:25; pointer-events:auto;
     display:none; flex-direction:column; overflow:hidden;
   }
   .account-panel.open{display:flex;}
   .hidden{display:none !important;}
-  .editor-head{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);background:var(--panel-2);border-radius:var(--radius-lg) var(--radius-lg) 0 0;}
+  .editor-head{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,.2);background:var(--chrome-deep);border-radius:var(--radius-lg) var(--radius-lg) 0 0;}
   .tabs{display:flex;flex:1 1 auto;}
-  .tab-btn{flex:1 1 auto;background:transparent;border:none;border-radius:0;padding:10px 4px;font-size:10.5px;font-family:var(--font-body);font-weight:500;letter-spacing:.02em;color:var(--text-faint);border-bottom:2px solid transparent;}
-  .tab-btn.active{color:var(--blue);border-bottom:2px solid var(--blue);background:#fff;}
-  .editor-close{border:none;background:transparent;padding:9px 12px;color:var(--text-faint);border-radius:0;}
-  .editor-close:hover{color:var(--red);background:transparent;border:none;box-shadow:none;}
+  .tab-btn{flex:1 1 auto;background:transparent;border:none;border-radius:0;padding:10px 4px;font-size:10.5px;font-family:var(--font-body);font-weight:500;letter-spacing:.02em;color:rgba(255,255,255,.72);border-bottom:2px solid transparent;}
+  .tab-btn.active{color:#fff;border-bottom:2px solid #fff;background:rgba(255,255,255,.14);}
+  .editor-close{border:none;background:transparent;padding:9px 12px;color:rgba(255,255,255,.75);border-radius:0;}
+  .editor-close:hover{color:#fff;background:rgba(255,255,255,.14);border:none;box-shadow:none;}
   .editor-body{padding:12px;overflow-y:auto;font-family:var(--font-body);}
   .tab-panel.hidden{display:none;}
 
@@ -110,14 +111,16 @@
   .palette-item:hover{border-color:var(--blue);box-shadow:0 1px 3px rgba(60,64,67,.14);}
   .palette-item:active{cursor:grabbing;}
   .palette-item .swatch{width:22px;height:15px;border-radius:3px;margin-bottom:1px;}
-  .placed-list{max-height:190px;overflow-y:auto;border-top:1px solid var(--border);padding-top:8px;}
-  .placed-row{display:flex;align-items:flex-start;justify-content:space-between;gap:6px;font-size:11px;font-family:var(--font-body);color:var(--text-dim);padding:6px 0;border-bottom:1px solid var(--panel-2);}
-  .placed-row:last-child{border-bottom:none;}
+  .placed-list{max-height:190px;overflow-y:auto;border-top:1px solid rgba(255,255,255,.28);padding-top:8px;}
+  .placed-row{display:flex;align-items:flex-start;justify-content:space-between;gap:6px;font-size:11px;font-family:var(--font-body);color:var(--text-dim);padding:8px 9px;margin-bottom:6px;background:#fff;border-radius:var(--radius);box-shadow:0 1px 2px rgba(60,64,67,.1);cursor:pointer;border:1.5px solid transparent;transition:.15s;}
+  .placed-row:hover{box-shadow:0 1px 4px rgba(60,64,67,.2);}
+  .placed-row.selected{border-color:var(--blue);background:var(--blue-dim);}
+  .placed-row:last-child{margin-bottom:0;}
   .placed-row .lbl{color:var(--text);}
   .placed-row .dims{margin-top:4px;display:flex;flex-wrap:wrap;gap:6px;font-family:var(--font-mono);}
   .placed-row .dim{display:inline-flex;align-items:center;color:var(--text-faint);}
-  .placed-empty{font-size:11px;color:var(--text-faint);padding:4px 0;}
-  .editor-hint{font-size:10px;color:var(--text-faint);margin-top:7px;line-height:1.5;}
+  .placed-empty{font-size:11px;color:rgba(255,255,255,.8);padding:4px 0;}
+  .editor-hint{font-size:10px;color:rgba(255,255,255,.8);margin-top:7px;line-height:1.5;}
 
   .predator-card{border:1px solid var(--border);border-radius:var(--radius);padding:9px;margin-bottom:9px;background:#fff;}
   .predator-card.active{border-color:var(--blue);background:var(--blue-dim);}
@@ -126,10 +129,12 @@
   .predator-row label{flex:0 0 auto;}
   .predator-row select{flex:1 1 auto;}
   .predator-row .freqs{display:flex;align-items:center;gap:4px;font-family:var(--font-mono);}
+  .account-panel .predator-row label{color:rgba(255,255,255,.88);}
+  #acc-current-name{color:#fff;}
 
   /* ---- dashboard: small refreshing blocks ---- */
-  .dashboard{flex:0 0 250px;max-width:250px;border-left:1px solid var(--border);background:var(--bg-2);overflow-y:auto;padding:12px;display:grid;grid-template-columns:1fr 1fr;gap:8px;align-content:start;}
-  .block{border:1px solid var(--border);background:var(--panel);border-radius:var(--radius);padding:9px 10px;}
+  .dashboard{flex:0 0 250px;max-width:250px;border-left:1px solid rgba(255,255,255,.1);background:var(--chrome);overflow-y:auto;padding:12px;display:grid;grid-template-columns:1fr 1fr;gap:8px;align-content:start;}
+  .block{border:1px solid var(--border);background:var(--panel);border-radius:var(--radius);padding:9px 10px;box-shadow:0 1px 2px rgba(60,64,67,.1);}
   .block.wide{grid-column:1 / -1;}
   .block .k{font-family:var(--font-body);font-size:10px;font-weight:500;letter-spacing:.02em;color:var(--text-faint);margin-bottom:4px;}
   .block .v{font-family:var(--font-mono);font-size:13px;font-weight:700;color:var(--text);line-height:1.3;word-break:break-word;}
@@ -138,12 +143,12 @@
   .eff-bar{height:5px;border-radius:3px;background:var(--panel-2);margin-top:5px;overflow:hidden;}
   .eff-bar i{display:block;height:100%;background:var(--amber);}
 
-  .statusbar{flex:0 0 auto;display:flex;align-items:center;justify-content:space-between;padding:7px 16px;border-top:1px solid var(--border);background:var(--bg-2);font-family:var(--font-body);font-size:10.5px;color:var(--text-faint);letter-spacing:.01em;}
+  .statusbar{flex:0 0 auto;display:flex;align-items:center;justify-content:space-between;padding:7px 16px;border-top:1px solid rgba(255,255,255,.1);background:var(--chrome-deep);font-family:var(--font-body);font-size:10.5px;color:rgba(255,255,255,.82);letter-spacing:.01em;}
 
   .dashboard::-webkit-scrollbar,.placed-list::-webkit-scrollbar,.editor-body::-webkit-scrollbar{width:6px;}
   .dashboard::-webkit-scrollbar-thumb,.placed-list::-webkit-scrollbar-thumb,.editor-body::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
 
-  .rat-drag-handle{display:inline-flex;align-items:center;gap:5px;padding:7px 12px;border:1px solid rgba(24,128,56,.4);border-radius:var(--radius);background:var(--green-dim);color:var(--green);cursor:grab;font-family:var(--font-body);font-size:12.5px;font-weight:500;letter-spacing:.01em;user-select:none;white-space:nowrap;}
+  .rat-drag-handle{display:inline-flex;align-items:center;gap:5px;padding:7px 12px;border:1px solid rgba(255,255,255,.4);border-radius:var(--radius);background:rgba(255,255,255,.16);color:#fff;cursor:grab;font-family:var(--font-body);font-size:12.5px;font-weight:500;letter-spacing:.01em;user-select:none;white-space:nowrap;}
   .rat-drag-handle:active{cursor:grabbing;}
 
   @media (max-width: 900px){
@@ -185,6 +190,7 @@
         </select>
       </div>
       <button id="btn-restart">↻ Restart simulation</button>
+      <button id="btn-random-stim">🎲 Random Stimulation</button>
       <button id="btn-edit-scene" class="editor-toggle">🛠 Edit scene</button>
       <div class="sep"></div>
       <div class="group">
@@ -259,9 +265,14 @@
               <div class="palette-item" draggable="true" data-drag="furniture:shelf"><span class="swatch" style="background:#1d4ed8"></span>Shelf</div>
               <div class="palette-item" draggable="true" data-drag="furniture:window"><span class="swatch" style="background:#67c1d6"></span>Window</div>
               <div class="palette-item" draggable="true" data-drag="furniture:wall"><span class="swatch" style="background:#64748b"></span>Wall</div>
+              <div class="palette-item" draggable="true" data-drag="furniture:bed"><span class="swatch" style="background:#6b8cae"></span>Bed</div>
+              <div class="palette-item" draggable="true" data-drag="furniture:table"><span class="swatch" style="background:#a1662f"></span>Table</div>
+              <div class="palette-item" draggable="true" data-drag="furniture:counter"><span class="swatch" style="background:#c9a876"></span>Counter</div>
+              <div class="palette-item" draggable="true" data-drag="furniture:fridge"><span class="swatch" style="background:#8a94a0"></span>Fridge</div>
+              <div class="palette-item" draggable="true" data-drag="furniture:cabinet"><span class="swatch" style="background:#6b4423"></span>Cabinet</div>
             </div>
             <div class="placed-list" id="list-furniture"></div>
-            <div class="editor-hint">Drag an icon onto the scene to place it. A silhouette preview shows where it will land. Use +/− to resize in whole grid units.</div>
+            <div class="editor-hint">Drag an icon onto the scene to place it — a silhouette preview shows where it will land. Click a placed item (in the scene or in this list) to select it, then drag its colored handles to resize by edge, drag the top handle for height, or tap ⟳ to rotate 90°. +/− steppers still work too.</div>
           </div>
           <div class="tab-panel hidden" data-tabpanel="humans">
             <div class="palette">
@@ -278,7 +289,7 @@
               <div class="palette-item" draggable="true" data-drag="zone"><span class="swatch" style="background:#d93025"></span>Zone</div>
             </div>
             <div class="placed-list" id="list-zones"></div>
-            <div class="editor-hint">"Do not approach" areas — the rat's route strongly avoids these.</div>
+            <div class="editor-hint">"Do not approach" areas — the rat's route strongly avoids these. Select a placed zone to drag-resize or rotate it, same as furniture.</div>
           </div>
         </div>
       </div>
@@ -443,13 +454,18 @@ function makeLabel(text, cls){
    cells (left/right). Only walls and humans are hard-blocked; everything else is either
    climbable terrain or purely decorative (lights/windows, ignored for movement). */
 const ITEM_DEFS = {
-  sofa:   { label:'Sofa',   cat:'furniture', L:3, W:2, H:2, color:0x1a73e8, opacity:0.86, climbable:true,  blocking:false, elevate:'floor' },
-  chair:  { label:'Chair',  cat:'furniture', L:1, W:1, H:2, color:0x3b82f6, opacity:0.86, climbable:true,  blocking:false, elevate:'floor' },
-  light:  { label:'Light',  cat:'furniture', L:1, W:1, H:1, color:0xf5c518, opacity:0.9,  climbable:false, blocking:false, elevate:'ceiling' },
-  shelf:  { label:'Shelf',  cat:'furniture', L:1, W:3, H:6, color:0x1d4ed8, opacity:0.86, climbable:true,  blocking:false, elevate:'floor' },
-  window: { label:'Window', cat:'furniture', L:1, W:4, H:4, color:0x67c1d6, opacity:0.35, climbable:false, blocking:false, elevate:'mid' },
-  wall:   { label:'Wall',   cat:'furniture', L:5, W:1, H:8, color:0x64748b, opacity:0.92, climbable:false, blocking:true,  elevate:'floor' },
-  zone:   { label:'Zone',   cat:'zone',      L:3, W:3, H:4, color:0xd93025, opacity:0.14, climbable:false, blocking:false, elevate:'floor', costOwn:60, costRing:15 },
+  sofa:    { label:'Sofa',    cat:'furniture', L:3, W:2, H:2, color:0x1a73e8, opacity:0.86, climbable:true,  blocking:false, elevate:'floor' },
+  chair:   { label:'Chair',   cat:'furniture', L:1, W:1, H:2, color:0x3b82f6, opacity:0.86, climbable:true,  blocking:false, elevate:'floor' },
+  light:   { label:'Light',   cat:'furniture', L:1, W:1, H:1, color:0xf5c518, opacity:0.9,  climbable:false, blocking:false, elevate:'ceiling' },
+  shelf:   { label:'Shelf',   cat:'furniture', L:1, W:3, H:6, color:0x1d4ed8, opacity:0.86, climbable:true,  blocking:false, elevate:'floor' },
+  window:  { label:'Window',  cat:'furniture', L:1, W:4, H:4, color:0x67c1d6, opacity:0.35, climbable:false, blocking:false, elevate:'mid' },
+  wall:    { label:'Wall',    cat:'furniture', L:5, W:1, H:8, color:0x64748b, opacity:0.92, climbable:false, blocking:true,  elevate:'floor' },
+  bed:     { label:'Bed',     cat:'furniture', L:7, W:4, H:3, color:0x6b8cae, opacity:0.9,  climbable:true,  blocking:false, elevate:'floor' },
+  table:   { label:'Table',   cat:'furniture', L:4, W:3, H:3, color:0xa1662f, opacity:0.9,  climbable:true,  blocking:false, elevate:'floor' },
+  counter: { label:'Counter', cat:'furniture', L:4, W:2, H:3, color:0xc9a876, opacity:0.9,  climbable:true,  blocking:false, elevate:'floor' },
+  fridge:  { label:'Fridge',  cat:'furniture', L:2, W:2, H:6, color:0x8a94a0, opacity:0.92, climbable:true,  blocking:false, elevate:'floor' },
+  cabinet: { label:'Cabinet', cat:'furniture', L:3, W:2, H:5, color:0x6b4423, opacity:0.9,  climbable:true,  blocking:false, elevate:'floor' },
+  zone:    { label:'Zone',    cat:'zone',      L:3, W:3, H:4, color:0xd93025, opacity:0.14, climbable:false, blocking:false, elevate:'floor', costOwn:60, costRing:15 },
 };
 
 let uid = 1;
@@ -460,6 +476,30 @@ function clampFootprint(col,row,L,W){
   col = clamp(col, 0, GRID-L);
   row = clamp(row, 0, GRID-W);
   return {col,row};
+}
+/* footprint dimensions in grid units, accounting for 90/270 rotation swapping L<->W */
+function footprintDims(item){
+  const rot = ((item.rot||0)%360+360)%360;
+  return (rot===90 || rot===270) ? { fl:item.W, fw:item.L } : { fl:item.L, fw:item.W };
+}
+/* recover a grid anchor (col,row) from a desired world-space footprint center */
+function centerToAnchor(item, cx, cz){
+  const dims = footprintDims(item);
+  const col = Math.round((cx+WORLD/2)/CELL - dims.fl/2);
+  const row = Math.round((cz+WORLD/2)/CELL - dims.fw/2);
+  return { col, row };
+}
+/* rotate in place — keeps the item's footprint centered as closely as possible */
+function rotateItem(item, deltaDeg){
+  const before = footprintDims(item);
+  const centerCol = item.col + before.fl/2;
+  const centerRow = item.row + before.fw/2;
+  item.rot = (((item.rot||0) + deltaDeg) % 360 + 360) % 360;
+  const after = footprintDims(item);
+  item.col = Math.round(centerCol - after.fl/2);
+  item.row = Math.round(centerRow - after.fw/2);
+  const fp = clampFootprint(item.col, item.row, after.fl, after.fw);
+  item.col = fp.col; item.row = fp.row;
 }
 
 /* ---- procedural per-type furniture "models" (built from primitives, not shared boxes) ---- */
@@ -544,6 +584,33 @@ function buildFurnitureParts(group, type, sx, sy, sz, color){
     addBoxPart(group, sx, mullT, sz, 0x64748b, 0, sy/2, 0);
     addBoxPart(group, sx, sy, mullT, 0x64748b, 0, sy/2, 0);
     addBoxPart(group, sx*0.4, sy*0.86, sz*0.86, color, 0, sy/2, 0, { opacity:0.28, doubleSide:true, noEdges:true });
+  } else if (type === 'bed'){
+    addBoxPart(group, sx, sy*0.18, sz, 0x5c4a3a, 0, sy*0.09, 0);
+    addBoxPart(group, sx*0.94, sy*0.32, sz*0.94, color, 0, sy*0.18+sy*0.16, 0);
+    addBoxPart(group, sx*0.06, sy, sz, 0x5c4a3a, -sx/2+sx*0.03, sy/2, 0);
+    addBoxPart(group, sx*0.22, sy*0.14, sz*0.7, 0xf5f2ea, -sx/2+sx*0.18, sy*0.18+sy*0.32+sy*0.07, 0);
+  } else if (type === 'table'){
+    addBoxPart(group, sx, sy*0.08, sz, color, 0, sy*0.92, 0);
+    const legR = Math.max(0.014, Math.min(sx,sz)*0.045);
+    const legH = sy*0.88;
+    const lx = sx*0.42, lz = sz*0.42;
+    [[-lx,-lz],[lx,-lz],[-lx,lz],[lx,lz]].forEach(([ex,ez])=>{
+      addCylPart(group, legR, legR, legH, 0x3a2a1a, ex, legH/2, ez);
+    });
+  } else if (type === 'counter'){
+    addBoxPart(group, sx*0.96, sy*0.85, sz*0.96, 0xd9d2c4, 0, sy*0.425, 0);
+    addBoxPart(group, sx, sy*0.12, sz, color, 0, sy*0.85+sy*0.06, 0);
+  } else if (type === 'fridge'){
+    addBoxPart(group, sx, sy, sz, color, 0, sy/2, 0);
+    addBoxPart(group, sx*1.001, sy*0.02, sz*1.001, 0x2b2f33, 0, sy*0.32, 0, { noEdges:true });
+    const handleR = Math.max(0.01, sx*0.04);
+    addCylPart(group, handleR, handleR, sy*0.4, 0x2b2f33, sx*0.42, sy*0.55, sz/2+0.012);
+  } else if (type === 'cabinet'){
+    addBoxPart(group, sx, sy, sz, color, 0, sy/2, 0);
+    addBoxPart(group, sx*0.98, sy*0.98, 0.006, 0x2b2f33, 0, sy/2, sz/2+0.003, { noEdges:true });
+    const knobS = Math.max(0.012, Math.min(sx,sz)*0.05);
+    addBoxPart(group, knobS, knobS, knobS, 0x2b2f33, -sx*0.12, sy*0.5, sz/2+knobS/2, { noEdges:true });
+    addBoxPart(group, knobS, knobS, knobS, 0x2b2f33, sx*0.12, sy*0.5, sz/2+knobS/2, { noEdges:true });
   } else {
     /* wall (and any other flat/solid item) — a plain slab is correct for a wall */
     addBoxPart(group, sx, sy, sz, color, 0, sy/2, 0);
@@ -560,16 +627,18 @@ function refreshItemMesh(item){
   const sx = item.L*CELL, sy = item.H*CELL, sz = item.W*CELL;
   buildFurnitureParts(item.mesh, item.type, sx, sy, sz, def.color);
   if (item.type === 'light') item.mesh.add(new THREE.PointLight(0xffe9b0, 0.5, 4));
-  const cx = -WORLD/2 + CELL*(item.col + item.L/2);
-  const cz = -WORLD/2 + CELL*(item.row + item.W/2);
+  const dims = footprintDims(item);
+  const cx = -WORLD/2 + CELL*(item.col + dims.fl/2);
+  const cz = -WORLD/2 + CELL*(item.row + dims.fw/2);
   item.mesh.position.set(cx, baseY(def, sy), cz);
+  item.mesh.rotation.y = THREE.MathUtils.degToRad(item.rot||0);
 }
 
 function placeItem(type, col, row){
   const def = ITEM_DEFS[type];
   if (!def) return;
   ({col,row} = clampFootprint(col,row,def.L,def.W));
-  const item = { id: uid++, type, col, row, L:def.L, W:def.W, H:def.H };
+  const item = { id: uid++, type, col, row, L:def.L, W:def.W, H:def.H, rot:0 };
   refreshItemMesh(item);
   placedItems.push(item);
   rebuildGrids(); recomputeRoute(true); refreshEditorLists(); scheduleAutosave();
@@ -580,14 +649,25 @@ function resizeItem(id, axis, delta){
   const def = ITEM_DEFS[item.type];
   if (axis === 'H' && def.cat === 'zone') return;
   item[axis] = clamp(item[axis] + delta, 1, 10);
-  const fp = clampFootprint(item.col, item.row, item.L, item.W);
+  const dims = footprintDims(item);
+  const fp = clampFootprint(item.col, item.row, dims.fl, dims.fw);
   item.col = fp.col; item.row = fp.row;
   refreshItemMesh(item);
+  if (selectedItem === item) positionHandles(item);
+  rebuildGrids(); recomputeRoute(true); refreshEditorLists(); scheduleAutosave();
+}
+function rotateItemBy(id, deltaDeg){
+  const item = placedItems.find(i=>i.id===id);
+  if (!item) return;
+  rotateItem(item, deltaDeg);
+  refreshItemMesh(item);
+  if (selectedItem === item) positionHandles(item);
   rebuildGrids(); recomputeRoute(true); refreshEditorLists(); scheduleAutosave();
 }
 function removeItem(id){
   const idx = placedItems.findIndex(i=>i.id===id);
   if (idx<0) return;
+  if (selectedItem === placedItems[idx]) deselectItem();
   roomGroup.remove(placedItems[idx].mesh);
   placedItems.splice(idx,1);
   rebuildGrids(); recomputeRoute(true); refreshEditorLists(); scheduleAutosave();
@@ -644,27 +724,28 @@ function rebuildGrids(){
   heightGrid = Array.from({length:GRID}, ()=> new Array(GRID).fill(0));
   placedItems.forEach(item=>{
     const def = ITEM_DEFS[item.type];
+    const { fl, fw } = footprintDims(item);
     if (def.climbable){
       const topH = item.H * CELL;
-      for (let r=item.row; r<item.row+item.W; r++){
-        for (let c=item.col; c<item.col+item.L; c++){
+      for (let r=item.row; r<item.row+fw; r++){
+        for (let c=item.col; c<item.col+fl; c++){
           if (c>=0&&c<GRID&&r>=0&&r<GRID) heightGrid[r][c] = Math.max(heightGrid[r][c], topH);
         }
       }
     }
     if (def.blocking){
       /* walls: a true hard obstacle — never climbable over the top, only routable around */
-      for (let r=item.row; r<item.row+item.W; r++){
-        for (let c=item.col; c<item.col+item.L; c++){
+      for (let r=item.row; r<item.row+fw; r++){
+        for (let c=item.col; c<item.col+fl; c++){
           if (c>=0&&c<GRID&&r>=0&&r<GRID) obstacleGrid[r][c] = true;
         }
       }
     }
     if (def.cat === 'zone'){
-      for (let r=item.row-1; r<=item.row+item.W; r++){
-        for (let c=item.col-1; c<=item.col+item.L; c++){
+      for (let r=item.row-1; r<=item.row+fw; r++){
+        for (let c=item.col-1; c<=item.col+fl; c++){
           if (c<0||c>=GRID||r<0||r>=GRID) continue;
-          const inside = (c>=item.col && c<item.col+item.L && r>=item.row && r<item.row+item.W);
+          const inside = (c>=item.col && c<item.col+fl && r>=item.row && r<item.row+fw);
           costGrid[r][c] += inside ? def.costOwn : def.costRing;
         }
       }
@@ -787,21 +868,25 @@ function updateTrail(now){
 }
 
 /* ============ ENTRANCE + GOAL MARKERS ============ */
-const GOAL_CELL = { c: GRID-3, r: GRID-3 };
+let GOAL_CELL = { c: GRID-3, r: GRID-3 };
 let entranceCell = { c: 1, r: Math.floor(GRID/2) };
 let manualEntrance = null;
 let randomizeEntrance = true;
 let pickingEntrance = false;
 
-{
-  const c = cellCenter(GOAL_CELL.c, GOAL_CELL.r);
-  const ring = new THREE.Mesh(new THREE.RingGeometry(0.11,0.14,32), new THREE.MeshBasicMaterial({ color:0x1a73e8, transparent:true, opacity:0.85, side:THREE.DoubleSide }));
-  ring.rotation.x = -Math.PI/2; ring.position.set(c.x,0.015,c.z);
-  roomGroup.add(ring);
-  const lbl = makeLabel(`GOAL · ${cellLabel(GOAL_CELL.c,GOAL_CELL.r)}`, 'tag-blue');
-  lbl.position.set(c.x, 0.3, c.z);
-  roomGroup.add(lbl);
+const goalRing = new THREE.Mesh(new THREE.RingGeometry(0.11,0.14,32), new THREE.MeshBasicMaterial({ color:0x1a73e8, transparent:true, opacity:0.85, side:THREE.DoubleSide }));
+goalRing.rotation.x = -Math.PI/2;
+roomGroup.add(goalRing);
+const goalLabel = makeLabel(`GOAL · ${cellLabel(GOAL_CELL.c,GOAL_CELL.r)}`, 'tag-blue');
+roomGroup.add(goalLabel);
+function placeGoalMarker(c,r){
+  GOAL_CELL = { c, r };
+  const center = cellCenter(c,r);
+  goalRing.position.set(center.x, 0.015, center.z);
+  goalLabel.position.set(center.x, 0.3, center.z);
+  goalLabel.element.textContent = `GOAL · ${cellLabel(c,r)}`;
 }
+placeGoalMarker(GOAL_CELL.c, GOAL_CELL.r);
 const entranceRing = new THREE.Mesh(new THREE.RingGeometry(0.11,0.14,32), new THREE.MeshBasicMaterial({ color:0x0f172a, transparent:true, opacity:0.75, side:THREE.DoubleSide }));
 entranceRing.rotation.x = -Math.PI/2;
 roomGroup.add(entranceRing);
@@ -1252,6 +1337,13 @@ function screenToCell(clientX, clientY){
   if (!raycaster.ray.intersectPlane(floorPlane, hit)) return null;
   return worldToCell(hit.x, hit.z);
 }
+function screenToFloorPoint(clientX, clientY){
+  const rect = renderer.domElement.getBoundingClientRect();
+  const ndc = new THREE.Vector2(((clientX-rect.left)/rect.width)*2-1, -((clientY-rect.top)/rect.height)*2+1);
+  raycaster.setFromCamera(ndc, camera);
+  const hit = new THREE.Vector3();
+  return raycaster.ray.intersectPlane(floorPlane, hit) ? hit : null;
+}
 
 /* --- drag placement silhouette — shows exactly where the dragged object will land ---
    dataTransfer.getData() only reliably returns a value on 'drop' (browser security
@@ -1347,20 +1439,180 @@ renderer.domElement.addEventListener('drop', e=>{
   else if (data === 'human') placeHuman(cell.c, cell.r);
   else if (data === 'rat') dropRatAt(cell.c, cell.r);
 });
-renderer.domElement.addEventListener('click', e=>{
-  if (!pickingEntrance) return;
-  const cell = screenToCell(e.clientX, e.clientY);
-  if (!cell) return;
-  if (obstacleGrid[cell.r][cell.c]){ logEvent('That cell is occupied'); return; }
-  manualEntrance = { c:cell.c, r:cell.r };
-  document.getElementById('toggle-randomize').checked = false;
-  randomizeEntrance = false;
-  placeEntranceMarker(cell.c, cell.r);
-  pickingEntrance = false;
-  document.getElementById('btn-set-entrance').classList.remove('active');
-  logEvent(`Entrance set to ${cellLabel(cell.c,cell.r)}`);
-  scheduleAutosave();
+
+/* ============ SELECT / ROTATE / DRAG-RESIZE placed furniture & zones ============ */
+let selectedItem = null;
+let activeDrag = null;      // { item, axis:'L'|'W'|'H', dir:+1|-1, startClientY, startH }
+let justFinishedDrag = false;
+
+const handleGroup = new THREE.Group();
+roomGroup.add(handleGroup);
+const HANDLE_DEFS = [
+  { axis:'L', dir: 1, color:0x1a73e8 },
+  { axis:'L', dir:-1, color:0x1a73e8 },
+  { axis:'W', dir: 1, color:0x188038 },
+  { axis:'W', dir:-1, color:0x188038 },
+  { axis:'H', dir: 1, color:0xe37400 },
+];
+const handleMeshes = HANDLE_DEFS.map(def=>{
+  const m = new THREE.Mesh(
+    new THREE.SphereGeometry(0.055,14,12),
+    new THREE.MeshStandardMaterial({ color:def.color, emissive:def.color, emissiveIntensity:0.3, roughness:0.35 })
+  );
+  m.userData = { axis:def.axis, dir:def.dir };
+  m.visible = false;
+  handleGroup.add(m);
+  return m;
 });
+const selectionOutline = new THREE.LineLoop(
+  new THREE.BufferGeometry().setFromPoints([
+    new THREE.Vector3(-0.5,0,-0.5), new THREE.Vector3(0.5,0,-0.5),
+    new THREE.Vector3(0.5,0,0.5), new THREE.Vector3(-0.5,0,0.5)
+  ]),
+  new THREE.LineBasicMaterial({ color:0x1a73e8, transparent:true, opacity:0.9 })
+);
+selectionOutline.visible = false;
+roomGroup.add(selectionOutline);
+
+function positionHandles(item){
+  const def = ITEM_DEFS[item.type];
+  const dims = footprintDims(item);
+  const axisL = new THREE.Vector3(1,0,0).applyQuaternion(item.mesh.quaternion);
+  const axisW = new THREE.Vector3(0,0,1).applyQuaternion(item.mesh.quaternion);
+  const center = item.mesh.position.clone();
+  const sy = item.H*CELL;
+  const baseYVal = baseY(def, sy);
+  const midY = baseYVal + sy/2;
+  handleMeshes.forEach(m=>{
+    const { axis, dir } = m.userData;
+    if (axis === 'H'){
+      if (def.cat === 'zone'){ m.visible = false; return; }
+      m.position.set(center.x, baseYVal + sy + 0.1, center.z);
+      m.visible = true;
+    } else {
+      const axisVec = axis === 'L' ? axisL : axisW;
+      const half = (axis === 'L' ? item.L : item.W) * CELL/2 + 0.09;
+      m.position.copy(center).addScaledVector(axisVec, dir*half);
+      m.position.y = midY;
+      m.visible = true;
+    }
+  });
+  selectionOutline.scale.set(dims.fl*CELL, 1, dims.fw*CELL);
+  selectionOutline.position.set(center.x, 0.022, center.z);
+  selectionOutline.visible = true;
+}
+function selectItem(item){
+  selectedItem = item;
+  positionHandles(item);
+}
+function deselectItem(){
+  selectedItem = null;
+  handleMeshes.forEach(m=> m.visible=false);
+  selectionOutline.visible = false;
+}
+function pickHandle(clientX, clientY){
+  if (!selectedItem) return null;
+  const rect = renderer.domElement.getBoundingClientRect();
+  const ndc = new THREE.Vector2(((clientX-rect.left)/rect.width)*2-1, -((clientY-rect.top)/rect.height)*2+1);
+  raycaster.setFromCamera(ndc, camera);
+  const hits = raycaster.intersectObjects(handleMeshes, false);
+  return hits.length ? hits[0].object : null;
+}
+function pickItem(clientX, clientY){
+  const rect = renderer.domElement.getBoundingClientRect();
+  const ndc = new THREE.Vector2(((clientX-rect.left)/rect.width)*2-1, -((clientY-rect.top)/rect.height)*2+1);
+  raycaster.setFromCamera(ndc, camera);
+  const meshes = placedItems.map(i=>i.mesh);
+  const hits = raycaster.intersectObjects(meshes, true);
+  if (!hits.length) return null;
+  let obj = hits[0].object;
+  while (obj && !placedItems.find(i=>i.mesh===obj)) obj = obj.parent;
+  return obj ? placedItems.find(i=>i.mesh===obj) : null;
+}
+/* dragging an edge handle: the OPPOSITE edge stays put, only the grabbed edge moves */
+function applyEdgeResize(item, axis, dir, worldHitPoint){
+  const axisWorld = (axis === 'L' ? new THREE.Vector3(1,0,0) : new THREE.Vector3(0,0,1)).applyQuaternion(item.mesh.quaternion);
+  const dimsBefore = footprintDims(item);
+  const centerBefore = new THREE.Vector3(
+    -WORLD/2 + CELL*(item.col + dimsBefore.fl/2), 0,
+    -WORLD/2 + CELL*(item.row + dimsBefore.fw/2)
+  );
+  const currentLen = axis === 'L' ? item.L : item.W;
+  const fixedEdge = centerBefore.clone().addScaledVector(axisWorld, -dir*currentLen*CELL/2);
+  const rel = new THREE.Vector3().subVectors(worldHitPoint, fixedEdge);
+  const projected = rel.dot(axisWorld) * dir;
+  const newLenUnits = clamp(Math.round(projected/CELL), 1, 10);
+  if (axis === 'L') item.L = newLenUnits; else item.W = newLenUnits;
+  const dimsAfter = footprintDims(item);
+  const newCenter = fixedEdge.clone().addScaledVector(axisWorld, dir*newLenUnits*CELL/2);
+  const anchor = centerToAnchor(item, newCenter.x, newCenter.z);
+  const fp = clampFootprint(anchor.col, anchor.row, dimsAfter.fl, dimsAfter.fw);
+  item.col = fp.col; item.row = fp.row;
+}
+
+renderer.domElement.addEventListener('pointerdown', e=>{
+  if (pickingEntrance) return;
+  const handle = pickHandle(e.clientX, e.clientY);
+  if (!handle || !selectedItem) return;
+  controls.enabled = false;
+  activeDrag = { item:selectedItem, axis:handle.userData.axis, dir:handle.userData.dir, startClientY:e.clientY, startH:selectedItem.H };
+  e.preventDefault();
+});
+window.addEventListener('pointermove', e=>{
+  if (!activeDrag) return;
+  const item = activeDrag.item;
+  if (activeDrag.axis === 'H'){
+    const deltaPixels = activeDrag.startClientY - e.clientY;
+    const newH = clamp(activeDrag.startH + Math.round(deltaPixels/18), 1, 10);
+    if (newH !== item.H){
+      item.H = newH;
+      refreshItemMesh(item);
+      positionHandles(item);
+      rebuildGrids(); recomputeRoute(true); refreshEditorLists();
+    }
+  } else {
+    const hit = screenToFloorPoint(e.clientX, e.clientY);
+    if (hit){
+      applyEdgeResize(item, activeDrag.axis, activeDrag.dir, hit);
+      refreshItemMesh(item);
+      positionHandles(item);
+      rebuildGrids(); recomputeRoute(true); refreshEditorLists();
+    }
+  }
+});
+window.addEventListener('pointerup', ()=>{
+  if (activeDrag){
+    activeDrag = null;
+    controls.enabled = true;
+    justFinishedDrag = true;
+    scheduleAutosave();
+  }
+});
+
+renderer.domElement.addEventListener('click', e=>{
+  if (justFinishedDrag){ justFinishedDrag = false; return; }
+  if (pickingEntrance){
+    const cell = screenToCell(e.clientX, e.clientY);
+    if (!cell) return;
+    if (obstacleGrid[cell.r][cell.c]){ logEvent('That cell is occupied'); return; }
+    manualEntrance = { c:cell.c, r:cell.r };
+    document.getElementById('toggle-randomize').checked = false;
+    randomizeEntrance = false;
+    placeEntranceMarker(cell.c, cell.r);
+    pickingEntrance = false;
+    document.getElementById('btn-set-entrance').classList.remove('active');
+    logEvent(`Entrance set to ${cellLabel(cell.c,cell.r)}`);
+    scheduleAutosave();
+    return;
+  }
+  if (pickHandle(e.clientX, e.clientY)) return;
+  const item = pickItem(e.clientX, e.clientY);
+  if (item) selectItem(item); else deselectItem();
+});
+window.addEventListener('keydown', e=>{
+  if (e.key === 'Escape') deselectItem();
+});
+
 
 /* ============ EDITOR PANEL — tabs, lists, sound config ============ */
 const editorPanel = document.getElementById('editor-panel');
@@ -1376,6 +1628,9 @@ document.querySelectorAll('.tab-btn').forEach(btn=>{
 function dimStepperHTML(item, axes){
   return axes.map(ax=>`<span class="dim">${ax}:${item[ax]}<button class="mini" data-resize="${item.id}" data-axis="${ax}" data-delta="1">+</button><button class="mini" data-resize="${item.id}" data-axis="${ax}" data-delta="-1">−</button></span>`).join('');
 }
+function rotateButtonHTML(item){
+  return `<span class="dim">${item.rot||0}°<button class="mini" data-rotate="${item.id}" title="Rotate 90°">⟳</button></span>`;
+}
 function refreshEditorLists(){
   document.getElementById('d-furniture').textContent = placedItems.filter(i=>ITEM_DEFS[i.type].cat==='furniture').length;
   document.getElementById('d-zones').textContent = placedItems.filter(i=>ITEM_DEFS[i.type].cat==='zone').length;
@@ -1384,15 +1639,15 @@ function refreshEditorLists(){
   const furnList = placedItems.filter(i=>ITEM_DEFS[i.type].cat==='furniture');
   const listFurn = document.getElementById('list-furniture');
   listFurn.innerHTML = furnList.length ? furnList.map(item=>`
-    <div class="placed-row"><div><div class="lbl">${ITEM_DEFS[item.type].label} · ${cellLabel(item.col,item.row)}</div>
-    <div class="dims">${dimStepperHTML(item, ['L','W','H'])}</div></div>
+    <div class="placed-row${selectedItem===item?' selected':''}" data-select="${item.id}"><div><div class="lbl">${ITEM_DEFS[item.type].label} · ${cellLabel(item.col,item.row)}</div>
+    <div class="dims">${dimStepperHTML(item, ['L','W','H'])}${rotateButtonHTML(item)}</div></div>
     <button class="small danger" data-remove="${item.id}">✕</button></div>`).join('') : '<div class="placed-empty">Nothing placed yet</div>';
 
   const zoneList = placedItems.filter(i=>ITEM_DEFS[i.type].cat==='zone');
   const listZones = document.getElementById('list-zones');
   listZones.innerHTML = zoneList.length ? zoneList.map(item=>`
-    <div class="placed-row"><div><div class="lbl">${ITEM_DEFS[item.type].label} · ${cellLabel(item.col,item.row)}</div>
-    <div class="dims">${dimStepperHTML(item, ['L','W'])}</div></div>
+    <div class="placed-row${selectedItem===item?' selected':''}" data-select="${item.id}"><div><div class="lbl">${ITEM_DEFS[item.type].label} · ${cellLabel(item.col,item.row)}</div>
+    <div class="dims">${dimStepperHTML(item, ['L','W'])}${rotateButtonHTML(item)}</div></div>
     <button class="small danger" data-remove="${item.id}">✕</button></div>`).join('') : '<div class="placed-empty">No zones yet</div>';
 
   const listHumans = document.getElementById('list-humans');
@@ -1404,11 +1659,178 @@ document.getElementById('editor-panel').addEventListener('click', e=>{
   const rid = e.target.getAttribute('data-remove');
   const hid = e.target.getAttribute('data-remove-human');
   const rsid = e.target.getAttribute('data-resize');
+  const rotid = e.target.getAttribute('data-rotate');
+  const selRow = e.target.closest('[data-select]');
   if (rid) removeItem(parseInt(rid,10));
   if (hid) removeHuman(parseInt(hid,10));
   if (rsid) resizeItem(parseInt(rsid,10), e.target.getAttribute('data-axis'), parseInt(e.target.getAttribute('data-delta'),10));
+  if (rotid) rotateItemBy(parseInt(rotid,10), 90);
+  if (!rid && !rsid && !rotid && selRow){
+    const item = placedItems.find(i=>i.id===parseInt(selRow.getAttribute('data-select'),10));
+    if (item) selectItem(item);
+    refreshEditorLists();
+  }
 });
 refreshEditorLists();
+
+/* ============ RANDOM STIMULATION — generate a random home floor plan ============ */
+function randomStimulation(){
+  deselectItem();
+  for (let i=placedItems.length-1;i>=0;i--){
+    if (ITEM_DEFS[placedItems[i].type].cat === 'furniture'){
+      roomGroup.remove(placedItems[i].mesh);
+      placedItems.splice(i,1);
+    }
+  }
+  humanItems.forEach(h=> roomGroup.remove(h.mesh));
+  humanItems.length = 0;
+
+  const MARGIN = 4;
+  const hx = MARGIN, hz = MARGIN, hw = GRID-MARGIN*2, hh = GRID-MARGIN*2;
+
+  function addWallSeg(vertical, fixedCoord, start, length){
+    if (length <= 0) return;
+    const def = ITEM_DEFS.wall;
+    const item = vertical
+      ? { id: uid++, type:'wall', col:fixedCoord, row:start, L:1, W:length, H:def.H, rot:0 }
+      : { id: uid++, type:'wall', col:start, row:fixedCoord, L:length, W:1, H:def.H, rot:0 };
+    refreshItemMesh(item);
+    placedItems.push(item);
+  }
+  /* a wall line with a randomized doorway gap somewhere along its middle */
+  function wallLineWithDoor(vertical, fixedCoord, spanStart, spanEnd){
+    const span = spanEnd - spanStart;
+    const doorLen = 2 + Math.floor(Math.random()*2);
+    if (span <= doorLen + 3) return null; // too short to wall off — leave fully open
+    const doorStart = spanStart + 1 + Math.floor(Math.random()*(span-doorLen-2));
+    const doorEnd = doorStart + doorLen;
+    addWallSeg(vertical, fixedCoord, spanStart, doorStart-spanStart);
+    addWallSeg(vertical, fixedCoord, doorEnd, spanEnd-doorEnd);
+    return { start:doorStart, end:doorEnd };
+  }
+
+  /* --- BSP-partition the house footprint into rectangular rooms, walled and doored --- */
+  const rooms = [];
+  function split(rect, depth){
+    const minSize = 9;
+    const canV = rect.w >= minSize*2, canH = rect.h >= minSize*2;
+    if (depth<=0 || (!canV && !canH)){ rooms.push(rect); return; }
+    const vertical = canV && (!canH || Math.random()<0.5);
+    if (vertical){
+      const at = rect.col + minSize + Math.floor(Math.random()*(rect.w-minSize*2+1));
+      wallLineWithDoor(true, at, rect.row, rect.row+rect.h);
+      split({ col:rect.col, row:rect.row, w:at-rect.col, h:rect.h }, depth-1);
+      split({ col:at, row:rect.row, w:rect.col+rect.w-at, h:rect.h }, depth-1);
+    } else {
+      const at = rect.row + minSize + Math.floor(Math.random()*(rect.h-minSize*2+1));
+      wallLineWithDoor(false, at, rect.col, rect.col+rect.w);
+      split({ col:rect.col, row:rect.row, w:rect.w, h:at-rect.row }, depth-1);
+      split({ col:rect.col, row:at, w:rect.w, h:rect.row+rect.h-at }, depth-1);
+    }
+  }
+  split({ col:hx, row:hz, w:hw, h:hh }, 2 + Math.floor(Math.random()*2));
+
+  /* --- perimeter walls, one side gets the front door --- */
+  const frontSide = Math.floor(Math.random()*4); // 0 north, 1 south, 2 west, 3 east
+  const perim = [
+    { vertical:false, fixed:hz-1,  spanStart:hx, spanEnd:hx+hw, side:0 },
+    { vertical:false, fixed:hz+hh, spanStart:hx, spanEnd:hx+hw, side:1 },
+    { vertical:true,  fixed:hx-1,  spanStart:hz, spanEnd:hz+hh, side:2 },
+    { vertical:true,  fixed:hx+hw, spanStart:hz, spanEnd:hz+hh, side:3 },
+  ];
+  let frontDoor = null;
+  perim.forEach(p=>{
+    const door = wallLineWithDoor(p.vertical, p.fixed, p.spanStart, p.spanEnd);
+    if (p.side === frontSide) frontDoor = { side:p.side, door, spanStart:p.spanStart, spanEnd:p.spanEnd };
+  });
+
+  /* --- furnish each room with a themed kit --- */
+  const occupied = Array.from({length:GRID}, ()=> new Array(GRID).fill(false));
+  placedItems.forEach(item=>{
+    for (let r=item.row-1;r<=item.row+item.W;r++){
+      for (let c=item.col-1;c<=item.col+item.L;c++){
+        if (c>=0&&c<GRID&&r>=0&&r<GRID) occupied[r][c] = true;
+      }
+    }
+  });
+  function findFreeSpotIn(rect, L, W){
+    for (let tries=0;tries<40;tries++){
+      const col = rect.col+1 + Math.floor(Math.random()*Math.max(1, rect.w-2-L));
+      const row = rect.row+1 + Math.floor(Math.random()*Math.max(1, rect.h-2-W));
+      let ok = col+L <= rect.col+rect.w-1 && row+W <= rect.row+rect.h-1;
+      for (let r=row;r<row+W && ok;r++){
+        for (let c=col;c<col+L && ok;c++){
+          if (occupied[r][c]) ok = false;
+        }
+      }
+      if (ok) return { col, row };
+    }
+    return null;
+  }
+  function markOcc(col,row,L,W){
+    for (let r=row-1;r<=row+W;r++) for (let c=col-1;c<=col+L;c++) if (c>=0&&c<GRID&&r>=0&&r<GRID) occupied[r][c] = true;
+  }
+
+  const ROOM_KITS = [
+    { name:'bedroom', items:['bed','cabinet','light'] },
+    { name:'kitchen', items:['counter','counter','fridge','cabinet','light'] },
+    { name:'living',  items:['sofa','table','light','window'] },
+    { name:'dining',  items:['table','chair','chair','chair','light'] },
+  ];
+  let kitchenRoom = null;
+  rooms.forEach(room=>{
+    const kit = ROOM_KITS[Math.floor(Math.random()*ROOM_KITS.length)];
+    if (kit.name === 'kitchen' && !kitchenRoom) kitchenRoom = room;
+    kit.items.forEach(type=>{
+      const def = ITEM_DEFS[type];
+      const rot = [0,90,180,270][Math.floor(Math.random()*4)];
+      const fl = (rot===90||rot===270) ? def.W : def.L;
+      const fw = (rot===90||rot===270) ? def.L : def.W;
+      const spot = findFreeSpotIn(room, fl, fw);
+      if (!spot) return;
+      const item = { id: uid++, type, col:spot.col, row:spot.row, L:def.L, W:def.W, H:def.H, rot };
+      refreshItemMesh(item);
+      placedItems.push(item);
+      markOcc(spot.col, spot.row, fl, fw);
+    });
+  });
+
+  /* a person or two wandering the house */
+  const humanCount = 1 + Math.floor(Math.random()*3);
+  for (let i=0;i<humanCount;i++){
+    const room = rooms[Math.floor(Math.random()*rooms.length)];
+    const spot = findFreeSpotIn(room, 1, 1);
+    if (!spot) continue;
+    placeHumanMesh(spot.col, spot.row);
+    markOcc(spot.col, spot.row, 1, 1);
+  }
+
+  /* the trap goes in the kitchen if this house has one — food draws rats — else a random room */
+  const goalRoom = kitchenRoom || rooms[Math.floor(Math.random()*rooms.length)];
+  const goalSpot = findFreeSpotIn(goalRoom, 1, 1) || { col: Math.floor(goalRoom.col+goalRoom.w/2), row: Math.floor(goalRoom.row+goalRoom.h/2) };
+  placeGoalMarker(goalSpot.col, goalSpot.row);
+
+  /* entrance sits just outside the front door, so the rat visibly walks in through it */
+  let ec, er;
+  const mid = frontDoor && frontDoor.door
+    ? Math.round((frontDoor.door.start+frontDoor.door.end)/2)
+    : Math.round((frontDoor.spanStart+frontDoor.spanEnd)/2);
+  if (frontDoor.side === 0){ ec = mid; er = hz-2; }
+  else if (frontDoor.side === 1){ ec = mid; er = hz+hh+1; }
+  else if (frontDoor.side === 2){ er = mid; ec = hx-2; }
+  else { er = mid; ec = hx+hw+1; }
+  manualEntrance = { c: clamp(ec,0,GRID-1), r: clamp(er,0,GRID-1) };
+  randomizeEntrance = false;
+  document.getElementById('toggle-randomize').checked = false;
+
+  rebuildGrids();
+  recomputeRoute(true);
+  refreshEditorLists();
+  scheduleAutosave();
+  logEvent(`Random stimulation — generated a ${rooms.length}-room home layout`);
+  enterPhase(PHASE.IDLE);
+}
+document.getElementById('btn-random-stim').addEventListener('click', randomStimulation);
 
 function shapeOptionsHTML(sel){
   const opts = [['concentric','Concentric'],['arc','Arc'],['spiky','Spiky'],['rattle','Rattle']];
@@ -1480,7 +1902,7 @@ let saveTimer = null;
 
 function serializeSetup(){
   return {
-    placedItems: placedItems.map(it=>({ type:it.type, col:it.col, row:it.row, L:it.L, W:it.W, H:it.H })),
+    placedItems: placedItems.map(it=>({ type:it.type, col:it.col, row:it.row, L:it.L, W:it.W, H:it.H, rot:it.rot||0 })),
     humanItems: humanItems.map(it=>({ col:it.col, row:it.row })),
     activePredatorId,
     predators: PREDATORS.map(p=>({ id:p.id, shape:p.shape, freqLow:p.freqLow, freqHigh:p.freqHigh, baseEff:p.baseEff })),
@@ -1488,6 +1910,7 @@ function serializeSetup(){
   };
 }
 function clearScene(){
+  deselectItem();
   placedItems.forEach(it=> roomGroup.remove(it.mesh));
   placedItems.length = 0;
   humanItems.forEach(it=> roomGroup.remove(it.mesh));
@@ -1497,7 +1920,7 @@ function applySetup(data){
   clearScene();
   (data.placedItems||[]).forEach(d=>{
     if (!ITEM_DEFS[d.type]) return;
-    const item = { id: uid++, type:d.type, col:d.col, row:d.row, L:d.L, W:d.W, H:d.H };
+    const item = { id: uid++, type:d.type, col:d.col, row:d.row, L:d.L, W:d.W, H:d.H, rot:d.rot||0 };
     refreshItemMesh(item);
     placedItems.push(item);
   });
